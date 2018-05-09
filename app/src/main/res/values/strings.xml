@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_activity_asks_activity">Episode</string>
+    <string name="tab_text_1">When</string>
+    <string name="tab_text_2">What</string>
+    <string name="tab_text_3">Why</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="episode_name_hint">Type a name to episode</string>
+    <string name="episode_name_text_view">Episode name:</string>
+    <string name="episode_description_text_view">Description:</string>
+    <string name="date_episode_text_view">Date:</string>
+    <string name="period_episode_text_view">Period:</string>
+    <string name="add_what_item_text_view">What you feel or do?</string>
+    <string name="add_what_item_category_text_view">How do you classify this reaction?</string>
+    <string-array name="what_item_categories_array">
+        <item>Physical</item>
+        <item>Feeling</item>
+        <item>Action</item>
+    </string-array>
+    <string name="unhelpful_thinking_styles_label">Thinking styles:</string>
+
+    <string name="unhelpful_thinking_style_mental_filter_label">Negative focusing</string>
+    <string name="unhelpful_thinking_style_mind_reading_label">Mind reading</string>
+    <string name="unhelpful_thinking_style_predictive_thinking_label">Fortune telling</string>
+    <string name="unhelpful_thinking_style_personalisation_label">Personalisation</string>
+    <string name="unhelpful_thinking_style_catastrophising_label">Catastrophising</string>
+    <string name="unhelpful_thinking_style_black_white_label">Radicalisation</string>
+    <string name="unhelpful_thinking_style_overgeneralisation_label">Generalisation</string>
+    <string name="unhelpful_thinking_style_shoulding_musting_label">Pressuring</string>
+    <string name="unhelpful_thinking_style_magnification_minimisation_label">Comparation</string>
+    <string name="unhelpful_thinking_style_others_empowerment_label">Other\'s empowerment</string>
+
+    <string name="arguments_label">Arguments</string>
+    <string name="objections_label">Objections</string>
+    <string name="belief_details_label">Details</string>
+
+    <string name="thought_label">Thought:</string>
+    <string name="thinking_name_hint">Why you feel or do?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- JSON strings-->
+    <string name="ep_name">ep_name</string>
+    <string name="ep_date">ep_date</string>
+    <string name="ep_period">ep_period</string>
+    <string name="ep_desc">ep_desc</string>
+
+
+</resources>
