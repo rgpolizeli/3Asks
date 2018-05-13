@@ -2,43 +2,63 @@ package com.example.myapplication;
 
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
+
+import java.util.ArrayList;
 
 public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.ViewHolder> {
-    private String[] argumentsDataSet;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+    ArrayList<String> argumentsDataSet;
 
-        public ViewSwitcher mViewSwitcher;
-        public TextView mTextView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
         public EditText mEditText;
-        public ImageButton mEditButton;
         public ImageButton mDeleteButton;
-
+        public MyTextWatcher mTextWatcher;
 
         public ViewHolder(View v) {
             super(v);
-            mViewSwitcher = (ViewSwitcher) v.findViewById(R.id.argument_switcher);
-            mTextView = (TextView) v.findViewById(R.id.argumentTextView);
-            mEditText = (EditText) v.findViewById(R.id.argument_edit_view);
-            mEditButton = (ImageButton) v.findViewById(R.id.argumentEditButton);
+            mEditText = (EditText) v.findViewById(R.id.argumentEditText);
             mDeleteButton = (ImageButton) v.findViewById(R.id.argumentDeleteButton);
+            mTextWatcher = new MyTextWatcher(this);
+
+            mEditText.addTextChangedListener(mTextWatcher);
+
+            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    try {
+                        argumentsDataSet.remove(position);
+                        notifyItemRemoved(position);
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
+    public ArrayList<String> getArgumentsDataSet(){
+        return this.argumentsDataSet;
+    }
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ArgumentRVAdapter(String[] ds) {
+    public ArgumentRVAdapter(ArrayList<String> ds) {
         argumentsDataSet = ds;
+    }
+
+    public void addArgument(){
+        int position = argumentsDataSet.size() + 1;
+        argumentsDataSet.add("");
+        notifyItemInserted(position);
     }
 
     // Create new views (invoked by the layout manager)
@@ -47,10 +67,6 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
                                                            int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.argument_item_recycler_view, parent, false);
-
-        ImageButton editButton = (ImageButton) v.findViewById(R.id.argumentEditButton);
-        editButton.setOnClickListener(new OnClickArgumentTextView(v));
-
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -61,44 +77,49 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        if (holder.mViewSwitcher.getNextView().equals(holder.mTextView)){
-            holder.mViewSwitcher.showNext();
+        if (holder.mEditText.hasFocus()){
+            holder.mEditText.clearFocus();
         }
 
-        holder.mTextView.setText(argumentsDataSet[position]);
+        holder.mEditText.removeTextChangedListener(holder.mTextWatcher);
+        holder.mEditText.setText(argumentsDataSet.get(position));
+        holder.mEditText.addTextChangedListener(holder.mTextWatcher);
+
+        if(argumentsDataSet.get(position).isEmpty()) {
+            holder.mEditText.requestFocus();
+        }
     }
 
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return argumentsDataSet.length;
+        return argumentsDataSet.size();
     }
 
-    private class OnClickArgumentTextView implements View.OnClickListener {
 
-        private View rootView;
+    private class MyTextWatcher implements TextWatcher {
 
-        public OnClickArgumentTextView(View v){
-            rootView = v;
+        private ViewHolder vh;
+
+        public MyTextWatcher(ViewHolder viewHolder){
+            vh = viewHolder;
         }
 
         @Override
-        public void onClick(View v) {
-            ViewSwitcher switcher = (ViewSwitcher) this.rootView.findViewById(R.id.argument_switcher);
-            View nextView = switcher.getNextView();
-            View viewOfTextView = switcher.findViewById(R.id.argumentTextView);
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            Log.i("message","before");
+        }
 
-            EditText eText = (EditText) switcher.findViewById(R.id.argument_edit_view);
-            TextView textView = (TextView) viewOfTextView;
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            argumentsDataSet.set(this.vh.getAdapterPosition(), s.toString());
+        }
 
-            if (nextView.equals(viewOfTextView)){ //if next to show is a textView
-                switcher.showNext();
-                textView.setText(eText.getText());
-            } else{
-                switcher.showNext();
-                eText.setText(textView.getText());
-            }
+        @Override
+        public void afterTextChanged(Editable s) {
+            Log.i("message","after");
         }
     }
+
 }

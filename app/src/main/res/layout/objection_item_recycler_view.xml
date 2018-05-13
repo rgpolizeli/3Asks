@@ -8,8 +8,9 @@
     android:layout_marginTop="10dp"
     android:background="?attr/colorBackgroundFloating">
 
-    <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/objection_switcher"
+
+    <EditText
+        android:id="@+id/objectionEditView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -17,24 +18,11 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@null"
+        android:hint="hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/objectionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minWidth="60dp"
-            android:text="TextView" />
-
-        <EditText
-            android:id="@+id/objection_edit_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="hint" />
-
-    </ViewSwitcher>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/objectionDeleteButton"
@@ -44,18 +32,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/objection_switcher"
+        app:layout_constraintTop_toBottomOf="@+id/objectionEditView"
         app:srcCompat="@android:drawable/ic_delete" />
-
-    <ImageButton
-        android:id="@+id/objectionEditButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/objectionDeleteButton"
-        app:layout_constraintTop_toBottomOf="@+id/objection_switcher"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
 
 </android.support.constraint.ConstraintLayout>

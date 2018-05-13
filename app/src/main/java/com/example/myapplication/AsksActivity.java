@@ -23,7 +23,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import java.util.ArrayList;
+
 public class AsksActivity extends AppCompatActivity {
+
+    final int REQUEST_NEW_REACTION = 1;
+    final int REQUEST_NEW_BELIEF = 2;
+
+    final int RESULT_NEW_REACTION_ADD = 100;
+    final int RESULT_NEW_REACTION_DELETE = 101;
+    final int RESULT_NEW_BELIEF_ADD = 102;
+    final int RESULT_NEW_BELIEF_DELETE = 103;
+
+    final String NEW_BELIEF = "NEW_BELIEF";
+
+    private ArrayList<String> beliefsList;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -58,6 +72,9 @@ public class AsksActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         bundle.getString("episode");
+
+        //load beliefs list
+        beliefsList = new ArrayList<>();
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -141,6 +158,29 @@ public class AsksActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == REQUEST_NEW_BELIEF) {
+            if (resultCode == RESULT_NEW_BELIEF_ADD) {
+
+
+
+                beliefsList = data.getStringArrayListExtra(NEW_BELIEF);
+                int position = beliefsList.size() + 1;
+                beliefsList.add("");
+                //notifyDataSetChanged();
+
+            } else{
+                if(resultCode == RESULT_NEW_BELIEF_DELETE){
+
+                }
+            }
+        }
+    }
+
+
 
     private void addReaction(){
         Intent intent = new Intent(this.getApplicationContext(), AddNewReactionActivity.class);
