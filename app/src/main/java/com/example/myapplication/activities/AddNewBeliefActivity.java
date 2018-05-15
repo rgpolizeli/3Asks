@@ -1,6 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -13,23 +14,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
+import com.example.myapplication.fragments.BeliefFragment;
+import com.example.myapplication.models.BeliefViewModel;
+import com.example.myapplication.auxiliaries.Constants;
+import com.example.myapplication.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddNewBeliefActivity extends AppCompatActivity {
 
     private AddNewBeliefActivity.BeliefPagerAdapter mBeliefPagerAdapter;
     private FloatingActionButton argumentsFab;
-    private FloatingActionButton objetctionsFab;
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+    private FloatingActionButton objectionsFab;
+
     private ViewPager mViewPager;
     private BeliefViewModel beliefViewModel;
-
-
-    private final String BELIEFS_LIST = "BELIEFS_LIST";
-    private final String REACTIONS_LIST = "REACTIONS_LIST";
-
    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +42,10 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         argumentsFab = (FloatingActionButton) findViewById(R.id.addArgumentFab);
-        objetctionsFab = (FloatingActionButton) findViewById(R.id.addObjectionFab);
+        objectionsFab = (FloatingActionButton) findViewById(R.id.addObjectionFab);
 
         argumentsFab.hide();
-        objetctionsFab.hide();
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-
-        //load lists
-        ArrayList<String> beliefsList = new ArrayList<>();
-        ArrayList<String> reactiosList = new ArrayList<>();
+        objectionsFab.hide();
 
         mBeliefPagerAdapter = new AddNewBeliefActivity.BeliefPagerAdapter(getSupportFragmentManager());
 
@@ -86,17 +80,17 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     private void showRightFab(int tabPosition) {
         switch (tabPosition) {
             case 1:
-                objetctionsFab.hide();
+                objectionsFab.hide();
                 argumentsFab.show();
                 break;
 
             case 2:
-                objetctionsFab.show();
+                objectionsFab.show();
                 argumentsFab.hide();
                 break;
 
             default:
-                objetctionsFab.hide();
+                objectionsFab.hide();
                 argumentsFab.hide();
                 break;
         }
@@ -104,7 +98,6 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_belief, menu);
         return true;
     }
@@ -112,19 +105,50 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch(id){
             case R.id.action_save_belief:
-                beliefViewModel.saveBelief();
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(Constants.ARG_NEW_BELIEF, mountActivityResult().toString());
+                setResult(Constants.RESULT_NEW_BELIEF_ADD, resultIntent);
+                finish();
                 return true;
             case R.id.action_delete_belief:
                 return true;
             default: return true;
         }
+    }
+
+    private JSONObject mountActivityResult(){
+        JSONObject resultJSON = new JSONObject();
+
+        JSONArray selectedUnhelpfulThinkingStylesArray = new JSONArray();
+        for(String unhelpfulThinkingStyleLabel : beliefViewModel.getSelectedThinkingStyles()){
+            selectedUnhelpfulThinkingStylesArray.put(unhelpfulThinkingStyleLabel);
+        }
+
+        JSONArray argumentsArray = new JSONArray();
+        for(String argumentLabel : beliefViewModel.getArguments()){
+            argumentsArray.put(argumentLabel);
+        }
+
+        JSONArray objectionsArray = new JSONArray();
+        for(String objectionLabel : beliefViewModel.getObjections()){
+            objectionsArray.put(objectionLabel);
+        }
+
+        try {
+            resultJSON.put(Constants.JSON_BELIEF_THOUGHT, beliefViewModel.getBeliefThought());
+            resultJSON.put(Constants.JSON_BELIEF_UNHELPFUL_THINKING_STYLES, selectedUnhelpfulThinkingStylesArray);
+            resultJSON.put(Constants.JSON_BELIEF_ARGUMENTS, argumentsArray);
+            resultJSON.put(Constants.JSON_BELIEF_OBJECTIONS, objectionsArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return resultJSON;
+
     }
 
     /**

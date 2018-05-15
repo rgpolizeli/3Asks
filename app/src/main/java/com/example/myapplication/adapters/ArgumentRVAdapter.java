@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.adapters;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import com.example.myapplication.R;
 
 import java.util.ArrayList;
 

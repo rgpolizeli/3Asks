@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,28 +19,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AsksActivity"
+            android:name=".activities.AsksActivity"
             android:label="@string/title_activity_asks_activity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".AddNewReactionActivity"
-            android:parentActivityName=".AsksActivity"
+            android:name=".activities.AddNewReactionActivity"
+            android:parentActivityName=".activities.AsksActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AsksActivity" />
+                android:value=".activities.AsksActivity" />
 
         </activity>
         <activity
-            android:name=".AddNewBeliefActivity"
+            android:name=".activities.AddNewBeliefActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

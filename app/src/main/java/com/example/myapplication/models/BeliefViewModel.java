@@ -1,7 +1,9 @@
-package com.example.myapplication;
+package com.example.myapplication.models;
 
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
+
+import com.example.myapplication.BeliefRepository;
 
 import java.util.ArrayList;
 
@@ -10,7 +12,7 @@ public class BeliefViewModel extends ViewModel {
     private ArrayList<String> selectedThinkingStylesList;
     private ArrayList<String> argumentsList;
     private ArrayList<String> objectionsList;
-    private BeliefRepository beliefRepo;
+    private BeliefRepository beliefRepository;
 
     public String getBeliefThought() {
         if (beliefThought == null) {

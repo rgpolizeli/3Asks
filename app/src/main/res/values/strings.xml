@@ -13,10 +13,16 @@
     <string name="period_episode_text_view">Period:</string>
     <string name="add_what_item_text_view">What you feel or do?</string>
     <string name="add_what_item_category_text_view">How do you classify this reaction?</string>
-    <string-array name="what_item_categories_array">
+    <string-array name="reaction_categories_array">
         <item>Physical</item>
         <item>Feeling</item>
         <item>Action</item>
+    </string-array>
+
+    <string-array name="episode_period_array">
+        <item>Morning</item>
+        <item>Evening</item>
+        <item>Night</item>
     </string-array>
     <string name="unhelpful_thinking_styles_label">Thinking styles:</string>
 

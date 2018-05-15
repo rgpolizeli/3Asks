@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -14,22 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import com.example.myapplication.adapters.ArgumentRVAdapter;
+import com.example.myapplication.models.BeliefViewModel;
+import com.example.myapplication.adapters.ObjectionRVAdapter;
+import com.example.myapplication.R;
+import com.example.myapplication.auxiliaries.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A BeliefFragment containing a simple view.
- */
+
 public class BeliefFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    private final String ARG_SECTION_NUMBER = "section_number";
+
     private static final int DETAILS_SECTION_NUMBER = 1;
     private static final int ARGUMENTS_SECTION_NUMBER = 2;
     private static final int OBJECTIONS_SECTION_NUMBER = 3;
@@ -45,7 +44,7 @@ public class BeliefFragment extends Fragment {
     public BeliefFragment newInstance(int sectionNumber) {
         BeliefFragment fragment = new BeliefFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
 
         return fragment;
@@ -101,10 +100,10 @@ public class BeliefFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView;
+        View rootView = null;
         BeliefViewModel model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
 
-        switch (getArguments().getInt(ARG_SECTION_NUMBER)){
+        switch (getArguments().getInt(Constants.ARG_SECTION_NUMBER)){
             case DETAILS_SECTION_NUMBER:
                 rootView = inflater.inflate(R.layout.belief_details_fragment, container, false);
                 setupThought(rootView,model);
@@ -141,12 +140,6 @@ public class BeliefFragment extends Fragment {
                 FloatingActionButton objectionsFab = (FloatingActionButton) coordinatorLayout2.findViewById(R.id.addObjectionFab);
                 objectionsFab.setOnClickListener(new OnClickListenerFABObjections(objectionsRecyclerView,objectionsRecyclerViewAdapter,model));
 
-                break;
-            default:
-
-                rootView = inflater.inflate(R.layout.fragment_asks, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
                 break;
         }
 
@@ -221,7 +214,7 @@ public class BeliefFragment extends Fragment {
         public void onClick(View v) {
             adapter.addArgument();
             recyclerView.scrollToPosition(adapter.getItemCount()-1);
-            model.addArgument();
+            //model.addArgument();
         }
 
     }
@@ -242,7 +235,7 @@ public class BeliefFragment extends Fragment {
         public void onClick(View v) {
             adapter.addObjection();
             recyclerView.scrollToPosition(adapter.getItemCount()-1);
-            model.addObjection();
+            //model.addObjection();
         }
 
     }
