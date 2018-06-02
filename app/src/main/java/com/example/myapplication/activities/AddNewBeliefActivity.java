@@ -14,10 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.myapplication.fragments.BeliefFragment;
-import com.example.myapplication.models.BeliefViewModel;
-import com.example.myapplication.auxiliaries.Constants;
 import com.example.myapplication.R;
+import com.example.myapplication.auxiliaries.Constants;
+import com.example.myapplication.fragments.BeliefArgumentsFragment;
+import com.example.myapplication.fragments.BeliefDetailsFragment;
+import com.example.myapplication.fragments.BeliefObjectionsFragment;
+import com.example.myapplication.viewmodel.BeliefViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -111,7 +113,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
             case R.id.action_save_belief:
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(Constants.ARG_NEW_BELIEF, mountActivityResult().toString());
-                setResult(Constants.RESULT_NEW_BELIEF_ADD, resultIntent);
+                setResult(Constants.RESULT_NEW_BELIEF, resultIntent);
                 finish();
                 return true;
             case R.id.action_delete_belief:
@@ -148,13 +150,8 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         }
 
         return resultJSON;
-
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class BeliefPagerAdapter extends FragmentPagerAdapter {
 
         public BeliefPagerAdapter(FragmentManager fm) {
@@ -163,9 +160,22 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a BeliefFragment (defined as a static inner class below).
-            return new BeliefFragment().newInstance((position + 1));
+
+            Fragment f = null;
+
+            switch(position){
+                case 0:
+                    f = new BeliefDetailsFragment();
+                    break;
+                case 1:
+                    f = new BeliefArgumentsFragment();
+                    break;
+                case 2:
+                    f = new BeliefObjectionsFragment();
+                    break;
+            }
+
+            return f;
         }
 
         @Override

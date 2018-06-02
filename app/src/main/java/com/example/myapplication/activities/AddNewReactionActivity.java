@@ -15,9 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.example.myapplication.auxiliaries.Constants;
 import com.example.myapplication.R;
-import com.example.myapplication.models.ReactionViewModel;
+import com.example.myapplication.auxiliaries.Constants;
+import com.example.myapplication.persistence.entity.Reaction;
+import com.example.myapplication.viewmodel.ReactionViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 public class AddNewReactionActivity extends AppCompatActivity {
 
     private ReactionViewModel reactionViewModel;
+    private Reaction initialReaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +38,18 @@ public class AddNewReactionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         reactionViewModel = ViewModelProviders.of(this).get(ReactionViewModel.class);
+        String reactionJSONString = getIntent().getStringExtra(Constants.ARG_REACTION);
+        if (reactionJSONString != null){
+            reactionViewModel.fillReactionSource(reactionJSONString);
+            fillInitialReaction();
+        }
 
         setupReaction();
         setupReactionClass();
+    }
+
+    private void fillInitialReaction(){
+        //this.initialReaction = new Reaction(this.reactionViewModel.getReaction(), this.reactionViewModel.getReactionClass());
     }
 
     private void setupReaction(){
@@ -77,10 +88,20 @@ public class AddNewReactionActivity extends AppCompatActivity {
 
         switch(id){
             case R.id.action_save_reaction:
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(Constants.ARG_NEW_REACTION, mountActivityResult().toString());
-                setResult(Constants.RESULT_NEW_REACTION_ADD, resultIntent);
-                finish();
+                if (getIntent().getStringExtra(Constants.ARG_REACTION) == null){ //new reaction
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(Constants.ARG_NEW_REACTION, mountActivityResult().toString());
+                    setResult(Constants.RESULT_NEW_REACTION, resultIntent);
+                    finish();
+                }else{ //edit reaction
+                    Intent resultIntent = new Intent();
+                    /*if(!this.reactionViewModel.isEqualToReaction(this.initialReaction)){
+                        resultIntent.putExtra(Constants.ARG_REACTION, mountActivityResult().toString());
+                        resultIntent.putExtra(Constants.ARG_REACTION_POSITION, getIntent().getIntExtra(Constants.ARG_REACTION_POSITION,-1));
+                    }*/
+                    setResult(Constants.RESULT_REACTION_EDIT, resultIntent);
+                    finish();
+                }
                 return true;
             case R.id.action_delete_reaction:
                 return true;

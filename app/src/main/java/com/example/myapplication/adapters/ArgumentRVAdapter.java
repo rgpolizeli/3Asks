@@ -12,12 +12,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.myapplication.R;
+import com.example.myapplication.persistence.entity.Argument;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.ViewHolder> {
 
-    ArrayList<String> argumentsDataSet;
+    List<Argument> arguments;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -38,7 +40,7 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     try {
-                        argumentsDataSet.remove(position);
+                        arguments.remove(position);
                         notifyItemRemoved(position);
                     }catch (ArrayIndexOutOfBoundsException e){
                         e.printStackTrace();
@@ -48,55 +50,51 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
         }
     }
 
-    public ArrayList<String> getArgumentsDataSet(){
-        return this.argumentsDataSet;
+
+    public ArgumentRVAdapter() {
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public ArgumentRVAdapter(ArrayList<String> ds) {
-        argumentsDataSet = ds;
+    public Argument getItem(int position) {
+        if (this.arguments == null){
+            return null;
+        } else{
+            return arguments.get(position);
+        }
     }
 
-    public void addArgument(){
-        int position = argumentsDataSet.size() + 1;
-        argumentsDataSet.add("");
-        notifyItemInserted(position);
-    }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ArgumentRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
-        // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.argument_item_recycler_view, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
 
         if (holder.mEditText.hasFocus()){
             holder.mEditText.clearFocus();
         }
 
         holder.mEditText.removeTextChangedListener(holder.mTextWatcher);
-        holder.mEditText.setText(argumentsDataSet.get(position));
+        holder.mEditText.setText(arguments.get(position).getArgument());
         holder.mEditText.addTextChangedListener(holder.mTextWatcher);
 
-        if(argumentsDataSet.get(position).isEmpty()) {
+        if(arguments.get(position).getArgument().isEmpty()) {
             holder.mEditText.requestFocus();
         }
     }
 
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return argumentsDataSet.size();
+        if (this.arguments == null)
+            return 0;
+        else
+            return arguments.size();
     }
 
 
@@ -110,17 +108,17 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            Log.i("message","before");
+
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            argumentsDataSet.set(this.vh.getAdapterPosition(), s.toString());
+            //arguments.set(this.vh.getAdapterPosition(), s.toString());
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            Log.i("message","after");
+
         }
     }
 

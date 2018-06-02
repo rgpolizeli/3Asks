@@ -1,8 +1,12 @@
 package com.example.myapplication.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,11 +15,17 @@ import android.view.MenuItem;
 
 import com.example.myapplication.adapters.EpisodesRVAdapter;
 import com.example.myapplication.R;
+import com.example.myapplication.auxiliaries.Constants;
+import com.example.myapplication.persistence.entity.Episode;
+import com.example.myapplication.viewmodel.MainViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView episodesRecyclerView;
-    private RecyclerView.Adapter episodesRecyclerViewAdapter;
+    private EpisodesRVAdapter episodesRecyclerViewAdapter;
     private RecyclerView.LayoutManager episodesRecyclerViewLayoutManager;
+    private MainViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +39,43 @@ public class MainActivity extends AppCompatActivity {
 
         episodesRecyclerViewLayoutManager = new LinearLayoutManager(this);
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
-
-        episodesRecyclerViewAdapter = new EpisodesRVAdapter(initDataset());
+        episodesRecyclerViewAdapter = new EpisodesRVAdapter();
         episodesRecyclerView.setAdapter(episodesRecyclerViewAdapter);
+
+        model = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        model.getAllEpisodes().observe(this, new Observer<List<Episode>>() {
+            @Override
+            public void onChanged(@Nullable final List<Episode> episodes) {
+
+                switch(model.getEpisodeListState()){
+                    case MainViewModel.NOT_LOADED:
+                        episodesRecyclerViewAdapter.setEpisodes(episodes);
+                        model.setEpisodeListState(MainViewModel.LOADED);
+                        break;
+                    case MainViewModel.LOADED:
+                        episodesRecyclerViewAdapter.setEpisodes(episodes);
+                        break;
+                        case MainViewModel.INSERTING_ITEM:
+                            episodesRecyclerViewAdapter.setEpisodes(episodes);
+                            model.setEpisodeListState(MainViewModel.LOADED);
+
+                            getInsertedItem(episodes);
+                            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(null);
+                            diffResult.
+                            startEditEpisodeActivity();
+                            break;
+                }
+
+
+            }
+        });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_episodes, menu);
         MenuItem item = menu.findItem(R.id.action_add_episode);
         return true;
@@ -44,39 +83,30 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_add_episode:
-                addEpisode();
+                model.createEpisode();
+                model.setEpisodeListState(MainViewModel.INSERTING_ITEM);
+                //addEpisode();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void addEpisode(){
-        Intent intent = new Intent(this, AsksActivity.class);
-        startActivity(intent);
+    private Episode getInsertedItem(List<Episode> newEpisodes){
+
     }
 
 
-    /*
-        * Generates Strings for RecyclerView's adapter. This data would usually come
-            * from a local content provider or remote server.
-    */
-    private String[] initDataset() {
-
-        int datasetLength = 20;
-
-        String [] mDataset = new String[datasetLength];
-        for (int i = 0; i < datasetLength; i++) {
-            mDataset[i] = "Episode #" + i;
+    private void startEditEpisodeActivity(Episode newEpisode){
+        if (newEpisode != null){
+            Intent intent = new Intent(this, AsksActivity.class);
+            intent.putExtra(Constants.ARG_EPISODE, newEpisode.getId());
+            startActivity(intent);
         }
-        return mDataset;
     }
 }

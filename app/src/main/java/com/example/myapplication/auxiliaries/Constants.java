@@ -7,12 +7,16 @@ public class Constants {
     //////////
 
     public static final int REQUEST_NEW_REACTION = 1;
-    public static final int REQUEST_NEW_BELIEF = 2;
+    public static final int REQUEST_EDIT_REACTION = 2;
+    public static final int REQUEST_NEW_BELIEF = 3;
+    public static final int REQUEST_EDIT_BELIEF = 4;
 
-    public static final int RESULT_NEW_REACTION_ADD = 100;
-    public static final int RESULT_NEW_REACTION_DELETE = 101;
-    public static final int RESULT_NEW_BELIEF_ADD = 102;
-    public static final int RESULT_NEW_BELIEF_DELETE = 103;
+    public static final int RESULT_NEW_REACTION = 100;
+    public static final int RESULT_REACTION_EDIT = 101;
+    public static final int RESULT_REACTION_DELETE = 102;
+    public static final int RESULT_NEW_BELIEF = 103;
+    public static final int RESULT_BELIEF_EDIT = 104;
+    public static final int RESULT_BELIEF_DELETE = 105;
 
 
     ///////////
@@ -24,6 +28,8 @@ public class Constants {
     public static final String ARG_NEW_REACTION = "new_reaction";
     public static final String ARG_BELIEF = "belief";
     public static final String ARG_REACTION = "reaction";
+    public static final String ARG_REACTION_POSITION = "reaction_position";
+    public static final String ARG_EPISODE = "episode";
     public static final String ARG_SECTION_NUMBER = "section_number";
 
 
@@ -40,14 +46,14 @@ public class Constants {
     // REACTION
     ////////////
 
-    public static final String JSON_REACTION = "reaction";
+    public static final String JSON_REACTION = "reaction_name";
     public static final String JSON_REACTION_CLASS = "reactionClass";
 
     ////////////
     // EPISODE
     ////////////
     
-    public static final String JSON_EPISODE = "episode";
+    public static final String JSON_EPISODE = "episode_name";
     public static final String JSON_EPISODE_DESC = "description";
     public static final String JSON_EPISODE_DATE = "date";
     public static final String JSON_EPISODE_PERIOD = "period";

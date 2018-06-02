@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="episodeColor">#ffe600</color>
     <color name="selectedColor">@android:color/holo_blue_light</color>
+    <color name="indigo">#4b0082</color>
+    <color name="pink">#F50057</color>
 </resources>

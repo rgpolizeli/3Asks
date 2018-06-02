@@ -11,14 +11,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.myapplication.R;
+import com.example.myapplication.persistence.entity.Objection;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.ViewHolder>{
-    ArrayList<String> objectionsDataSet;
+    List<Objection> objections;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
 
         public EditText mEditText;
         public ImageButton mDeleteButton;
@@ -37,7 +38,7 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     try {
-                        objectionsDataSet.remove(position);
+                        objections.remove(position);
                         notifyItemRemoved(position);
                     }catch (ArrayIndexOutOfBoundsException e){
                         e.printStackTrace();
@@ -48,51 +49,50 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public ObjectionRVAdapter(ArrayList<String> ds) {
-        objectionsDataSet = ds;
+
+    public ObjectionRVAdapter() {
     }
 
-    public void addObjection(){
-        int position = objectionsDataSet.size() + 1;
-        objectionsDataSet.add("");
-        notifyItemInserted(position);
+
+    public Objection getItem(int position) {
+        if (this.objections == null){
+            return null;
+        } else{
+            return objections.get(position);
+        }
     }
 
-    // Create new views (invoked by the layout manager)
+
     @Override
     public ObjectionRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
-        // create a new view
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.objection_item_recycler_view, parent, false);
         ObjectionRVAdapter.ViewHolder vh = new ObjectionRVAdapter.ViewHolder(v);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+
     @Override
     public void onBindViewHolder(ObjectionRVAdapter.ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
 
         if (holder.mEditText.hasFocus()){
             holder.mEditText.clearFocus();
         }
 
         holder.mEditText.removeTextChangedListener(holder.mTextWatcher);
-        holder.mEditText.setText(objectionsDataSet.get(position));
+        holder.mEditText.setText(objections.get(position).getObjection());
         holder.mEditText.addTextChangedListener(holder.mTextWatcher);
 
-        if(objectionsDataSet.get(position).isEmpty()) {
+        if(objections.get(position).getObjection().isEmpty()) {
             holder.mEditText.requestFocus();
         }
     }
 
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return objectionsDataSet.size();
+        return objections.size();
     }
 
 
@@ -106,17 +106,17 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            Log.i("message","before");
+
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            objectionsDataSet.set(this.vh.getAdapterPosition(), s.toString());
+            //objections.set(this.vh.getAdapterPosition(), s.toString());
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            Log.i("message","after");
+
         }
     }
 }

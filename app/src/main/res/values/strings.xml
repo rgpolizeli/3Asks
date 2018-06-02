@@ -5,12 +5,12 @@
     <string name="tab_text_2">What</string>
     <string name="tab_text_3">Why</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="episode_name_hint">Type a name to episode</string>
-    <string name="episode_name_text_view">Episode name:</string>
-    <string name="episode_description_text_view">Description:</string>
-    <string name="date_episode_text_view">Date:</string>
-    <string name="period_episode_text_view">Period:</string>
+
+    <string name="episode_name_hint">Episode</string>
+    <string name="episode_date_hint">Date</string>
+    <string name="episode_description_hint">Description</string>
+    <string name="episode_period_hint">Period</string>
+
     <string name="add_what_item_text_view">What you feel or do?</string>
     <string name="add_what_item_category_text_view">How do you classify this reaction?</string>
     <string-array name="reaction_categories_array">
