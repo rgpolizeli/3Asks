@@ -18,10 +18,10 @@ public interface ObjectionDao {
     long insert(Objection objection);
 
     @Update
-    void update(Objection... objection);
+    int update(Objection... objection);
 
     @Delete
-    void delete(Objection... objection);
+    int delete(Objection... objection);
 
     @Query("SELECT * " +
             "FROM Objection " +

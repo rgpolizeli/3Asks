@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="insideOverlay">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/episodeTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/MyHintText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/episode_name_edit_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/episode_name_hint"
+                android:inputType="text"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@color/errorColor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/episodeTextInputLayout" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/episodeDateTextInputLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/textInputLayoutSpace"
+            app:hintTextAppearance="@style/MyHintText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/episodeTextInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/episode_date_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/episode_date_hint"
+                android:inputType="date" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/episode_period_spinner"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:entries="@array/episode_period_array"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/episodeDateTextInputLayout"
+            app:layout_constraintStart_toEndOf="@+id/episodeDateTextInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/episodeDateTextInputLayout" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/episodeDescriptionTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="@dimen/textInputLayoutSpace"
+            app:hintTextAppearance="@style/MyHintText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/episodeDateTextInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/episode_description_edit_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/episode_description_hint"
+                android:inputType="textMultiLine"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/episodeDescriptionTextInputLayout" />
+        </android.support.design.widget.TextInputLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v4.widget.NestedScrollView>

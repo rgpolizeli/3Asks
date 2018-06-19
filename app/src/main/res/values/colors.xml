@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primaryBackGround">#e1e1e1</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent1">#009688</color>
+    <color name="colorAccent2">@android:color/holo_blue_light</color>
+    <color name="colorAccent3">#FF4081</color>
+    <color name="colorAccent4">#40c4ff</color>
+    <color name="errorColor">#B00020</color>
+    <color name="dialogHintTextColor">#6D6D6D</color>
+
+
     <color name="episodeColor">#ffe600</color>
     <color name="selectedColor">@android:color/holo_blue_light</color>
     <color name="indigo">#4b0082</color>
     <color name="pink">#F50057</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FFFF0000</color>
 </resources>

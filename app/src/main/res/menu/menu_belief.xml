@@ -10,11 +10,4 @@
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/action_save_belief"
-        android:icon="@android:drawable/ic_menu_save"
-        android:orderInCategory="300"
-        android:title="User"
-        app:showAsAction="ifRoom" />
-
 </menu>

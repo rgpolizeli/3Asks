@@ -18,7 +18,7 @@ public interface BeliefThinkingStyleDao {
     void insert(BeliefThinkingStyle beliefThinkingStyle);
 
     @Delete
-    void delete(BeliefThinkingStyle... beliefThinkingStyles);
+    int delete(BeliefThinkingStyle... beliefThinkingStyles);
 
     @Query("SELECT ThinkingStyle.thinkingStyle FROM BeliefThinkingStyle INNER JOIN ThinkingStyle ON ThinkingStyle.thinkingStyle = BeliefThinkingStyle.thinkingStyleId WHERE BeliefThinkingStyle.beliefId=:beliefId")
     LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(final int beliefId);

@@ -3,7 +3,6 @@ package com.example.myapplication.viewmodel;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.myapplication.auxiliaries.Constants;
-import com.example.myapplication.persistence.entity.Reaction;
 
 import org.json.JSONException;
 import org.json.JSONObject;

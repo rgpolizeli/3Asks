@@ -5,10 +5,12 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent3</item>
+        <item name="android:colorBackground">?attr/colorBackgroundFloating</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -18,13 +20,13 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Chip">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:height">32dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
         <item name="android:background">@drawable/clip</item>
         <item name="android:textColor">#5E5E5E</item>
         <item name="android:textSize">12sp</item>
-        <!-- <item name="android:paddingTop">7sp</item> -->
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center</item>
@@ -32,13 +34,18 @@
 
     <!--Floating label text style-->
     <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColorHint">@color/indigo</item>
         <item name="android:textColor">@color/pink</item>
+    </style>
+
+    <style name="ErrorMessageTextStyle" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/errorColor</item>
     </style>
 
     <!--Input field style-->
     <style name="MyEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/indigo</item>
-        <item name="colorControlActivated">@color/pink</item>
+        <item name="colorControlActivated">@color/colorAccent3</item>
     </style>
 
 </resources>

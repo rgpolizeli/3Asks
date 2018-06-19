@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">3Asks</string>
     <string name="title_activity_asks_activity">Episode</string>
     <string name="tab_text_1">When</string>
     <string name="tab_text_2">What</string>
@@ -24,7 +24,7 @@
         <item>Evening</item>
         <item>Night</item>
     </string-array>
-    <string name="unhelpful_thinking_styles_label">Thinking styles:</string>
+    <string name="unhelpful_thinking_styles_label">Thinking styles</string>
 
     <string name="unhelpful_thinking_style_mental_filter_label">Negative focusing</string>
     <string name="unhelpful_thinking_style_mind_reading_label">Mind reading</string>
@@ -36,6 +36,7 @@
     <string name="unhelpful_thinking_style_shoulding_musting_label">Pressuring</string>
     <string name="unhelpful_thinking_style_magnification_minimisation_label">Comparation</string>
     <string name="unhelpful_thinking_style_others_empowerment_label">Other\'s empowerment</string>
+    <string name="unhelpful_thinking_style_labeling_label">Labeling</string>
 
     <string name="arguments_label">Arguments</string>
     <string name="objections_label">Objections</string>

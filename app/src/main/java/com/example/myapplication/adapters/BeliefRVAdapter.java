@@ -1,33 +1,29 @@
 package com.example.myapplication.adapters;
 
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.listeners.EditListener;
 import com.example.myapplication.persistence.entity.Belief;
-import com.example.myapplication.R;
-import com.example.myapplication.persistence.entity.Reaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHolder> {
     private List<Belief> beliefs;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
+        public TextView beliefTextView;
         public ViewHolder(View v) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.beliefTextView);
+            beliefTextView = v.findViewById(R.id.beliefTextView);
         }
     }
 
     public BeliefRVAdapter() {
-
     }
 
     public void setBeliefs(List<Belief> beliefs) {
@@ -48,10 +44,9 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
     public BeliefRVAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                          int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.belief_item_recycler_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view_belief, parent, false);
 
         setItemListeners(v);
-
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -59,7 +54,7 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //holder.mTextView.setText(beliefs.get(position).getThought());
+        holder.beliefTextView.setText(beliefs.get(position).getBelief());
     }
 
     @Override
@@ -69,9 +64,8 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
     }
 
     private void setItemListeners(View v){
-        ConstraintLayout cl = (ConstraintLayout) v.findViewById(R.id.beliefConstraintLayout);
         EditListener editListener = new EditListener();
         editListener.setBeliefs(this.beliefs);
-        cl.setOnClickListener(editListener);
+        v.setOnClickListener(editListener);
     }
 }

@@ -18,10 +18,10 @@ public interface ArgumentDao {
     long insert(Argument argument);
 
     @Update
-    void update(Argument... argument);
+    int update(Argument... argument);
 
     @Delete
-    void delete(Argument... argument);
+    int delete(Argument... argument);
 
     @Query("SELECT * " +
             "FROM Argument " +

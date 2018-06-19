@@ -8,7 +8,6 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 import android.support.annotation.NonNull;
 
-import com.example.myapplication.persistence.entity.Objection;
 import com.example.myapplication.persistence.entity.Reaction;
 
 import java.util.List;
@@ -19,10 +18,10 @@ public interface ReactionDao {
     long insert(Reaction reaction);
 
     @Update
-    void update(Reaction... reaction);
+    int update(Reaction... reaction);
 
     @Delete
-    void delete(Reaction... reaction);
+    int delete(Reaction... reaction);
 
     @Query("SELECT * " +
             "FROM Reaction " +

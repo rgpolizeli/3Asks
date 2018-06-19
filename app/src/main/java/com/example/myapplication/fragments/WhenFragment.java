@@ -1,34 +1,37 @@
 package com.example.myapplication.fragments;
 
-import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import java.text.DateFormat;
 
+import com.example.myapplication.R;
+import com.example.myapplication.listeners.EpisodeDateOnClick;
+import com.example.myapplication.listeners.EpisodeDescriptionTextWatcher;
+import com.example.myapplication.listeners.EpisodeTextWatcher;
+import com.example.myapplication.listeners.OnItemSelectedListenerEpisodePeriod;
 import com.example.myapplication.persistence.entity.Episode;
 import com.example.myapplication.viewmodel.EpisodeViewModel;
-import com.example.myapplication.R;
 
-import java.util.Calendar;
+import java.text.DateFormat;
 import java.util.Date;
 
 public class WhenFragment extends Fragment {
 
-    private EditText episodeEditText;
-    private EditText episodeDescriptionEditText;
-    private EditText episodeDateEditText;
+    private TextInputLayout episodeTextInputLayout;
+    private TextInputEditText episodeEditText;
+    private TextInputEditText episodeDescriptionEditText;
+    private TextInputEditText episodeDateEditText;
     private Spinner episodePeriodSpinner;
 
     private EpisodeViewModel model;
@@ -39,12 +42,15 @@ public class WhenFragment extends Fragment {
 
         model = ViewModelProviders.of(this.getActivity()).get(EpisodeViewModel.class);
 
-        View rootView = inflater.inflate(R.layout.when_ask_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_when_ask, container, false);
 
-        episodeEditText = (EditText)rootView.findViewById(R.id.episode_name_edit_view);
-        episodeDescriptionEditText = (EditText)rootView.findViewById(R.id.episode_description_edit_view);
-        episodeDateEditText = (EditText)rootView.findViewById(R.id.episode_date_edit_text);
-        episodePeriodSpinner = (Spinner)rootView.findViewById(R.id.episode_period_spinner);
+        setupFAB(container);
+
+        episodeTextInputLayout = rootView.findViewById(R.id.episodeTextInputLayout);
+        episodeEditText = rootView.findViewById(R.id.episode_name_edit_view);
+        episodeDescriptionEditText = rootView.findViewById(R.id.episode_description_edit_view);
+        episodeDateEditText = rootView.findViewById(R.id.episode_date_edit_text);
+        episodePeriodSpinner = rootView.findViewById(R.id.episode_period_spinner);
 
         Episode e = model.getEpisode().getValue();
 
@@ -56,6 +62,29 @@ public class WhenFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    private void setupFAB(ViewGroup container){
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)container.getParent();
+        FloatingActionButton saveEpisodeFab = coordinatorLayout.findViewById(R.id.saveEpisodeFab);
+        saveEpisodeFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEpisode();
+            }
+        });
+    }
+
+    private void saveEpisode(){
+        String newEpisodeName = episodeEditText.getText().toString();
+
+        if (!newEpisodeName.isEmpty()){
+            episodeTextInputLayout.setError(null); // hide error
+            model.saveEpisode();
+        } else{
+            episodeTextInputLayout.setError("Episode is required!"); // show error
+        }
+
     }
 
     private void loadFragmentFromViewModel(@NonNull Episode e){
@@ -74,179 +103,7 @@ public class WhenFragment extends Fragment {
     private void setupViewListeners(){
         episodeEditText.addTextChangedListener(new EpisodeTextWatcher(model));
         episodeDescriptionEditText.addTextChangedListener(new EpisodeDescriptionTextWatcher(model));
-        episodeDateEditText.setOnClickListener(new EpisodeDateOnClick(model));
+        episodeDateEditText.setOnClickListener(new EpisodeDateOnClick(model,episodeDateEditText));
         episodePeriodSpinner.setOnItemSelectedListener(new OnItemSelectedListenerEpisodePeriod(model));
     }
-
-
-
-/*
-    private void setupEpisodeDescription(View rootView,EpisodeViewModel model){
-
-
-
-        if (!episodeDescription.isEmpty()){
-            episodeDescriptionEditText.setText(episodeDescription);
-        }
-
-        episodeDescriptionEditText.addTextChangedListener(new EpisodeDescriptionTextWatcher(model));
-    }
-
-    private void setupEpisodeDate(View rootView,EpisodeViewModel model){
-
-        String episodeDate = model.getDate();
-
-        if (!episodeDate.isEmpty()){
-            episodeDateEditText.setText(episodeDate);
-        }
-
-        episodeDateEditText.addTextChangedListener(new EpisodeDateTextWatcher(model));
-    }
-
-    private void setupEpisodePeriod(View rootView,EpisodeViewModel model){
-
-        String episodePeriod = model.getPeriod();
-
-        if (!episodePeriod.isEmpty()){
-            episodePeriodSpinner.setSelection(((ArrayAdapter)episodePeriodSpinner.getAdapter()).getPosition(episodePeriod));
-        }
-
-        episodePeriodSpinner.setOnItemSelectedListener(new OnItemSelectedListenerEpisodePeriod(model));
-    }
-    */
-
-    //
-    // LISTENERS
-    //
-
-    private class EpisodeTextWatcher implements TextWatcher {
-
-        private EpisodeViewModel model;
-
-        public EpisodeTextWatcher(EpisodeViewModel model){
-            this.model = model;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            Episode e = model.getEpisode().getValue();
-            e.setEpisode(s.toString());
-            model.setModifiableEpisodeCopy(e);
-        }
-    }
-
-    private class EpisodeDescriptionTextWatcher implements TextWatcher {
-
-        private EpisodeViewModel model;
-
-        public EpisodeDescriptionTextWatcher(EpisodeViewModel model){
-            this.model = model;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            Episode e = model.getEpisode().getValue();
-            e.setDescription(s.toString());
-            model.setModifiableEpisodeCopy(e);
-        }
-    }
-
-    private class EpisodeDateOnDateSetListener implements DatePickerDialog.OnDateSetListener{
-        EpisodeViewModel model;
-
-        EpisodeDateOnDateSetListener(EpisodeViewModel model){
-            this.model = model;
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Episode e = model.getEpisode().getValue();
-            Calendar c = Calendar.getInstance();
-            c.set(year,month,dayOfMonth);
-            e.setDate(c.getTime());
-            model.setModifiableEpisodeCopy(e);
-            episodeDateEditText.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime()));
-        }
-    }
-
-    private class EpisodeDateOnClick implements View.OnClickListener {
-
-        EpisodeViewModel model;
-
-        EpisodeDateOnClick(EpisodeViewModel model){
-            this.model = model;
-        }
-
-        @Override
-        public void onClick(View v) {
-            final Calendar c = Calendar.getInstance();
-            DatePickerDialog dialog = new DatePickerDialog(v.getContext(), new EpisodeDateOnDateSetListener(this.model), c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-            dialog.show();
-        }
-    }
-
-
-    /*
-    private class EpisodeDateTextWatcher implements TextWatcher {
-
-        private EpisodeViewModel model;
-
-        public EpisodeDateTextWatcher(EpisodeViewModel model){
-            this.model = model;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            Episode e = model.getEpisode().getValue();
-            e.setDate(new Date(s.toString()));
-            model.setModifiableEpisodeCopy(e);
-        }
-    }
-    */
-
-    private class OnItemSelectedListenerEpisodePeriod implements AdapterView.OnItemSelectedListener {
-
-        private EpisodeViewModel model;
-
-        public OnItemSelectedListenerEpisodePeriod(EpisodeViewModel model){
-            this.model = model;
-        }
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String period = parent.getItemAtPosition(position).toString();
-            Episode e = model.getEpisode().getValue();
-            e.setPeriod(period);
-            model.setModifiableEpisodeCopy(e);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-    }
-
 }

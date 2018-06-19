@@ -1,22 +1,24 @@
 package com.example.myapplication.listeners;
 
-import android.app.Activity;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
-import com.example.myapplication.R;
 import com.example.myapplication.activities.AddNewBeliefActivity;
-import com.example.myapplication.activities.AddNewReactionActivity;
 import com.example.myapplication.activities.AsksActivity;
+import com.example.myapplication.adapters.BeliefRVAdapter;
 import com.example.myapplication.adapters.EpisodesRVAdapter;
-import com.example.myapplication.adapters.ReactionRVAdapter;
 import com.example.myapplication.auxiliaries.Constants;
+import com.example.myapplication.messages.OpenEditArgumentDialogEvent;
+import com.example.myapplication.messages.OpenEditObjectionDialogEvent;
+import com.example.myapplication.messages.OpenEditReactionDialogEvent;
+import com.example.myapplication.persistence.entity.Argument;
 import com.example.myapplication.persistence.entity.Belief;
 import com.example.myapplication.persistence.entity.Episode;
+import com.example.myapplication.persistence.entity.Objection;
 import com.example.myapplication.persistence.entity.Reaction;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -25,6 +27,8 @@ public class EditListener implements View.OnClickListener{
     private List<Reaction> reactions;
     private List<Belief> beliefs;
     private List<Episode> episodes;
+    private List<Argument> arguments;
+    private List<Objection> objections;
 
     @Override
     public void onClick(View v) {
@@ -37,6 +41,14 @@ public class EditListener implements View.OnClickListener{
             } else{
                 if(episodes != null){
                     startEditEpisodeActivity(v);
+                } else{
+                    if(arguments != null){
+                        startEditArgumentActivity(v);
+                    } else{
+                        if(objections != null){
+                            startEditObjectionActivity(v);
+                        }
+                    }
                 }
             }
         }
@@ -45,33 +57,21 @@ public class EditListener implements View.OnClickListener{
     private void startEditReactionActivity(View v){
         RecyclerView recyclerView = (RecyclerView) v.getParent();
         int position = recyclerView.getChildAdapterPosition(v);
-        Reaction reaction = ((ReactionRVAdapter)recyclerView.getAdapter()).getItem(position);
-
-        if (reaction != null){
-            Intent intent = new Intent(v.getContext(), AddNewReactionActivity.class);
-            intent.putExtra(Constants.ARG_REACTION, reaction.getId());
-            v.getContext().startActivity(intent);
-        }
-
-
-        /*
-        int position;
-        Intent intent;
-
-        position = ((RecyclerView)v.getParent()).getChildAdapterPosition(v);
-        intent = new Intent(v.getContext(), AddNewReactionActivity.class);
-        //intent.putExtra( Constants.ARG_REACTION, reactions.get(position).parseToJSONObject().toString() );
-        //intent.putExtra( Constants.ARG_REACTION_POSITION, position );
-        ((Activity)v.getContext()).startActivityForResult(intent, Constants.REQUEST_EDIT_REACTION);
-        */
+        EventBus.getDefault().post(new OpenEditReactionDialogEvent(position));
     }
 
     private void startEditBeliefActivity(View v){
-        int position;
-        Intent intent;
+        RecyclerView recyclerView = (RecyclerView) v.getParent();
+        int position = recyclerView.getChildAdapterPosition(v);
+        Belief belief = ((BeliefRVAdapter)recyclerView.getAdapter()).getItem(position);
 
-        intent = new Intent(v.getContext(), AddNewBeliefActivity.class);
-        ((Activity)((ContextWrapper) v.getContext()).getBaseContext()).startActivityForResult(intent, Constants.REQUEST_NEW_BELIEF);
+        if (belief != null){
+            Intent intent = new Intent(v.getContext(), AddNewBeliefActivity.class);
+            intent.putExtra(Constants.ARG_BELIEF, belief.getId());
+            v.getContext().startActivity(intent);
+        }else{
+            //err
+        }
     }
 
     private void startEditEpisodeActivity(View v){
@@ -88,6 +88,19 @@ public class EditListener implements View.OnClickListener{
 
     }
 
+    private void startEditArgumentActivity(View v){
+        RecyclerView recyclerView = (RecyclerView) v.getParent();
+        int position = recyclerView.getChildAdapterPosition(v);
+        EventBus.getDefault().post(new OpenEditArgumentDialogEvent(position));
+    }
+
+    private void startEditObjectionActivity(View v){
+        RecyclerView recyclerView = (RecyclerView) v.getParent();
+        int position = recyclerView.getChildAdapterPosition(v);
+        EventBus.getDefault().post(new OpenEditObjectionDialogEvent(position));
+    }
+
+
     public EditListener(){
     }
 
@@ -103,5 +116,12 @@ public class EditListener implements View.OnClickListener{
         this.episodes = episodes;
     }
 
+    public void setArguments(List<Argument> arguments) {
+        this.arguments = arguments;
+    }
+
+    public void setObjections(List<Objection> objections) {
+        this.objections = objections;
+    }
 
 }

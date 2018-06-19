@@ -1,6 +1,5 @@
 package com.example.myapplication.adapters;
 
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.listeners.EditListener;
 import com.example.myapplication.persistence.entity.Episode;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +19,16 @@ public class EpisodesRVAdapter extends RecyclerView.Adapter<EpisodesRVAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mTextView;
+        public TextView episodeTextView;
+        public TextView episodeDateTextView;
+        public TextView episodePeriodTextView;
+
+
         public ViewHolder(View v) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.episodeNameTextView);
+            episodeTextView = (TextView) v.findViewById(R.id.episodeNameTextView);
+            episodeDateTextView = (TextView) v.findViewById(R.id.episodeDateTextView);
+            episodePeriodTextView = (TextView) v.findViewById(R.id.episodePeriodTextView);
         }
     }
 
@@ -39,7 +45,7 @@ public class EpisodesRVAdapter extends RecyclerView.Adapter<EpisodesRVAdapter.Vi
     @Override
     public EpisodesRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.episode_text_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view_episode, parent, false);
 
         setItemListeners(v);
 
@@ -49,9 +55,9 @@ public class EpisodesRVAdapter extends RecyclerView.Adapter<EpisodesRVAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(this.episodes.get(position).getEpisode());
-
-
+        holder.episodeTextView.setText(this.episodes.get(position).getEpisode());
+        holder.episodeDateTextView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(this.episodes.get(position).getDate()));
+        holder.episodePeriodTextView.setText(this.episodes.get(position).getPeriod());
     }
 
     @Override
@@ -68,10 +74,8 @@ public class EpisodesRVAdapter extends RecyclerView.Adapter<EpisodesRVAdapter.Vi
     }
 
     private void setItemListeners(View v){
-        //ConstraintLayout cl = (ConstraintLayout) v.findViewById(R.id.episodeConstraintLayout);
         EditListener editListener = new EditListener();
         editListener.setEpisodes(this.episodes);
-        //cl.setOnClickListener(editListener);
         v.setOnClickListener(editListener);
     }
 }

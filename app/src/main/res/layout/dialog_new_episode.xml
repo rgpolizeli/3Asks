@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/inputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        app:hintTextAppearance="@style/MyHintText"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorMessageTextStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/episodeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Episode Name"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/episodePeriodSpinner"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:entries="@array/episode_period_array"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/episodeDateTextInputLayout"
+        app:layout_constraintStart_toEndOf="@+id/episodeDateTextInputLayout"
+        app:layout_constraintTop_toTopOf="@+id/episodeDateTextInputLayout" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/episodeDateTextInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        app:hintTextAppearance="@style/MyHintText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputLayout">
+
+        <EditText
+            android:id="@+id/episodeDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="7"
+            android:hint="@string/episode_date_hint"
+            android:inputType="date" />
+    </android.support.design.widget.TextInputLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

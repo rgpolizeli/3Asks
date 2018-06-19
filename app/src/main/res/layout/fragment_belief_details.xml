@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="insideOverlay"
+       >
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/beliefTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/MyHintText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/beliefEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Belief"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@color/errorColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/belief_text_view" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/thinking_styles_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/textInputLayoutSpace"
+                android:paddingLeft="5dp"
+                android:text="@string/unhelpful_thinking_styles_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/beliefTextInputLayout"
+                />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/buttonsConstraintLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thinking_styles_text_view">
+
+                <Button
+                    android:id="@+id/fortune_telling_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_predictive_thinking_label"
+                    app:layout_constraintStart_toEndOf="@+id/generalisation_button"
+                    app:layout_constraintTop_toBottomOf="@+id/negative_focusing_button" />
+
+                <Button
+                    android:id="@+id/personalisation_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_personalisation_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pressuring_button" />
+
+                <Button
+                    android:id="@+id/others_empowerment_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_others_empowerment_label"
+                    app:layout_constraintStart_toEndOf="@+id/pressuring_button"
+                    app:layout_constraintTop_toBottomOf="@+id/fortune_telling_button" />
+
+                <Button
+                    android:id="@+id/pressuring_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_shoulding_musting_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/generalisation_button" />
+
+                <Button
+                    android:id="@+id/generalisation_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_overgeneralisation_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/comparation_button" />
+
+                <Button
+                    android:id="@+id/negative_focusing_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_mental_filter_label"
+                    app:layout_constraintStart_toEndOf="@+id/comparation_button"
+                    app:layout_constraintTop_toBottomOf="@+id/catastrophising_button" />
+
+                <Button
+                    android:id="@+id/catastrophising_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_catastrophising_label"
+                    app:layout_constraintStart_toEndOf="@+id/radicalisation_button"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/labeling_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_labeling_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/personalisation_button" />
+
+                <Button
+                    android:id="@+id/mind_reading_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_mind_reading_label"
+                    app:layout_constraintStart_toEndOf="@+id/personalisation_button"
+                    app:layout_constraintTop_toBottomOf="@+id/others_empowerment_button" />
+
+                <Button
+                    android:id="@+id/comparation_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:text="@string/unhelpful_thinking_style_magnification_minimisation_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/radicalisation_button" />
+
+                <Button
+                    android:id="@+id/radicalisation_button"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/unhelpful_thinking_style_button"
+                    android:focusableInTouchMode="false"
+                    android:longClickable="false"
+                    android:text="@string/unhelpful_thinking_style_black_white_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>

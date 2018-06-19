@@ -2,14 +2,25 @@ package com.example.myapplication.persistence.asynctask;
 
 import android.os.AsyncTask;
 
+import com.example.myapplication.auxiliaries.Constants;
+import com.example.myapplication.messages.CreatedReactionEvent;
+import com.example.myapplication.messages.CreatingReactionEvent;
 import com.example.myapplication.persistence.dao.ArgumentDao;
 import com.example.myapplication.persistence.entity.Argument;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class insertArgumentAsyncTask extends AsyncTask<Argument, Void, Long> {
     private ArgumentDao mAsyncTaskDao;
 
-    insertArgumentAsyncTask(ArgumentDao dao) {
+    public insertArgumentAsyncTask(ArgumentDao dao) {
         mAsyncTaskDao = dao;
+    }
+
+    @Override
+    protected void onPreExecute(){
+        super.onPreExecute();
+        //EventBus.getDefault().post(new CreatingReactionEvent(Constants.START_CREATE_REACTION_MESSAGE));
     }
 
     @Override
@@ -19,8 +30,8 @@ public class insertArgumentAsyncTask extends AsyncTask<Argument, Void, Long> {
     }
 
     @Override
-    protected void onPostExecute(Long result) {
-        super.onPostExecute(result);
-
+    protected void onPostExecute(Long argumentId) {
+        super.onPostExecute(argumentId);
+        //EventBus.getDefault().post(new CreatedReactionEvent(argumentId.intValue()));
     }
 }
