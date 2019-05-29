@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainCoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:theme="@style/Widget.Design.CoordinatorLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context=".activities.MainActivity">
+    android:fitsSystemWindows="true">
 
     <ProgressBar
         android:id="@+id/indeterminateBar"
@@ -14,51 +13,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/episodesRecyclerView" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_weight="1"
         android:layout_gravity="top"
+        android:layout_weight="1"
         android:background="?attr/colorPrimary"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:popupTheme="@style/ThemeOverlay.AppCompat" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/episodesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="?attr/actionBarSize"
         android:scrollbars="vertical"
-        android:theme="@style/Widget.Design.CoordinatorLayout"
+        android:theme="@style/Widget.Support.CoordinatorLayout"
         tools:listitem="@layout/item_recycler_view_episode" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addEpisodeFAB"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newEpisodeFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="showNewEpisodeDialog"
         android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-</android.support.design.widget.CoordinatorLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

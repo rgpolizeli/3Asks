@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/reaction_constraintLayout"
     android:layout_width="match_parent"
@@ -16,10 +16,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="5"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:fontFamily="@font/roboto"
         app:layout_constraintBottom_toTopOf="@+id/reaction_class_text_view"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,4 +35,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reaction_text_view" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

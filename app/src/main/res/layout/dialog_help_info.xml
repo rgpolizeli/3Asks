@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/helpInfoDialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/helpInfoDialogTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="@string/help_info_dialog_title"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/helpInfoDialogCloseImageButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/ic_close_white_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/helpInfoDialogTitleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/websiteTextView"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_public_black_24dp"
+        android:drawableLeft="@drawable/ic_public_black_24dp"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="fill_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/help_info_dialog_website_label"
+        android:textSize="16sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/helpInfoDialogTitleTextView" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+
+    <TextView
+        android:id="@+id/howItWorksTextView"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_help_outline_grey_24dp"
+        android:drawableLeft="@drawable/ic_help_outline_grey_24dp"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="fill_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/help_info_dialog_how_it_works_label"
+        android:textSize="16sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/howItWorksTextView" />
+
+    <TextView
+        android:id="@+id/exampleOfUseTextView"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_help_outline_grey_24dp"
+        android:drawableLeft="@drawable/ic_help_outline_grey_24dp"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="fill_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/help_info_dialog_example_label"
+        android:textSize="16sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exampleOfUseTextView" />
+
+    <TextView
+        android:id="@+id/termsOfUseTextView"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_info_outline_grey_24dp"
+        android:drawableLeft="@drawable/ic_info_outline_grey_24dp"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="fill_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/help_info_dialog_terms_of_use_label"
+        android:textSize="16sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/termsOfUseTextView" />
+
+    <TextView
+        android:id="@+id/privacyPolicyTextView"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_info_outline_grey_24dp"
+        android:drawableLeft="@drawable/ic_info_outline_grey_24dp"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="fill_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/help_info_dialog_privacy_policy_label"
+        android:textSize="16sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/privacyPolicyTextView" />
+
+    <TextView
+        android:id="@+id/contactTextView"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_email_grey_24dp"
+        android:drawableLeft="@drawable/ic_email_grey_24dp"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="fill_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/help_info_dialog_contact_label"
+        android:textSize="16sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider6" />
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contactTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
