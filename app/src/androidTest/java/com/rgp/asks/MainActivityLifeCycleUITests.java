@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityLifeCycleUITests {
     @Test
-    public void afterActivityOnCreate_ShowLoadingBar(){
+    public void afterActivityOnCreate_ShowLoadingBar() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
 
         onView(withId(R.id.indeterminateBar)).check(matches(isDisplayed()));

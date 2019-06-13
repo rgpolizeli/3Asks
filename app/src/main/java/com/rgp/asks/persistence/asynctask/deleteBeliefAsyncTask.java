@@ -30,7 +30,7 @@ public class deleteBeliefAsyncTask extends AsyncTask<Belief, Void, Integer> {
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        EventBus.getDefault().post(new DeletedBeliefEvent(result==1, deletedBeliefId));
+        EventBus.getDefault().post(new DeletedBeliefEvent(result == 1, deletedBeliefId));
     }
 }
 

@@ -15,6 +15,9 @@ import java.util.List;
 public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHolder> {
     private List<Belief> beliefs;
 
+    public BeliefRVAdapter() {
+    }
+
     @Override
     public BeliefRVAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                          int viewType) {
@@ -27,28 +30,16 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
         return vh;
     }
 
-    public BeliefRVAdapter() {
-    }
-
     public void setBeliefs(List<Belief> beliefs) {
         this.beliefs = beliefs;
         notifyDataSetChanged();
     }
 
     public Belief getItem(int position) {
-        if (this.beliefs == null){
+        if (this.beliefs == null) {
             return null;
-        } else{
+        } else {
             return beliefs.get(position);
-        }
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView beliefTextView;
-
-        public ViewHolder(View v) {
-            super(v);
-            beliefTextView = v.findViewById(com.rgp.asks.R.id.beliefTextView);
         }
     }
 
@@ -63,9 +54,18 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
         else return this.beliefs.size();
     }
 
-    private void setItemListeners(View v){
+    private void setItemListeners(View v) {
         EditListener editListener = new EditListener();
         editListener.setBeliefs(this.beliefs);
         v.setOnClickListener(editListener);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView beliefTextView;
+
+        public ViewHolder(View v) {
+            super(v);
+            beliefTextView = v.findViewById(com.rgp.asks.R.id.beliefTextView);
+        }
     }
 }

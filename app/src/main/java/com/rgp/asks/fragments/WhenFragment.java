@@ -53,9 +53,9 @@ public class WhenFragment extends Fragment {
 
         Episode e = model.getEpisode().getValue();
 
-        if(e == null){
+        if (e == null) {
             new Exception();
-        } else{
+        } else {
             loadFragmentFromViewModel(e);
             setupViewListeners();
         }
@@ -63,8 +63,8 @@ public class WhenFragment extends Fragment {
         return rootView;
     }
 
-    private void setupFAB(ViewGroup container){
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)container.getParent();
+    private void setupFAB(ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton saveEpisodeFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
         saveEpisodeFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,19 +74,19 @@ public class WhenFragment extends Fragment {
         });
     }
 
-    private void saveEpisode(){
+    private void saveEpisode() {
         String newEpisodeName = episodeEditText.getText().toString();
 
-        if (!newEpisodeName.isEmpty()){
+        if (!newEpisodeName.isEmpty()) {
             episodeTextInputLayout.setError(null); // hide error
             model.uncheckedSaveEpisode();
-        } else{
+        } else {
             episodeTextInputLayout.setError("Episode is required!"); // show error
         }
 
     }
 
-    private void loadFragmentFromViewModel(@NonNull Episode e){
+    private void loadFragmentFromViewModel(@NonNull Episode e) {
         String episode = e.getEpisode();
         String episodeDescription = e.getDescription();
         Date episodeDate = e.getDate();
@@ -97,14 +97,14 @@ public class WhenFragment extends Fragment {
         episodeDateEditText.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(episodeDate));
 
         //episodePeriodSpinner.setSelection(((ArrayAdapter)episodePeriodSpinner.getAdapter()).getPosition(episodePeriod));
-        episodePeriodSpinner.setSelection( getPositionInSpinnerAdapter(episodePeriodSpinner.getAdapter(), episodePeriod) );
+        episodePeriodSpinner.setSelection(getPositionInSpinnerAdapter(episodePeriodSpinner.getAdapter(), episodePeriod));
 
     }
 
-    private int getPositionInSpinnerAdapter(SpinnerAdapter spinnerAdapter, String item){
-        if (spinnerAdapter != null){
-            for (int i = 0; i < spinnerAdapter.getCount(); i++){
-                if (spinnerAdapter.getItem(i).toString().equals(item)){
+    private int getPositionInSpinnerAdapter(SpinnerAdapter spinnerAdapter, String item) {
+        if (spinnerAdapter != null) {
+            for (int i = 0; i < spinnerAdapter.getCount(); i++) {
+                if (spinnerAdapter.getItem(i).toString().equals(item)) {
                     return i;
                 }
             }
@@ -112,10 +112,10 @@ public class WhenFragment extends Fragment {
         return 0;
     }
 
-    private void setupViewListeners(){
+    private void setupViewListeners() {
         episodeEditText.addTextChangedListener(new EpisodeTextWatcher(model));
         episodeDescriptionEditText.addTextChangedListener(new EpisodeDescriptionTextWatcher(model));
-        episodeDateEditText.setOnClickListener(new EpisodeDateOnClick(model,episodeDateEditText));
+        episodeDateEditText.setOnClickListener(new EpisodeDateOnClick(model, episodeDateEditText));
         episodePeriodSpinner.setOnItemSelectedListener(new OnItemSelectedListenerEpisodePeriod(model));
     }
 }

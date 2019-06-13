@@ -30,15 +30,14 @@ import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
 public class GetThinkingStylesForBeliefTest {
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule =
+            new InstantTaskExecutorRule();
     private BeliefThinkingStyleDao beliefThinkingStyleDao;
     private EpisodeDao episodeDao;
     private BeliefDao beliefDao;
     private ThinkingStyleDao thinkingStyleDao;
     private AppRoomDatabase mDb;
-
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule =
-            new InstantTaskExecutorRule();
 
     @Before
     public void createDb() {
@@ -79,9 +78,9 @@ public class GetThinkingStylesForBeliefTest {
 
         LiveData<List<ThinkingStyle>> thinkingStylesForBelief = beliefThinkingStyleDao.getThinkingStylesForBelief(bId.intValue());
         thinkingStylesForBelief.observeForever(thinkingStyles -> {
-                assert(thinkingStyles != null);
-                assert(thinkingStyles.size() == 2);
-            }
+                    assert (thinkingStyles != null);
+                    assert (thinkingStyles.size() == 2);
+                }
         );
     }
 }

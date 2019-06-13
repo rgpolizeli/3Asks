@@ -30,7 +30,7 @@ public class BeliefDetailsFragment extends Fragment {
     private BeliefViewModel model;
     private TextInputLayout beliefTextInputLayout;
     private TextInputEditText thoughtEditText;
-    private Map<Button,ThinkingStyle> thinkingStyleButtonsMap;
+    private Map<Button, ThinkingStyle> thinkingStyleButtonsMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,10 +47,10 @@ public class BeliefDetailsFragment extends Fragment {
 
         Belief b = model.getModifiableBeliefCopy();
         List<ThinkingStyle> selectedThinkingStyles = model.getModifiableSelectedThinkingStylesCopy();
-        if(b == null || selectedThinkingStyles==null){
+        if (b == null || selectedThinkingStyles == null) {
             new Exception();
-        } else{
-            loadFragmentFromViewModel(b,selectedThinkingStyles);
+        } else {
+            loadFragmentFromViewModel(b, selectedThinkingStyles);
         }
 
         /*
@@ -70,8 +70,8 @@ public class BeliefDetailsFragment extends Fragment {
         return rootView;
     }
 
-    private void setupFAB(ViewGroup container){
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)container.getParent();
+    private void setupFAB(ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton saveBeliefFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveBeliefFab);
         saveBeliefFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,25 +81,25 @@ public class BeliefDetailsFragment extends Fragment {
         });
     }
 
-    private void saveBelief(){
+    private void saveBelief() {
         String newBeliefName = thoughtEditText.getText().toString();
 
-        if (!newBeliefName.isEmpty()){
+        if (!newBeliefName.isEmpty()) {
             beliefTextInputLayout.setError(null); // hide error
             model.uncheckedSaveBelief();
-        } else{
+        } else {
             beliefTextInputLayout.setError("Belief is required!"); // show error
         }
 
     }
 
-    private void loadFragmentFromViewModel(@NonNull final Belief b, @NonNull final List<ThinkingStyle> selectedThinkingStyles){
+    private void loadFragmentFromViewModel(@NonNull final Belief b, @NonNull final List<ThinkingStyle> selectedThinkingStyles) {
         setupThought(b.getBelief());
         setupSelectUnhelpfulThinkingStyles(selectedThinkingStyles);
     }
 
-    private Map<Button,ThinkingStyle> getUnhelpfulThinkingStylesButtons(View rootView){
-        Map<Button,ThinkingStyle> buttonsMap = new HashMap<>();
+    private Map<Button, ThinkingStyle> getUnhelpfulThinkingStylesButtons(View rootView) {
+        Map<Button, ThinkingStyle> buttonsMap = new HashMap<>();
         List<Button> buttonsList = new ArrayList<>();
 
         buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.radicalisation_button));
@@ -114,28 +114,28 @@ public class BeliefDetailsFragment extends Fragment {
         buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.mind_reading_button));
         buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.labeling_button));
 
-        for(Button button : buttonsList){
-            buttonsMap.put(button,new ThinkingStyle(button.getText().toString()));
+        for (Button button : buttonsList) {
+            buttonsMap.put(button, new ThinkingStyle(button.getText().toString()));
         }
 
         return buttonsMap;
     }
 
 
-    private void setupSelectUnhelpfulThinkingStyles(@NonNull final List<ThinkingStyle> selectedThinkingStyles){
+    private void setupSelectUnhelpfulThinkingStyles(@NonNull final List<ThinkingStyle> selectedThinkingStyles) {
 
-        for (Button button : thinkingStyleButtonsMap.keySet()){
+        for (Button button : thinkingStyleButtonsMap.keySet()) {
             button.setOnClickListener(new OnClickListenerUnhelpfulThinkingStyleButton(selectedThinkingStyles));
 
-            if(selectedThinkingStyles.contains(thinkingStyleButtonsMap.get(button))){
+            if (selectedThinkingStyles.contains(thinkingStyleButtonsMap.get(button))) {
                 button.setSelected(Boolean.TRUE);
             }
         }
 
     }
 
-    private void setupThought(String thought){
-        if (!thought.isEmpty()){
+    private void setupThought(String thought) {
+        if (!thought.isEmpty()) {
             thoughtEditText.setText(thought);
         }
 
@@ -150,19 +150,19 @@ public class BeliefDetailsFragment extends Fragment {
 
         List<ThinkingStyle> selectedThinkingStyles;
 
-        public OnClickListenerUnhelpfulThinkingStyleButton(@NonNull final List<ThinkingStyle> selectedThinkingStyles){
+        public OnClickListenerUnhelpfulThinkingStyleButton(@NonNull final List<ThinkingStyle> selectedThinkingStyles) {
             this.selectedThinkingStyles = selectedThinkingStyles;
         }
 
         @Override
         public void onClick(View v) {
 
-            Button button = (Button)v;
+            Button button = (Button) v;
 
-            if(!button.isSelected()){
+            if (!button.isSelected()) {
                 button.setSelected(Boolean.TRUE);
                 model.addUnhelpfulThinkingStyle(thinkingStyleButtonsMap.get(button));
-            } else{
+            } else {
                 button.setSelected(Boolean.FALSE);
                 model.removeUnhelpfulThinkingStyle(thinkingStyleButtonsMap.get(button));
             }
@@ -173,7 +173,7 @@ public class BeliefDetailsFragment extends Fragment {
 
     private class ThoughtTextWatcher implements TextWatcher {
 
-        public ThoughtTextWatcher(){
+        public ThoughtTextWatcher() {
         }
 
         @Override

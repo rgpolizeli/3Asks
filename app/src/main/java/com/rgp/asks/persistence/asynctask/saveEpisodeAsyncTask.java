@@ -25,7 +25,7 @@ public class saveEpisodeAsyncTask extends AsyncTask<Episode, Void, Integer> {
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        if (result==1){
+        if (result == 1) {
             EventBus.getDefault().post(new SavedEditedEpisodeEvent(Constants.SAVED_EDITED_EPISODE_MESSAGE));
         }
     }

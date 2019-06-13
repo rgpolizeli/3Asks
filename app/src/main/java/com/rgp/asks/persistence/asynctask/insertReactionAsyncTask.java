@@ -18,7 +18,7 @@ public class insertReactionAsyncTask extends AsyncTask<Reaction, Void, Long> {
     }
 
     @Override
-    protected void onPreExecute(){
+    protected void onPreExecute() {
         super.onPreExecute();
         EventBus.getDefault().post(new CreatingReactionEvent(Constants.START_CREATE_REACTION_MESSAGE));
     }

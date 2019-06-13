@@ -58,7 +58,7 @@ public class WhyFragment extends Fragment {
 
         newBeliefDialog = createNewEpisodeInputDialog();
 
-        CoordinatorLayout coordinatorLayout2 = (CoordinatorLayout)container.getParent();
+        CoordinatorLayout coordinatorLayout2 = (CoordinatorLayout) container.getParent();
         FloatingActionButton beliefsFab = coordinatorLayout2.findViewById(com.rgp.asks.R.id.addBeliefFab);
         beliefsFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +84,7 @@ public class WhyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private AlertDialog createNewEpisodeInputDialog(){
+    private AlertDialog createNewEpisodeInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
@@ -97,35 +97,31 @@ public class WhyFragment extends Fragment {
         return dialog;
     }
 
-    private void showNewBeliefDialog(){
+    private void showNewBeliefDialog() {
         this.newBeliefDialog.show();
         final AlertDialog dialog = this.newBeliefDialog;
 
-        this.newBeliefDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newBeliefDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 EditText beliefEditText = dialog.findViewById(com.rgp.asks.R.id.thoughtEditText);
                 String newBelief = beliefEditText.getText().toString();
 
-                if(newBelief.isEmpty()){
+                if (newBelief.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.newEpisodeNameTextInputLayout);
                     inputLayout.setError("Thought is required!"); // show error
-                } else{
+                } else {
                     model.createBelief(newBelief);
                     clearEpisodeDialog(dialog);
                     dialog.dismiss();
                 }
             }
         });
-        this.newBeliefDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newBeliefDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearEpisodeDialog(dialog);
                 dialog.cancel();
             }
@@ -133,7 +129,7 @@ public class WhyFragment extends Fragment {
     }
 
 
-    private void clearEpisodeDialog(AlertDialog dialog){
+    private void clearEpisodeDialog(AlertDialog dialog) {
         TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.newEpisodeNameTextInputLayout);
         EditText beliefEditText = dialog.findViewById(com.rgp.asks.R.id.thoughtEditText);
 
@@ -141,7 +137,7 @@ public class WhyFragment extends Fragment {
         beliefEditText.setText("");
     }
 
-    private void createUnsavedDialog(@NonNull final int beliefPositionInRecyclerView){
+    private void createUnsavedDialog(@NonNull final int beliefPositionInRecyclerView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
         builder
@@ -174,15 +170,15 @@ public class WhyFragment extends Fragment {
         //startEditBeliefActivity(event.beliefId);
     }
 
-    private void startEditBeliefActivity(@NonNull final int beliefPositionInRecyclerView){
+    private void startEditBeliefActivity(@NonNull final int beliefPositionInRecyclerView) {
 
-        Belief belief = ((BeliefRVAdapter)beliefsRecyclerView.getAdapter()).getItem(beliefPositionInRecyclerView);
+        Belief belief = ((BeliefRVAdapter) beliefsRecyclerView.getAdapter()).getItem(beliefPositionInRecyclerView);
 
-        if (belief != null){
+        if (belief != null) {
             Intent intent = new Intent(this.getActivity(), AddNewBeliefActivity.class);
             intent.putExtra(Constants.ARG_BELIEF, belief.getId());
             startActivity(intent);
-        }else{
+        } else {
             //err
         }
 
@@ -194,7 +190,7 @@ public class WhyFragment extends Fragment {
         //if (model.episodeWasChanged()){
         //    createUnsavedDialog(event.beliefPositionInRecyclerView);
         //} else{
-            startEditBeliefActivity(event.beliefPositionInRecyclerView);
+        startEditBeliefActivity(event.beliefPositionInRecyclerView);
         //}
     }
 }

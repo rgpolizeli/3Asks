@@ -16,7 +16,7 @@ public class insertEpisodeAsyncTask extends AsyncTask<Episode, Void, Long> {
     }
 
     @Override
-    protected void onPreExecute(){
+    protected void onPreExecute() {
         super.onPreExecute();
     }
 

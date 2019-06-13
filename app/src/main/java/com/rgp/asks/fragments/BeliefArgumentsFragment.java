@@ -56,7 +56,7 @@ public class BeliefArgumentsFragment extends Fragment {
         return rootView;
     }
 
-    private void setupRecyclerView(View rootView){
+    private void setupRecyclerView(View rootView) {
         argumentsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.argumentRV);
         LinearLayoutManager argumentsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         argumentsRecyclerView.setLayoutManager(argumentsRecyclerViewLayoutManager);
@@ -64,8 +64,8 @@ public class BeliefArgumentsFragment extends Fragment {
         argumentsRecyclerView.setAdapter(argumentsRecyclerViewAdapter);
     }
 
-    private void setupFAB(ViewGroup container){
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)container.getParent();
+    private void setupFAB(ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton argumentsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addArgumentFab);
         argumentsFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +75,7 @@ public class BeliefArgumentsFragment extends Fragment {
         });
     }
 
-    private void initViewModel(){
+    private void initViewModel() {
         model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
         model.getArguments().observe(this, new Observer<List<Argument>>() {
             @Override
@@ -85,26 +85,26 @@ public class BeliefArgumentsFragment extends Fragment {
         });
     }
 
-    private void initDialogs(){
+    private void initDialogs() {
         newArgumentDialog = createNewArgumentDialog();
         editArgumentDialog = createEditArgumentDialog();
     }
 
-    private AlertDialog createEditArgumentDialog(){
+    private AlertDialog createEditArgumentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
         builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_argument, null))
                 .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete",null)
+                .setNeutralButton("Delete", null)
                 .setTitle("Edit the argument");
 
         AlertDialog dialog = builder.create();
         return dialog;
     }
 
-    private AlertDialog createNewArgumentDialog(){
+    private AlertDialog createNewArgumentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
@@ -118,61 +118,55 @@ public class BeliefArgumentsFragment extends Fragment {
         return dialog;
     }
 
-    private void showNewArgumentDialog(){
+    private void showNewArgumentDialog() {
         this.newArgumentDialog.show();
         final AlertDialog dialog = this.newArgumentDialog;
 
-        this.newArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 TextInputEditText argumentEditText = dialog.findViewById(com.rgp.asks.R.id.argumentEditText);
                 String newArgument = argumentEditText.getText().toString();
 
-                if(newArgument.isEmpty()){
+                if (newArgument.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
                     inputLayout.setError("Argument is required!"); // show error
-                } else{
+                } else {
                     model.createArgument(newArgument);
                     clearArgumentDialog(dialog);
                     dialog.dismiss();
                 }
             }
         });
-        this.newArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearArgumentDialog(dialog);
                 dialog.cancel();
             }
         });
     }
 
-    private void showEditArgumentDialog(@NonNull final Argument argument){
+    private void showEditArgumentDialog(@NonNull final Argument argument) {
         this.editArgumentDialog.show();
         final AlertDialog dialog = this.editArgumentDialog;
         final TextInputEditText argumentEditText = dialog.findViewById(com.rgp.asks.R.id.argumentEditText);
 
         argumentEditText.setText(argument.getArgument());
 
-        this.editArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.editArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 String newArgument = argumentEditText.getText().toString();
 
-                if(newArgument.isEmpty()){
+                if (newArgument.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
                     inputLayout.setError("Argument is required!"); // show error
-                } else{
-                    if ( !newArgument.equals(argument.getArgument()) ){
+                } else {
+                    if (!newArgument.equals(argument.getArgument())) {
                         argument.setArgument(newArgument);
                         model.editArgument(argument);
                         clearArgumentDialog(dialog);
@@ -181,20 +175,17 @@ public class BeliefArgumentsFragment extends Fragment {
                 }
             }
         });
-        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearArgumentDialog(dialog);
                 dialog.cancel();
             }
         });
-        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener(){
+        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 model.removeArgument(argument);
                 clearArgumentDialog(dialog);
                 dialog.dismiss();
@@ -202,7 +193,7 @@ public class BeliefArgumentsFragment extends Fragment {
         });
     }
 
-    private void clearArgumentDialog(AlertDialog dialog){
+    private void clearArgumentDialog(AlertDialog dialog) {
         TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
         TextInputEditText argumentEditText = dialog.findViewById(com.rgp.asks.R.id.argumentEditText);
 
@@ -217,12 +208,12 @@ public class BeliefArgumentsFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onOpenEditArgumentDialogEvent(OpenEditArgumentDialogEvent event){
+    public void onOpenEditArgumentDialogEvent(OpenEditArgumentDialogEvent event) {
         Argument argument = argumentsRecyclerViewAdapter.getItem(event.argumentPositionInRecyclerView);
-        if (argument != null){
+        if (argument != null) {
             this.showEditArgumentDialog(argument);
-        } else{
-            Toast.makeText(this.getActivity(),"This argument don't exist!", Toast.LENGTH_SHORT);
+        } else {
+            Toast.makeText(this.getActivity(), "This argument don't exist!", Toast.LENGTH_SHORT);
         }
     }
 }

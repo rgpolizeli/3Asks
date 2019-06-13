@@ -18,7 +18,7 @@ public class Belief {
     private String belief;
 
     @NonNull
-    @ForeignKey(entity = Episode.class,parentColumns = "id",childColumns = "episodeId",onDelete = CASCADE)
+    @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
     private int episodeId;
 
     public Belief(@NonNull String belief, @NonNull int episodeId) {

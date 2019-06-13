@@ -18,7 +18,7 @@ public class Argument {
     private String argument;
 
     @NonNull
-    @ForeignKey(entity = Belief.class,parentColumns = "id",childColumns = "beliefId",onDelete = CASCADE)
+    @ForeignKey(entity = Belief.class, parentColumns = "id", childColumns = "beliefId", onDelete = CASCADE)
     private int beliefId;
 
     public Argument(@NonNull String argument, @NonNull int beliefId) {

@@ -14,7 +14,7 @@ public class EpisodeDateOnDateSetListener implements DatePickerDialog.OnDateSetL
     private EpisodeViewModel model;
     private EditText episodeDateEditText;
 
-    EpisodeDateOnDateSetListener(EpisodeViewModel model, EditText episodeDateEditText){
+    EpisodeDateOnDateSetListener(EpisodeViewModel model, EditText episodeDateEditText) {
         this.model = model;
         this.episodeDateEditText = episodeDateEditText;
     }
@@ -23,7 +23,7 @@ public class EpisodeDateOnDateSetListener implements DatePickerDialog.OnDateSetL
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Episode e = model.getModifiableEpisodeCopy();
         Calendar c = Calendar.getInstance();
-        c.set(year,month,dayOfMonth);
+        c.set(year, month, dayOfMonth);
         e.setDate(c.getTime());
         episodeDateEditText.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(c.getTime()));
     }

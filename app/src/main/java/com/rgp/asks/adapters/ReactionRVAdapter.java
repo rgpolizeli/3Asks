@@ -15,6 +15,9 @@ import java.util.List;
 public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.ViewHolder> {
     private List<Reaction> reactions;
 
+    public ReactionRVAdapter() {
+    }
+
     @Override
     public ReactionRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
@@ -27,24 +30,9 @@ public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.Vi
         return vh;
     }
 
-
     public void setReactions(List<Reaction> reactions) {
         this.reactions = reactions;
         notifyDataSetChanged();
-    }
-
-    public ReactionRVAdapter() {
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView reactionTextView;
-        public TextView reactionClassTextView;
-
-        public ViewHolder(View v) {
-            super(v);
-            reactionTextView = v.findViewById(com.rgp.asks.R.id.reaction_text_view);
-            reactionClassTextView = v.findViewById(com.rgp.asks.R.id.reaction_class_text_view);
-        }
     }
 
     @Override
@@ -63,16 +51,27 @@ public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.Vi
     }
 
     public Reaction getItem(int position) {
-        if (this.reactions == null){
+        if (this.reactions == null) {
             return null;
-        } else{
+        } else {
             return reactions.get(position);
         }
     }
 
-    private void setItemListeners(View v){
+    private void setItemListeners(View v) {
         EditListener editListener = new EditListener();
         editListener.setReactions(this.reactions);
         v.setOnClickListener(editListener);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView reactionTextView;
+        public TextView reactionClassTextView;
+
+        public ViewHolder(View v) {
+            super(v);
+            reactionTextView = v.findViewById(com.rgp.asks.R.id.reaction_text_view);
+            reactionClassTextView = v.findViewById(com.rgp.asks.R.id.reaction_class_text_view);
+        }
     }
 }

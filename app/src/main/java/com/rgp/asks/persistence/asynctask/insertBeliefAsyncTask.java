@@ -18,7 +18,7 @@ public class insertBeliefAsyncTask extends AsyncTask<Belief, Void, Long> {
     }
 
     @Override
-    protected void onPreExecute(){
+    protected void onPreExecute() {
         super.onPreExecute();
         EventBus.getDefault().post(new CreatingBeliefEvent(Constants.START_CREATE_BELIEF_MESSAGE));
     }

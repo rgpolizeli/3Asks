@@ -17,6 +17,9 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
 
     private List<Argument> arguments;
 
+    public ArgumentRVAdapter() {
+    }
+
     @Override
     public ArgumentRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
@@ -30,21 +33,6 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
         this.arguments = arguments;
         notifyDataSetChanged();
     }
-
-
-    public ArgumentRVAdapter() {
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView argumentTextView;
-
-        public ViewHolder(View v) {
-            super(v);
-            argumentTextView = v.findViewById(com.rgp.asks.R.id.argumentTextView);
-        }
-    }
-
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -61,17 +49,27 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
     }
 
     public Argument getItem(int position) {
-        if (this.arguments == null){
+        if (this.arguments == null) {
             return null;
-        } else{
+        } else {
             return arguments.get(position);
         }
     }
 
-    private void setItemListeners(View v){
+    private void setItemListeners(View v) {
         EditListener editListener = new EditListener();
         editListener.setArguments(this.arguments);
         v.setOnClickListener(editListener);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView argumentTextView;
+
+        public ViewHolder(View v) {
+            super(v);
+            argumentTextView = v.findViewById(com.rgp.asks.R.id.argumentTextView);
+        }
     }
 
 

@@ -9,7 +9,7 @@ import com.rgp.asks.viewmodel.EpisodeViewModel;
 public class EpisodeDescriptionTextWatcher implements TextWatcher {
     private EpisodeViewModel model;
 
-    public EpisodeDescriptionTextWatcher(EpisodeViewModel model){
+    public EpisodeDescriptionTextWatcher(EpisodeViewModel model) {
         this.model = model;
     }
 

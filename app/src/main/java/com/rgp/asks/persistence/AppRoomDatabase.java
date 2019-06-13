@@ -32,14 +32,6 @@ import java.util.concurrent.Executors;
 @TypeConverters({DateConverter.class})
 public abstract class AppRoomDatabase extends RoomDatabase {
 
-    public abstract ReactionDao reactionDao();
-    public abstract ArgumentDao argumentDao();
-    public abstract BeliefDao beliefDao();
-    public abstract BeliefThinkingStyleDao beliefThinkingStyleDao();
-    public abstract EpisodeDao episodeDao();
-    public abstract ObjectionDao objectionDao();
-    public abstract ThinkingStyleDao thinkingStyleDao();
-
     private static AppRoomDatabase INSTANCE;
 
     public static AppRoomDatabase getDatabase(final Context context) {
@@ -53,7 +45,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static AppRoomDatabase buildDatabase(final Context context){
+    private static AppRoomDatabase buildDatabase(final Context context) {
         return Room.databaseBuilder(context.getApplicationContext(),
                 AppRoomDatabase.class, "3ask_database")
                 .addCallback(new Callback() {
@@ -81,7 +73,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
 
     private static ThinkingStyle[] createUnhelpfulThinkingStyles() {
 
-        return new ThinkingStyle[] {
+        return new ThinkingStyle[]{
 
                 new ThinkingStyle(Constants.unhelpful_thinking_style_mental_filter_label),
 
@@ -107,5 +99,19 @@ public abstract class AppRoomDatabase extends RoomDatabase {
         };
 
     }
+
+    public abstract ReactionDao reactionDao();
+
+    public abstract ArgumentDao argumentDao();
+
+    public abstract BeliefDao beliefDao();
+
+    public abstract BeliefThinkingStyleDao beliefThinkingStyleDao();
+
+    public abstract EpisodeDao episodeDao();
+
+    public abstract ObjectionDao objectionDao();
+
+    public abstract ThinkingStyleDao thinkingStyleDao();
 
 }

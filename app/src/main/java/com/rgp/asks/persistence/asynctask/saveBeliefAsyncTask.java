@@ -41,22 +41,22 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
         return deleteThinkingStylesResult && updateThoughtResult == 1;
     }
 
-    private boolean deleteThinkingStyles(@NonNull final int beliefId){
+    private boolean deleteThinkingStyles(@NonNull final int beliefId) {
         boolean result = true;
         int intermediateResult;
-        for(ThinkingStyle th : toDeleteThinkingStyles){
-            intermediateResult = beliefThinkingStyleDao.delete(new BeliefThinkingStyle(beliefId,th.getThinkingStyle()));
-            if (intermediateResult==0){
+        for (ThinkingStyle th : toDeleteThinkingStyles) {
+            intermediateResult = beliefThinkingStyleDao.delete(new BeliefThinkingStyle(beliefId, th.getThinkingStyle()));
+            if (intermediateResult == 0) {
                 result = false;
             }
         }
         return result;
     }
 
-    private void insertThinkingStyles(@NonNull final int beliefId){
+    private void insertThinkingStyles(@NonNull final int beliefId) {
 
-        for(ThinkingStyle th : toInsertThinkingStyles){
-            beliefThinkingStyleDao.insert(new BeliefThinkingStyle(beliefId,th.getThinkingStyle()));
+        for (ThinkingStyle th : toInsertThinkingStyles) {
+            beliefThinkingStyleDao.insert(new BeliefThinkingStyle(beliefId, th.getThinkingStyle()));
         }
 
     }
@@ -64,7 +64,7 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        if (result){
+        if (result) {
             EventBus.getDefault().post(new SavedEditedBeliefEvent(Constants.SAVED_EDITED_BELIEF_MESSAGE));
         }
     }

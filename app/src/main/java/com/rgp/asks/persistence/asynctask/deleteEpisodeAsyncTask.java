@@ -30,7 +30,7 @@ public class deleteEpisodeAsyncTask extends AsyncTask<Episode, Void, Integer> {
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        EventBus.getDefault().post(new DeletedEpisodeEvent(result==1,deletedEpisodeId));
+        EventBus.getDefault().post(new DeletedEpisodeEvent(result == 1, deletedEpisodeId));
     }
 }
 

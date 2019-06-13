@@ -60,7 +60,7 @@ public class AsksActivity extends AppCompatActivity {
         loadFABs();
 
         model = ViewModelProviders.of(this).get(EpisodeViewModel.class);
-        model.loadEpisode(this.getIntent().getIntExtra(Constants.ARG_EPISODE,-1));
+        model.loadEpisode(this.getIntent().getIntExtra(Constants.ARG_EPISODE, -1));
         model.getEpisode().observe(this, new Observer<Episode>() {
             @Override
             public void onChanged(@Nullable final Episode episode) {
@@ -69,13 +69,12 @@ public class AsksActivity extends AppCompatActivity {
 
                 //this way I'm sure the episode has already been loaded from the database
                 // before user click in a tab
-                if (!model.getEpisodeIsLoaded() && episode!=null){
+                if (!model.getEpisodeIsLoaded() && episode != null) {
                     model.setEpisodeIsLoaded(true);
                     initTabs();
                     model.initModifiableEpisodeCopy();
-                }
-                else{
-                    if (model.getEpisodeIsLoaded() && episode!=null){
+                } else {
+                    if (model.getEpisodeIsLoaded() && episode != null) {
                         initTabs();
                     }
                 }
@@ -86,11 +85,11 @@ public class AsksActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         openUnsavedDialog();
     }
 
-    private AlertDialog createUnsavedDialog(){
+    private AlertDialog createUnsavedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder
@@ -113,28 +112,28 @@ public class AsksActivity extends AppCompatActivity {
         return dialog;
     }
 
-    private void openUnsavedDialog(){
+    private void openUnsavedDialog() {
         AlertDialog unsavedDialog = createUnsavedDialog();
-        if (model.episodeWasChanged()){
+        if (model.episodeWasChanged()) {
             unsavedDialog.show();
-        } else{
+        } else {
             finish();
         }
     }
 
-    private void loadFABs(){
+    private void loadFABs() {
         saveEpisodeFab = findViewById(com.rgp.asks.R.id.saveEpisodeFab);
         reactionsFab = findViewById(com.rgp.asks.R.id.addReactionFab);
         beliefsFab = findViewById(com.rgp.asks.R.id.addBeliefFab);
     }
 
-    private void setEpisodeNameInToolbar(final Episode e){
-        if (e != null){
+    private void setEpisodeNameInToolbar(final Episode e) {
+        if (e != null) {
             toolbar.setTitle(e.getEpisode());
         }
     }
 
-    private void initTabs(){
+    private void initTabs() {
         findViewById(com.rgp.asks.R.id.indeterminateBar).setVisibility(View.GONE);
         findViewById(com.rgp.asks.R.id.tabs).setVisibility(View.VISIBLE);
 
@@ -145,12 +144,13 @@ public class AsksActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(com.rgp.asks.R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager){
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 showRightFab(tab.getPosition());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
@@ -196,14 +196,15 @@ public class AsksActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch(id){
+        switch (id) {
             case com.rgp.asks.R.id.action_delete_episode:
                 model.removeEpisode();
                 return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            default: return true;
+            default:
+                return true;
         }
     }
 
@@ -211,6 +212,26 @@ public class AsksActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
+        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        setEpisodeNameInToolbar(model.getModifiableEpisodeCopy());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDeletedEpisodeEvent(DeletedEpisodeEvent event) {
+
+        if (event.result) {
+            Episode currentEpisode = model.getEpisode().getValue();
+            if (currentEpisode == null || currentEpisode.getId() == event.deletedEpisodeId) {
+                Toast.makeText(this, Constants.DELETED_EPISODE_MESSAGE, Toast.LENGTH_SHORT).show();
+                this.finish();
+            }
+        } else {
+            Toast.makeText(this, "Failed to delete the episode", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -224,7 +245,7 @@ public class AsksActivity extends AppCompatActivity {
 
             Fragment f = null;
 
-            switch(position){
+            switch (position) {
                 case 0:
                     f = new WhenFragment();
                     break;
@@ -242,26 +263,6 @@ public class AsksActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return 3;
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        setEpisodeNameInToolbar(model.getModifiableEpisodeCopy());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDeletedEpisodeEvent(DeletedEpisodeEvent event) {
-
-        if (event.result){
-            Episode currentEpisode = model.getEpisode().getValue();
-            if (currentEpisode == null || currentEpisode.getId() == event.deletedEpisodeId){
-                Toast.makeText(this, Constants.DELETED_EPISODE_MESSAGE, Toast.LENGTH_SHORT).show();
-                this.finish();
-            }
-        } else{
-            Toast.makeText(this, "Failed to delete the episode", Toast.LENGTH_SHORT).show();
         }
     }
 }

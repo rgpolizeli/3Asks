@@ -59,12 +59,12 @@ public class WhatFragment extends Fragment {
         return rootView;
     }
 
-    private void initDialogs(){
+    private void initDialogs() {
         newReactionDialog = createNewReactionDialog();
         editReactionDialog = createEditReactionDialog();
     }
 
-    private void initViewModel(){
+    private void initViewModel() {
         model = ViewModelProviders.of(this.getActivity()).get(EpisodeViewModel.class);
         model.getReactions().observe(this, new Observer<List<Reaction>>() {
             @Override
@@ -74,8 +74,8 @@ public class WhatFragment extends Fragment {
         });
     }
 
-    private void setupFAB(ViewGroup container){
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)container.getParent();
+    private void setupFAB(ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton reactionFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addReactionFab);
         reactionFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +85,7 @@ public class WhatFragment extends Fragment {
         });
     }
 
-    private void setupRecyclerView(View rootView){
+    private void setupRecyclerView(View rootView) {
         reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.reactionsRecyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         //GridLayoutManager reactionsRecyclerViewLayoutManager = new GridLayoutManager(rootView.getContext(),2);
@@ -94,21 +94,21 @@ public class WhatFragment extends Fragment {
         reactionsRecyclerView.setAdapter(reactionsRecyclerViewAdapter);
     }
 
-    private AlertDialog createEditReactionDialog(){
+    private AlertDialog createEditReactionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
         builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null))
                 .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete",null)
+                .setNeutralButton("Delete", null)
                 .setTitle("Edit the reaction");
 
         AlertDialog dialog = builder.create();
         return dialog;
     }
 
-    private AlertDialog createNewReactionDialog(){
+    private AlertDialog createNewReactionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
@@ -122,38 +122,34 @@ public class WhatFragment extends Fragment {
         return dialog;
     }
 
-    private void showNewReactionDialog(){
+    private void showNewReactionDialog() {
         this.newReactionDialog.show();
         final AlertDialog dialog = this.newReactionDialog;
 
-        this.newReactionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newReactionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 TextInputEditText reactionEditText = dialog.findViewById(com.rgp.asks.R.id.reactionEditText);
                 Spinner reactionClassSpinner = dialog.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
 
                 String newReaction = reactionEditText.getText().toString();
                 String newReactionClass = reactionClassSpinner.getSelectedItem().toString();
 
-                if(newReaction.isEmpty()){
+                if (newReaction.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.reactionTextInputLayout);
                     inputLayout.setError("Reaction is required!"); // show error
-                } else{
+                } else {
                     model.createReaction(newReaction, newReactionClass);
                     clearReactionDialog(dialog);
                     dialog.dismiss();
                 }
             }
         });
-        this.newReactionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newReactionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearReactionDialog(dialog);
                 dialog.cancel();
             }
@@ -161,38 +157,36 @@ public class WhatFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onOpenEditReactionDialogEvent(OpenEditReactionDialogEvent event){
+    public void onOpenEditReactionDialogEvent(OpenEditReactionDialogEvent event) {
         Reaction reaction = reactionsRecyclerViewAdapter.getItem(event.reactionPositionInRecyclerView);
-        if (reaction != null){
+        if (reaction != null) {
             this.showEditReactionDialog(reaction);
-        } else{
-            Toast.makeText(this.getActivity(),"This reaction don't exist!", Toast.LENGTH_SHORT);
+        } else {
+            Toast.makeText(this.getActivity(), "This reaction don't exist!", Toast.LENGTH_SHORT);
         }
     }
 
-    private void showEditReactionDialog(final Reaction reaction){
+    private void showEditReactionDialog(final Reaction reaction) {
         this.editReactionDialog.show();
         final AlertDialog dialog = this.editReactionDialog;
         final TextInputEditText reactionEditText = dialog.findViewById(com.rgp.asks.R.id.reactionEditText);
         final Spinner reactionClassSpinner = dialog.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
 
         reactionEditText.setText(reaction.getReaction());
-        reactionClassSpinner.setSelection(getIndex(reactionClassSpinner,reaction.getReactionCategory()));
+        reactionClassSpinner.setSelection(getIndex(reactionClassSpinner, reaction.getReactionCategory()));
 
-        this.editReactionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.editReactionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 String newReaction = reactionEditText.getText().toString();
                 String newReactionClass = reactionClassSpinner.getSelectedItem().toString();
 
-                if(newReaction.isEmpty()){
+                if (newReaction.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.reactionTextInputLayout);
                     inputLayout.setError("Reaction is required!"); // show error
-                } else{
-                    if (!newReaction.equals(reaction.getReaction()) || !newReactionClass.equals(reaction.getReactionCategory())){
+                } else {
+                    if (!newReaction.equals(reaction.getReaction()) || !newReactionClass.equals(reaction.getReactionCategory())) {
                         reaction.setReaction(newReaction);
                         reaction.setReactionCategory(newReactionClass);
                         model.editReaction(reaction);
@@ -203,20 +197,17 @@ public class WhatFragment extends Fragment {
                 }
             }
         });
-        this.editReactionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.editReactionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearReactionDialog(dialog);
                 dialog.cancel();
             }
         });
-        this.editReactionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener(){
+        this.editReactionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 model.removeReaction(reaction);
                 clearReactionDialog(dialog);
                 dialog.dismiss();
@@ -225,9 +216,9 @@ public class WhatFragment extends Fragment {
     }
 
 
-    private int getIndex(Spinner spinner, String myString){
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+    private int getIndex(Spinner spinner, String myString) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
                 return i;
             }
         }
@@ -235,7 +226,7 @@ public class WhatFragment extends Fragment {
         return 0;
     }
 
-    private void clearReactionDialog(AlertDialog dialog){
+    private void clearReactionDialog(AlertDialog dialog) {
         TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.reactionTextInputLayout);
         EditText reactionEditText = dialog.findViewById(com.rgp.asks.R.id.reactionEditText);
         Spinner reactionClassSpinner = dialog.findViewById(com.rgp.asks.R.id.reactionClassSpinner);

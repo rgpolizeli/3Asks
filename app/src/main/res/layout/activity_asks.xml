@@ -17,8 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        >
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,8 +27,7 @@
             android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
-        </androidx.appcompat.widget.Toolbar>
+            app:title="@string/app_name"></androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -70,10 +68,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@android:color/holo_purple"
         android:src="@drawable/ic_add_white_24dp"
         android:visibility="gone"
-        />
+        app:backgroundTint="@android:color/holo_purple" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addBeliefFab"
@@ -82,9 +79,8 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add_white_24dp"
-        app:backgroundTint="@color/colorAccent3"
         android:visibility="gone"
-        />
+        app:backgroundTint="@color/colorAccent3" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/saveEpisodeFab"
@@ -93,8 +89,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_save_white_24dp"
-        app:backgroundTint="@color/colorAccent1"
         android:visibility="gone"
-         />
+        app:backgroundTint="@color/colorAccent1" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

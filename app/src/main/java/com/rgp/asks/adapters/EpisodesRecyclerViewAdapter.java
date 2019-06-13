@@ -19,15 +19,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.ViewHolder> {
-    private @NonNull List<Episode> episodes;
+    private @NonNull
+    List<Episode> episodes;
+    private @NonNull
+    OnItemClickListener onItemClickListener;
 
     @Inject
-    @NonNull
-    OnItemClickListener onClickListItemListener;
-
-    @Inject
-    public EpisodesRecyclerViewAdapter() {
+    public EpisodesRecyclerViewAdapter(OnItemClickListener onItemClickListener) {
         this.episodes = new ArrayList<>();
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -43,11 +43,6 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
     public void setEpisodes(@NonNull final List<Episode> episodes) {
         this.episodes = episodes;
         notifyDataSetChanged();
-    }
-
-    @NonNull
-    public OnItemClickListener getOnClickListItemListener() {
-        return onClickListItemListener;
     }
 
     @Override
@@ -66,6 +61,12 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         return episodes.get(position);
     }
 
+    private void setItemListeners(View v) {
+        EditListener editListener = new EditListener();
+        editListener.setEpisodes(this.episodes);
+        v.setOnClickListener(editListener);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView episodeTextView;
@@ -78,11 +79,5 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
             episodeDateTextView = v.findViewById(com.rgp.asks.R.id.episodeDateTextView);
             episodePeriodTextView = v.findViewById(com.rgp.asks.R.id.episodePeriodTextView);
         }
-    }
-
-    private void setItemListeners(View v){
-        EditListener editListener = new EditListener();
-        editListener.setEpisodes(this.episodes);
-        v.setOnClickListener(editListener);
     }
 }

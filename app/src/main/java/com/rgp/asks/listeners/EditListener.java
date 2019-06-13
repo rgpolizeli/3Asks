@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-public class EditListener implements View.OnClickListener{
+public class EditListener implements View.OnClickListener {
 
     private List<Reaction> reactions;
     private List<Belief> beliefs;
@@ -30,22 +30,25 @@ public class EditListener implements View.OnClickListener{
     private List<Argument> arguments;
     private List<Objection> objections;
 
+    public EditListener() {
+    }
+
     @Override
     public void onClick(View v) {
 
-        if (reactions != null){
+        if (reactions != null) {
             startEditReactionActivity(v);
-        } else{
-            if (beliefs != null){
+        } else {
+            if (beliefs != null) {
                 startEditBeliefActivity(v);
-            } else{
-                if(episodes != null){
+            } else {
+                if (episodes != null) {
                     startEditEpisodeActivity(v);
-                } else{
-                    if(arguments != null){
+                } else {
+                    if (arguments != null) {
                         startEditArgumentActivity(v);
-                    } else{
-                        if(objections != null){
+                    } else {
+                        if (objections != null) {
                             startEditObjectionActivity(v);
                         }
                     }
@@ -54,25 +57,25 @@ public class EditListener implements View.OnClickListener{
         }
     }
 
-    private void startEditReactionActivity(View v){
+    private void startEditReactionActivity(View v) {
         RecyclerView recyclerView = (RecyclerView) v.getParent();
         int position = recyclerView.getChildAdapterPosition(v);
         EventBus.getDefault().post(new OpenEditReactionDialogEvent(position));
     }
 
-    private void startEditBeliefActivity(View v){
+    private void startEditBeliefActivity(View v) {
         RecyclerView recyclerView = (RecyclerView) v.getParent();
         int position = recyclerView.getChildAdapterPosition(v);
         EventBus.getDefault().post(new OpenEditBeliefActivityEvent(position));
     }
 
-    private void startEditEpisodeActivity(View v){
+    private void startEditEpisodeActivity(View v) {
 
         RecyclerView recyclerView = (RecyclerView) v.getParent();
         int position = recyclerView.getChildAdapterPosition(v);
         Episode episode = ((EpisodesRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
-        if (episode != null){
+        if (episode != null) {
             Intent intent = new Intent(v.getContext(), AsksActivity.class);
             intent.putExtra(Constants.ARG_EPISODE, episode.getId());
             v.getContext().startActivity(intent);
@@ -80,20 +83,16 @@ public class EditListener implements View.OnClickListener{
 
     }
 
-    private void startEditArgumentActivity(View v){
+    private void startEditArgumentActivity(View v) {
         RecyclerView recyclerView = (RecyclerView) v.getParent();
         int position = recyclerView.getChildAdapterPosition(v);
         EventBus.getDefault().post(new OpenEditArgumentDialogEvent(position));
     }
 
-    private void startEditObjectionActivity(View v){
+    private void startEditObjectionActivity(View v) {
         RecyclerView recyclerView = (RecyclerView) v.getParent();
         int position = recyclerView.getChildAdapterPosition(v);
         EventBus.getDefault().post(new OpenEditObjectionDialogEvent(position));
-    }
-
-
-    public EditListener(){
     }
 
     public void setReactions(List<Reaction> reactions) {

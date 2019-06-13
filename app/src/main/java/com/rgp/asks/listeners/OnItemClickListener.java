@@ -15,8 +15,8 @@ public class OnItemClickListener implements View.OnClickListener {
     public OnItemClickListener() {
     }
 
-    public LiveData<View> getClickedView(){
-        if(clickedView == null){
+    public LiveData<View> getClickedView() {
+        if (clickedView == null) {
             clickedView = new MutableLiveData<>();
         }
         return clickedView;

@@ -57,8 +57,8 @@ public class BeliefObjectionsFragment extends Fragment {
         return rootView;
     }
 
-    private void setupFAB(ViewGroup container){
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)container.getParent();
+    private void setupFAB(ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton objectionsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addObjectionFab);
         objectionsFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class BeliefObjectionsFragment extends Fragment {
         });
     }
 
-    private void setupRecyclerView(View rootView){
+    private void setupRecyclerView(View rootView) {
         objectionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.objectionRV);
         LinearLayoutManager objectionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         objectionsRecyclerView.setLayoutManager(objectionsRecyclerViewLayoutManager);
@@ -76,7 +76,7 @@ public class BeliefObjectionsFragment extends Fragment {
         objectionsRecyclerView.setAdapter(objectionsRecyclerViewAdapter);
     }
 
-    private void initViewModel(){
+    private void initViewModel() {
         model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
         model.getObjections().observe(this, new Observer<List<Objection>>() {
             @Override
@@ -86,26 +86,26 @@ public class BeliefObjectionsFragment extends Fragment {
         });
     }
 
-    private void initDialogs(){
+    private void initDialogs() {
         newObjectionDialog = createNewObjectionDialog();
         editObjectionDialog = createEditObjectionDialog();
     }
 
-    private AlertDialog createEditObjectionDialog(){
+    private AlertDialog createEditObjectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
         builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_objection, null))
                 .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete",null)
+                .setNeutralButton("Delete", null)
                 .setTitle("Edit the objection");
 
         AlertDialog dialog = builder.create();
         return dialog;
     }
 
-    private AlertDialog createNewObjectionDialog(){
+    private AlertDialog createNewObjectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
@@ -119,61 +119,55 @@ public class BeliefObjectionsFragment extends Fragment {
         return dialog;
     }
 
-    private void showNewObjectionDialog(){
+    private void showNewObjectionDialog() {
         this.newObjectionDialog.show();
         final AlertDialog dialog = this.newObjectionDialog;
 
-        this.newObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 TextInputEditText objectionEditText = dialog.findViewById(com.rgp.asks.R.id.objectionEditText);
                 String newObjection = objectionEditText.getText().toString();
 
-                if(newObjection.isEmpty()){
+                if (newObjection.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
                     inputLayout.setError("Objection is required!"); // show error
-                } else{
+                } else {
                     model.createObjection(newObjection);
                     clearObjectionDialog(dialog);
                     dialog.dismiss();
                 }
             }
         });
-        this.newObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.newObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearObjectionDialog(dialog);
                 dialog.cancel();
             }
         });
     }
 
-    private void showEditObjectionDialog(@NonNull final Objection objection){
+    private void showEditObjectionDialog(@NonNull final Objection objection) {
         this.editObjectionDialog.show();
         final AlertDialog dialog = this.editObjectionDialog;
         final TextInputEditText objectionEditText = dialog.findViewById(com.rgp.asks.R.id.objectionEditText);
 
         objectionEditText.setText(objection.getObjection());
 
-        this.editObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.editObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 String newObjection = objectionEditText.getText().toString();
 
-                if(newObjection.isEmpty()){
+                if (newObjection.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
                     inputLayout.setError("Objection is required!"); // show error
-                } else{
-                    if ( !newObjection.equals(objection.getObjection()) ){
+                } else {
+                    if (!newObjection.equals(objection.getObjection())) {
                         objection.setObjection(newObjection);
                         model.editObjection(objection);
                         clearObjectionDialog(dialog);
@@ -182,20 +176,17 @@ public class BeliefObjectionsFragment extends Fragment {
                 }
             }
         });
-        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-        {
+        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 clearObjectionDialog(dialog);
                 dialog.cancel();
             }
         });
-        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener(){
+        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 model.removeObjection(objection);
                 clearObjectionDialog(dialog);
                 dialog.dismiss();
@@ -203,7 +194,7 @@ public class BeliefObjectionsFragment extends Fragment {
         });
     }
 
-    private void clearObjectionDialog(AlertDialog dialog){
+    private void clearObjectionDialog(AlertDialog dialog) {
         TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
         TextInputEditText objectionEditText = dialog.findViewById(com.rgp.asks.R.id.objectionEditText);
 
@@ -218,12 +209,12 @@ public class BeliefObjectionsFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onOpenEditObjectionDialogEvent(OpenEditObjectionDialogEvent event){
+    public void onOpenEditObjectionDialogEvent(OpenEditObjectionDialogEvent event) {
         Objection objection = objectionsRecyclerViewAdapter.getItem(event.objectionPositionInRecyclerView);
-        if (objection != null){
+        if (objection != null) {
             this.showEditObjectionDialog(objection);
-        } else{
-            Toast.makeText(this.getActivity(),"This argument don't exist!", Toast.LENGTH_SHORT);
+        } else {
+            Toast.makeText(this.getActivity(), "This argument don't exist!", Toast.LENGTH_SHORT);
         }
     }
 }

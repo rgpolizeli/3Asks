@@ -5,26 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:layout_marginTop="8dp"
+    android:layout_marginRight="8dp"
     android:background="@color/white"
-    android:padding="16dp"
-    android:minHeight="50dp">
+    android:minHeight="50dp"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/episodeNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLines="1"
         android:text="Episode Name"
         android:textColor="#000000"
         android:textSize="16sp"
         app:fontFamily="@font/roboto"
         app:layout_constraintBottom_toTopOf="@+id/episodeDateTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/episodeDateTextView"

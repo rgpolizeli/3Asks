@@ -12,7 +12,7 @@ public class EpisodeDateOnClick implements View.OnClickListener {
     private EpisodeViewModel model;
     private EditText episodeDateEditText;
 
-    public EpisodeDateOnClick(EpisodeViewModel model, EditText episodeDateEditText){
+    public EpisodeDateOnClick(EpisodeViewModel model, EditText episodeDateEditText) {
         this.model = model;
         this.episodeDateEditText = episodeDateEditText;
     }
@@ -20,7 +20,7 @@ public class EpisodeDateOnClick implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         final Calendar c = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(v.getContext(), new EpisodeDateOnDateSetListener(this.model,this.episodeDateEditText), c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        DatePickerDialog dialog = new DatePickerDialog(v.getContext(), new EpisodeDateOnDateSetListener(this.model, this.episodeDateEditText), c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dialog.show();
     }
 }

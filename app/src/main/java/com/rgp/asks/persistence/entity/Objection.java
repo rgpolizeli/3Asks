@@ -18,7 +18,7 @@ public class Objection {
     private String objection;
 
     @NonNull
-    @ForeignKey(entity = Belief.class,parentColumns = "id",childColumns = "beliefId",onDelete = CASCADE)
+    @ForeignKey(entity = Belief.class, parentColumns = "id", childColumns = "beliefId", onDelete = CASCADE)
     private int beliefId;
 
     public Objection(@NonNull String objection, @NonNull int beliefId) {

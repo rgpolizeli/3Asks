@@ -9,7 +9,7 @@ import java.util.Calendar;
 public class EpisodeDateDialogOnClick implements View.OnClickListener {
     private EditText episodeDateEditText;
 
-    public EpisodeDateDialogOnClick(EditText episodeDateEditText){
+    public EpisodeDateDialogOnClick(EditText episodeDateEditText) {
         this.episodeDateEditText = episodeDateEditText;
     }
 

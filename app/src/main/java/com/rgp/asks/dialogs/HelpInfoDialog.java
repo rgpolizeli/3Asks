@@ -17,8 +17,10 @@ import com.rgp.asks.R;
 
 public class HelpInfoDialog {
 
-    @Nullable private View helpInfoDialogView;
-    @Nullable private AlertDialog alertDialog;
+    @Nullable
+    private View helpInfoDialogView;
+    @Nullable
+    private AlertDialog alertDialog;
 
     public void createHelpInfoDialogView(@NonNull LayoutInflater inflater, int layoutId) throws InflateException {
         this.helpInfoDialogView = inflater.inflate(layoutId, null);
@@ -26,14 +28,15 @@ public class HelpInfoDialog {
 
     /**
      * Create and set listeners to children views.
+     *
      * @throws NullPointerException
      */
-    public void setupChildrenViewsOnClickListener() throws NullPointerException{
+    public void setupChildrenViewsOnClickListener() throws NullPointerException {
         ImageButton closeButton = helpInfoDialogView.findViewById(R.id.helpInfoDialogCloseImageButton);
 
         TextView websiteTextView = helpInfoDialogView.findViewById(R.id.websiteTextView);
-        TextView howTextView=helpInfoDialogView.findViewById(R.id.howItWorksTextView);
-        TextView exampleTextView= helpInfoDialogView.findViewById(R.id.exampleOfUseTextView);
+        TextView howTextView = helpInfoDialogView.findViewById(R.id.howItWorksTextView);
+        TextView exampleTextView = helpInfoDialogView.findViewById(R.id.exampleOfUseTextView);
         TextView termsTextView = helpInfoDialogView.findViewById(R.id.termsOfUseTextView);
         TextView privacyTextView = helpInfoDialogView.findViewById(R.id.privacyPolicyTextView);
         TextView contactTextView = helpInfoDialogView.findViewById(R.id.contactTextView);
@@ -67,7 +70,7 @@ public class HelpInfoDialog {
 
         contactTextView.setOnClickListener(v -> {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto","3asksapp@gmail.com", null));
+                    "mailto", "3asksapp@gmail.com", null));
             v.getContext().startActivity(Intent.createChooser(emailIntent, "Send email..."));
         });
     }
@@ -75,6 +78,7 @@ public class HelpInfoDialog {
     /**
      * Create an {@link AlertDialog} and {@link View.OnClickListener}s to positive and negative buttons.
      * It is necessary to configure listeners with function getButton().setOnClickListener() because the function setPositiveButton dismiss the alertDialog when clicked even an input error occurs.
+     *
      * @param context
      */
 
@@ -85,11 +89,11 @@ public class HelpInfoDialog {
         this.alertDialog = builder.create();
     }
 
-    public void show(){
+    public void show() {
         if (this.alertDialog != null) this.alertDialog.show();
     }
 
-    public void dismiss(){
+    public void dismiss() {
         if (this.alertDialog != null) this.alertDialog.dismiss();
     }
 }

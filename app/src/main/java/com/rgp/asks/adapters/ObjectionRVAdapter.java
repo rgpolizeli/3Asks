@@ -12,12 +12,15 @@ import com.rgp.asks.persistence.entity.Objection;
 
 import java.util.List;
 
-public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.ViewHolder>{
+public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.ViewHolder> {
     private List<Objection> objections;
+
+    public ObjectionRVAdapter() {
+    }
 
     @Override
     public ObjectionRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                           int viewType) {
+                                                            int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(com.rgp.asks.R.layout.item_recycler_view_objection, parent, false);
         setItemListeners(v);
@@ -30,20 +33,6 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
         notifyDataSetChanged();
     }
 
-    public ObjectionRVAdapter() {
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView objectionTextView;
-
-        public ViewHolder(View v) {
-            super(v);
-            objectionTextView = v.findViewById(com.rgp.asks.R.id.objectionTextView);
-        }
-    }
-
-
     @Override
     public void onBindViewHolder(ObjectionRVAdapter.ViewHolder holder, int position) {
 
@@ -52,9 +41,9 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
     }
 
     public Objection getItem(int position) {
-        if (this.objections == null){
+        if (this.objections == null) {
             return null;
-        } else{
+        } else {
             return objections.get(position);
         }
     }
@@ -67,10 +56,20 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
             return objections.size();
     }
 
-    private void setItemListeners(View v){
+    private void setItemListeners(View v) {
         EditListener editListener = new EditListener();
         editListener.setObjections(this.objections);
         v.setOnClickListener(editListener);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView objectionTextView;
+
+        public ViewHolder(View v) {
+            super(v);
+            objectionTextView = v.findViewById(com.rgp.asks.R.id.objectionTextView);
+        }
     }
 
 

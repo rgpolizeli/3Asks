@@ -21,7 +21,7 @@ public class Reaction {
     private String reactionCategory;
 
     @NonNull
-    @ForeignKey(entity = Episode.class,parentColumns = "id",childColumns = "episodeId",onDelete = CASCADE)
+    @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
     private int episodeId;
 
     public Reaction(@NonNull String reaction, @NonNull String reactionCategory, @NonNull int episodeId) {

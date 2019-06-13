@@ -6,15 +6,15 @@ import androidx.room.ForeignKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(primaryKeys = {"beliefId","thinkingStyleId"})
+@Entity(primaryKeys = {"beliefId", "thinkingStyleId"})
 public class BeliefThinkingStyle {
 
     @NonNull
-    @ForeignKey(entity = Belief.class,parentColumns = "id",childColumns = "beliefId",onDelete = CASCADE)
+    @ForeignKey(entity = Belief.class, parentColumns = "id", childColumns = "beliefId", onDelete = CASCADE)
     private int beliefId;
 
     @NonNull
-    @ForeignKey(entity = ThinkingStyle.class,parentColumns = "thinkingStyle",childColumns = "thinkingStyleId",onDelete = CASCADE)
+    @ForeignKey(entity = ThinkingStyle.class, parentColumns = "thinkingStyle", childColumns = "thinkingStyleId", onDelete = CASCADE)
     private String thinkingStyleId;
 
     public BeliefThinkingStyle(@NonNull int beliefId, @NonNull String thinkingStyleId) {

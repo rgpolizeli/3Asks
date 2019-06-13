@@ -70,8 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
-        android:src="@drawable/ic_add_white_24dp" />
+        android:src="@drawable/ic_add_white_24dp"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addObjectionFab"
@@ -79,9 +79,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_white_24dp"
         android:visibility="gone"
-        app:backgroundTint="@android:color/holo_orange_light"
-        android:src="@drawable/ic_add_white_24dp" />
+        app:backgroundTint="@android:color/holo_orange_light" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/saveBeliefFab"

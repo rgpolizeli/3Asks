@@ -64,21 +64,21 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
         beliefViewModel = ViewModelProviders.of(this).get(BeliefViewModel.class);
 
-        if(beliefViewModel!= null && beliefViewModel.getBeliefIsLoaded() && beliefViewModel.getSelectedThinkingStylesIsLoaded()){
+        if (beliefViewModel != null && beliefViewModel.getBeliefIsLoaded() && beliefViewModel.getSelectedThinkingStylesIsLoaded()) {
             initTabs();
         }
 
-        beliefViewModel.loadBelief(this.getIntent().getIntExtra(Constants.ARG_BELIEF,-1));
+        beliefViewModel.loadBelief(this.getIntent().getIntExtra(Constants.ARG_BELIEF, -1));
         beliefViewModel.getBelief().observe(this, new Observer<Belief>() {
             @Override
             public void onChanged(@Nullable Belief belief) {
 
                 setBeliefNameInToolbar(belief);
 
-                if (!beliefViewModel.getBeliefIsLoaded() && belief!=null){
+                if (!beliefViewModel.getBeliefIsLoaded() && belief != null) {
                     beliefViewModel.initModifiableBeliefCopy();
                     beliefViewModel.setBeliefIsLoaded(true);
-                    if (beliefViewModel.getSelectedThinkingStylesIsLoaded()){
+                    if (beliefViewModel.getSelectedThinkingStylesIsLoaded()) {
                         initTabs();
                     }
                 }
@@ -88,33 +88,33 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         beliefViewModel.getSelectedThinkingStyles().observe(this, new Observer<List<ThinkingStyle>>() {
             @Override
             public void onChanged(@Nullable List<ThinkingStyle> selectedThinkingStyles) {
-                if (!beliefViewModel.getSelectedThinkingStylesIsLoaded() && selectedThinkingStyles!=null){
+                if (!beliefViewModel.getSelectedThinkingStylesIsLoaded() && selectedThinkingStyles != null) {
                     beliefViewModel.initModifiableSelectedThinkingStylesCopy();
                     beliefViewModel.setSelectedThinkingStylesIsLoaded(true);
-                    if(beliefViewModel.getBeliefIsLoaded()){
+                    if (beliefViewModel.getBeliefIsLoaded()) {
                         initTabs();
                     }
 
-                } else{
+                } else {
 
                 }
             }
         });
     }
 
-    private void loadFABs(){
+    private void loadFABs() {
         saveBeliefFab = findViewById(com.rgp.asks.R.id.saveBeliefFab);
         argumentsFab = findViewById(com.rgp.asks.R.id.addArgumentFab);
         objectionsFab = findViewById(com.rgp.asks.R.id.addObjectionFab);
     }
 
-    private void setBeliefNameInToolbar(final Belief b){
-        if (b != null){
+    private void setBeliefNameInToolbar(final Belief b) {
+        if (b != null) {
             toolbar.setTitle(b.getBelief());
         }
     }
 
-    private void initTabs(){
+    private void initTabs() {
         findViewById(com.rgp.asks.R.id.indeterminateBar2).setVisibility(View.GONE);
         findViewById(com.rgp.asks.R.id.beliefTabs).setVisibility(View.VISIBLE);
 
@@ -125,12 +125,13 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         tabLayout = findViewById(com.rgp.asks.R.id.beliefTabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager){
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 showRightFab(tab.getPosition());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
@@ -175,19 +176,19 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch(id){
+        switch (id) {
             case com.rgp.asks.R.id.action_delete_belief:
                 beliefViewModel.removeBelief();
                 return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            default: return true;
+            default:
+                return true;
         }
     }
 
@@ -195,38 +196,6 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    public class BeliefPagerAdapter extends FragmentPagerAdapter {
-
-        public BeliefPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            Fragment f = null;
-
-            switch(position){
-                case 0:
-                    f = new BeliefDetailsFragment();
-                    break;
-                case 1:
-                    f = new BeliefArgumentsFragment();
-                    break;
-                case 2:
-                    f = new BeliefObjectionsFragment();
-                    break;
-            }
-
-            return f;
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -238,24 +207,24 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeletedBeliefEvent(DeletedBeliefEvent event) {
 
-        if (event.result){
+        if (event.result) {
             Belief currentBelief = beliefViewModel.getBelief().getValue();
-            if (currentBelief == null || currentBelief.getId() == event.deletedBeliefId){
+            if (currentBelief == null || currentBelief.getId() == event.deletedBeliefId) {
                 Toast.makeText(this, Constants.DELETED_BELIEF_MESSAGE, Toast.LENGTH_SHORT).show();
                 this.finish();
 
             }
-        } else{
+        } else {
             Toast.makeText(this, "Failed to delete the belief", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         openUnsavedDialog();
     }
 
-    private AlertDialog createUnsavedDialog(){
+    private AlertDialog createUnsavedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder
@@ -278,12 +247,44 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         return dialog;
     }
 
-    private void openUnsavedDialog(){
+    private void openUnsavedDialog() {
         AlertDialog unsavedDialog = createUnsavedDialog();
-        if (beliefViewModel.beliefWasChanged()){
+        if (beliefViewModel.beliefWasChanged()) {
             unsavedDialog.show();
-        } else{
+        } else {
             finish();
+        }
+    }
+
+    public class BeliefPagerAdapter extends FragmentPagerAdapter {
+
+        public BeliefPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            Fragment f = null;
+
+            switch (position) {
+                case 0:
+                    f = new BeliefDetailsFragment();
+                    break;
+                case 1:
+                    f = new BeliefArgumentsFragment();
+                    break;
+                case 2:
+                    f = new BeliefObjectionsFragment();
+                    break;
+            }
+
+            return f;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
         }
     }
 

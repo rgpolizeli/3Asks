@@ -36,7 +36,7 @@ public class MainActivityUITests {
             new IntentsTestRule<>(MainActivity.class);
 
     @Test
-    public void clickOnNewEpisodeFloatingActionButton_OpenNewEpisodeDialog(){
+    public void clickOnNewEpisodeFloatingActionButton_OpenNewEpisodeDialog() {
         //given: newEpisodeFloatingActionButton.
         //when: user click on it.
         //then: newEpisodeDialog is show.
@@ -44,18 +44,18 @@ public class MainActivityUITests {
         onView(withId(R.id.newEpisodeDialog)).check(matches(isDisplayed()));
     }
 
-    private void openNewEpisodeDialog(){
+    private void openNewEpisodeDialog() {
         onView(withId(R.id.newEpisodeFloatingActionButton)).perform(click());
     }
 
-    private void clickOnPositiveButtonOfNewEpisodeDialog(){
+    private void clickOnPositiveButtonOfNewEpisodeDialog() {
         onView(withText(R.string.new_episode_dialog_positive_button_label))
                 .inRoot(isDialog())
                 .perform(click())
         ;
     }
 
-    private void clickOnNegativeButtonOfNewEpisodeDialog(){
+    private void clickOnNegativeButtonOfNewEpisodeDialog() {
         onView(withText(R.string.new_episode_dialog_negative_button_label))
                 .inRoot(isDialog())
                 .perform(click())
@@ -63,14 +63,14 @@ public class MainActivityUITests {
     }
 
     @Test
-    public void clickOnPositiveButtonOfNewEpisodeDialog_WithEmptyEpisodeName_ShowError(){
+    public void clickOnPositiveButtonOfNewEpisodeDialog_WithEmptyEpisodeName_ShowError() {
         openNewEpisodeDialog();
         clickOnPositiveButtonOfNewEpisodeDialog();
         onView(withText(R.string.new_episode_dialog_error_empty_episode_name)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void clickOnNegativeButtonOfNewEpisodeDialog_WithAnErrorInEpisodeName_ResetStateOfNewEpisodeDialog(){
+    public void clickOnNegativeButtonOfNewEpisodeDialog_WithAnErrorInEpisodeName_ResetStateOfNewEpisodeDialog() {
         //given: newEpisodeDialog with an error message in field newEpisodeNameTextInputLayout.
         //when: user click on cancel button.
         //then: newEpisodeDialog is reset to a default state.
@@ -92,7 +92,7 @@ public class MainActivityUITests {
     }
 
     @Test
-    public void clickOnNegativeButtonOfNewEpisodeDialog_WithoutAnErrorInEpisodeName_ResetStateOfNewEpisodeDialog(){
+    public void clickOnNegativeButtonOfNewEpisodeDialog_WithoutAnErrorInEpisodeName_ResetStateOfNewEpisodeDialog() {
         //given: newEpisodeDialog without an error message in field newEpisodeNameTextInputLayout, but with typed text and selected a date and period.
         //when: user click on cancel button.
         //then: newEpisodeDialog is reset to a default state.
@@ -100,7 +100,7 @@ public class MainActivityUITests {
     }
 
     @Test
-    public void clickOnActionHelpMenuOption_OpenHelpInfoDialog(){
+    public void clickOnActionHelpMenuOption_OpenHelpInfoDialog() {
         //given: the menu option action_help
         //when: user click on it.
         //then: helpInfoDialog is show.
@@ -117,28 +117,28 @@ public class MainActivityUITests {
     }
 
     @Test
-    public void afterActivityOnCreate_ShowLoadingBar(){
+    public void afterActivityOnCreate_ShowLoadingBar() {
         //ondata in recycler view, check if indeterminatebar is not displayed.
     }
 
     @Test
-    public void clickOnItemInEpisodesRecyclerView_OpenAsksActivity(){
+    public void clickOnItemInEpisodesRecyclerView_OpenAsksActivity() {
         //given: the EpisodesRecyclerView isn't empty
         //when: user click on any episode.
         //then: AsksActivity is opened.
 
-        if (getRVcount() > 0){
+        if (getRVcount() > 0) {
             onView(withId(R.id.episodesRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
             intended(hasComponent(AsksActivity.class.getName()));
         }
     }
 
-    private int getRVcount(){
+    private int getRVcount() {
         RecyclerView recyclerView = mainActivityActivityTestRule.getActivity().findViewById(R.id.episodesRecyclerView);
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
-        if(adapter == null){
+        if (adapter == null) {
             return 0;
-        } else{
+        } else {
             return adapter.getItemCount();
         }
     }
@@ -150,8 +150,8 @@ public class MainActivityUITests {
     //reopen the newEpisodeDialog after clicked in negative button
 
     //reopen the newEpisodeDialog after change orientation of activity or minimize it
-        //after typed a valid inputs
-        //after try create a episode with invalid inputs, ie, with an error message.
+    //after typed a valid inputs
+    //after try create a episode with invalid inputs, ie, with an error message.
 
     // try create an episode without name, check erro messsage
 

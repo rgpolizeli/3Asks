@@ -9,7 +9,7 @@ import com.rgp.asks.viewmodel.EpisodeViewModel;
 public class OnItemSelectedListenerEpisodePeriod implements AdapterView.OnItemSelectedListener {
     private EpisodeViewModel model;
 
-    public OnItemSelectedListenerEpisodePeriod(EpisodeViewModel model){
+    public OnItemSelectedListenerEpisodePeriod(EpisodeViewModel model) {
         this.model = model;
     }
 

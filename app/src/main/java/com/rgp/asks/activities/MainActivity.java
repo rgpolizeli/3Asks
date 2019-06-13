@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rgp.asks.R;
@@ -16,47 +17,55 @@ import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.dialogs.HelpInfoDialog;
 import com.rgp.asks.dialogs.NewEpisodeDialog;
-import com.rgp.asks.liveDataObservers.EpisodeRecyclerViewOnClickItemObserver;
-import com.rgp.asks.liveDataObservers.EpisodesObserver;
+import com.rgp.asks.listeners.OnItemClickListener;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
+import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import javax.inject.Inject;
-
-import dagger.Lazy;
-import dagger.android.AndroidInjection;
-
 public class MainActivity extends AppCompatActivity {
-    @Inject
-    Lazy<RecyclerView> lazyEpisodesRecyclerView;
-    @Inject
-    EpisodeRecyclerViewOnClickItemObserver episodeRecyclerViewOnClickItemObserver;
-    @Inject
-    EpisodesObserver episodesObserver;
 
     private RecyclerView episodesRecyclerView;
+    private EpisodesRecyclerViewAdapter episodesRecyclerViewAdapter;
     private MainViewModel mainViewModel;
     private NewEpisodeDialog newEpisodeDialog;
     private HelpInfoDialog helpInfoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        episodesRecyclerView = lazyEpisodesRecyclerView.get();
+        episodesRecyclerView = this.findViewById(R.id.episodesRecyclerView);
+        RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(this);
+        episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
+        OnItemClickListener onItemClickListener = new OnItemClickListener();
+        episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(onItemClickListener);
+        episodesRecyclerView.setAdapter(episodesRecyclerViewAdapter);
+
+        onItemClickListener.getClickedView().observe(this, view -> {
+            int position = 0;
+            if (view != null) {
+                position = episodesRecyclerView.getChildAdapterPosition(view);
+            }
+            Episode clickedEpisode = episodesRecyclerViewAdapter.getItem(position);
+            startEditEpisodeActivity(clickedEpisode.getId());
+        });
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         helpInfoDialog = createHelpInfoDialog();
         newEpisodeDialog = createNewEpisodeDialog();
+
+        mainViewModel.getAllEpisodes().observe(this, episodes -> {
+            episodesRecyclerViewAdapter.setEpisodes(episodes);
+            showViews();
+        });
 
         hideViews();
     }
@@ -65,12 +74,6 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        getEpisodesRecyclerViewAdapter().getOnClickListItemListener().getClickedView().observe(this, episodeRecyclerViewOnClickItemObserver);
-        mainViewModel.getAllEpisodes().observe(this, episodesObserver);
-    }
-
-    private EpisodesRecyclerViewAdapter getEpisodesRecyclerViewAdapter() {
-        return (EpisodesRecyclerViewAdapter) episodesRecyclerView.getAdapter();
     }
 
     private NewEpisodeDialog createNewEpisodeDialog() {

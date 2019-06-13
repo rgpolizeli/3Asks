@@ -5,9 +5,9 @@
 
     <item
         android:id="@+id/action_delete_episode"
+        android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="400"
         android:title="Delete episode"
-        android:icon="@android:drawable/ic_menu_delete"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
 </menu>

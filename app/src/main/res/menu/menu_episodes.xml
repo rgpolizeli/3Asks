@@ -5,10 +5,10 @@
 
     <item
         android:id="@+id/action_help"
+        android:icon="@drawable/ic_help_outline_white_24dp"
         android:orderInCategory="400"
         android:title="Help and Info"
-        android:icon="@drawable/ic_help_outline_white_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
 
 </menu>

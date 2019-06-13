@@ -64,52 +64,52 @@ public class Repository {
         this.thinkingStyleDao = db.thinkingStyleDao();
     }
 
-       ///////////////
+    ///////////////
     // READ OPERATIONS //
-      ///////////////
+    ///////////////
 
-    public LiveData<List<Episode>> getAllEpisodes(){
+    public LiveData<List<Episode>> getAllEpisodes() {
         return this.episodeDao.getAllEpisodes();
     }
 
-    public LiveData<Episode> getEpisodeById(@NonNull int episodeId){
+    public LiveData<Episode> getEpisodeById(@NonNull int episodeId) {
         return this.episodeDao.getEpisodeById(episodeId);
     }
 
-    public LiveData<Belief> getBeliefById(@NonNull int beliefId){
+    public LiveData<Belief> getBeliefById(@NonNull int beliefId) {
         return this.beliefDao.getBeliefById(beliefId);
     }
 
-    public LiveData<List<Reaction>> getReactionsForEpisode(@NonNull int episodeId){
+    public LiveData<List<Reaction>> getReactionsForEpisode(@NonNull int episodeId) {
         return this.reactionDao.getReactionsForEpisode(episodeId);
     }
 
-    public LiveData<List<Belief>> getBeliefsForEpisode(@NonNull int episodeId){
+    public LiveData<List<Belief>> getBeliefsForEpisode(@NonNull int episodeId) {
         return this.beliefDao.getBeliefsForEpisode(episodeId);
     }
 
-    public LiveData<List<Argument>> getArgumentsForBelief(@NonNull int beliefId){
+    public LiveData<List<Argument>> getArgumentsForBelief(@NonNull int beliefId) {
         return this.argumentDao.getArgumentsForBelief(beliefId);
     }
 
-    public LiveData<List<Objection>> getObjectionsForBelief(@NonNull int beliefId){
+    public LiveData<List<Objection>> getObjectionsForBelief(@NonNull int beliefId) {
         return this.objectionDao.getObjectionsForBelief(beliefId);
     }
 
-    public LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(@NonNull int beliefId){
+    public LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(@NonNull int beliefId) {
         return this.beliefThinkingStyleDao.getThinkingStylesForBelief(beliefId);
     }
 
-       ///////////////
+    ///////////////
     // CREATE OPERATIONS //
-       ///////////////
+    ///////////////
 
-    public void createEpisode(@NonNull String newEpisodeName,@NonNull String newEpisodeDate,@NonNull String newEpisodePeriod){
+    public void createEpisode(@NonNull String newEpisodeName, @NonNull String newEpisodeDate, @NonNull String newEpisodePeriod) {
 
         Date episodeDate;
 
         try {
-            episodeDate = newEpisodeDate.isEmpty()? Calendar.getInstance().getTime() : DateFormat.getDateInstance(DateFormat.SHORT).parse(newEpisodeDate);
+            episodeDate = newEpisodeDate.isEmpty() ? Calendar.getInstance().getTime() : DateFormat.getDateInstance(DateFormat.SHORT).parse(newEpisodeDate);
         } catch (ParseException e) {
             episodeDate = Calendar.getInstance().getTime();
         }
@@ -124,7 +124,7 @@ public class Repository {
         new insertEpisodeAsyncTask(this.episodeDao).execute(e);
     }
 
-    public void createArgumentForBelief(@NonNull final int beliefId, @NonNull final String newArgument){
+    public void createArgumentForBelief(@NonNull final int beliefId, @NonNull final String newArgument) {
         Argument a = new Argument(
                 newArgument,
                 beliefId
@@ -132,15 +132,15 @@ public class Repository {
         new insertArgumentAsyncTask(this.argumentDao).execute(a);
     }
 
-    public void editArgumentForBelief(@NonNull final Argument argument){
+    public void editArgumentForBelief(@NonNull final Argument argument) {
         new saveArgumentAsyncTask(this.argumentDao).execute(argument);
     }
 
-    public void deleteArgumentForBelief(@NonNull final Argument argument){
+    public void deleteArgumentForBelief(@NonNull final Argument argument) {
         new deleteArgumentAsyncTask(this.argumentDao).execute(argument);
     }
 
-    public void createObjectionForBelief(final int beliefId, @NonNull final String newObjection){
+    public void createObjectionForBelief(final int beliefId, @NonNull final String newObjection) {
         Objection o = new Objection(
                 newObjection,
                 beliefId
@@ -148,11 +148,11 @@ public class Repository {
         new insertObjectionAsyncTask(this.objectionDao).execute(o);
     }
 
-    public void editObjectionForBelief(@NonNull final Objection objection){
+    public void editObjectionForBelief(@NonNull final Objection objection) {
         new saveObjectionAsyncTask(this.objectionDao).execute(objection);
     }
 
-    public void deleteObjectionForBelief(@NonNull final Objection objection){
+    public void deleteObjectionForBelief(@NonNull final Objection objection) {
         new deleteObjectionAsyncTask(this.objectionDao).execute(objection);
     }
 
@@ -165,16 +165,16 @@ public class Repository {
         new insertReactionAsyncTask(this.reactionDao).execute(r);
     }
 
-    public void editReactionForEpisode(@NonNull final Reaction reaction){
+    public void editReactionForEpisode(@NonNull final Reaction reaction) {
         new saveReactionAsyncTask(this.reactionDao).execute(reaction);
     }
 
-    public void deleteReactionForEpisode(@NonNull final Reaction reaction){
+    public void deleteReactionForEpisode(@NonNull final Reaction reaction) {
         new deleteReactionAsyncTask(this.reactionDao).execute(reaction);
     }
 
     public void createBeliefForEpisode(final int episodeId, @NonNull final String newBelief) {
-        Belief b = new Belief(newBelief,episodeId);
+        Belief b = new Belief(newBelief, episodeId);
         new insertBeliefAsyncTask(this.beliefDao).execute(b);
     }
 

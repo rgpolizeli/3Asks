@@ -25,9 +25,9 @@
                 android:layout_height="match_parent"
                 android:hint="@string/episode_name_hint"
                 android:inputType="text"
-                app:fontFamily="@font/roboto"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@color/errorColor"
+                app:fontFamily="@font/roboto"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/episodeTextInputLayout" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -46,11 +46,11 @@
                 android:id="@+id/episode_date_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:focusable="false"
                 android:hint="@string/episode_date_hint"
                 android:inputType="date"
-                android:focusable="false"
                 android:longClickable="false"
-                app:fontFamily="@font/roboto"/>
+                app:fontFamily="@font/roboto" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
@@ -58,11 +58,11 @@
             style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
             android:entries="@array/episode_period_array"
-            android:paddingBottom="15dp"
             android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/episodeDateTextInputLayout"
             app:layout_constraintStart_toEndOf="@+id/episodeDateTextInputLayout"
             app:layout_constraintTop_toTopOf="@+id/episodeDateTextInputLayout" />
