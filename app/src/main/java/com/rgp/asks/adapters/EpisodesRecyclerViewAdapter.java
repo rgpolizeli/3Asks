@@ -9,25 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rgp.asks.listeners.EditListener;
-import com.rgp.asks.listeners.OnItemClickListener;
 import com.rgp.asks.persistence.entity.Episode;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.ViewHolder> {
-    private @NonNull
-    List<Episode> episodes;
-    private @NonNull
-    OnItemClickListener onItemClickListener;
+    @NonNull
+    private List<Episode> episodes;
 
-    @Inject
-    public EpisodesRecyclerViewAdapter(OnItemClickListener onItemClickListener) {
+    public EpisodesRecyclerViewAdapter() {
         this.episodes = new ArrayList<>();
-        this.onItemClickListener = onItemClickListener;
     }
 
     @Override

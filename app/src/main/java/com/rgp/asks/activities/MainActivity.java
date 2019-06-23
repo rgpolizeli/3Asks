@@ -17,9 +17,7 @@ import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.dialogs.HelpInfoDialog;
 import com.rgp.asks.dialogs.NewEpisodeDialog;
-import com.rgp.asks.listeners.OnItemClickListener;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
-import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,18 +43,8 @@ public class MainActivity extends AppCompatActivity {
         episodesRecyclerView = this.findViewById(R.id.episodesRecyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(this);
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
-        OnItemClickListener onItemClickListener = new OnItemClickListener();
-        episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(onItemClickListener);
+        episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter();
         episodesRecyclerView.setAdapter(episodesRecyclerViewAdapter);
-
-        onItemClickListener.getClickedView().observe(this, view -> {
-            int position = 0;
-            if (view != null) {
-                position = episodesRecyclerView.getChildAdapterPosition(view);
-            }
-            Episode clickedEpisode = episodesRecyclerViewAdapter.getItem(position);
-            startEditEpisodeActivity(clickedEpisode.getId());
-        });
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         helpInfoDialog = createHelpInfoDialog();
