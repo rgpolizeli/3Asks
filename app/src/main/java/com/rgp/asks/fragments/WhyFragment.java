@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class WhyFragment extends Fragment {
 
@@ -84,6 +87,11 @@ public class WhyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     private AlertDialog createNewEpisodeInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -105,6 +113,7 @@ public class WhyFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 EditText beliefEditText = dialog.findViewById(com.rgp.asks.R.id.thoughtEditText);
                 String newBelief = beliefEditText.getText().toString();
 
@@ -122,6 +131,7 @@ public class WhyFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearEpisodeDialog(dialog);
                 dialog.cancel();
             }

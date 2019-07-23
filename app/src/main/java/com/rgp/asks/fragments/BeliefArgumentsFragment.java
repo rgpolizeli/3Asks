@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class BeliefArgumentsFragment extends Fragment {
 
     private RecyclerView argumentsRecyclerView;
@@ -54,6 +57,11 @@ public class BeliefArgumentsFragment extends Fragment {
         initViewModel();
 
         return rootView;
+    }
+
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setupRecyclerView(View rootView) {
@@ -126,6 +134,7 @@ public class BeliefArgumentsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 TextInputEditText argumentEditText = dialog.findViewById(com.rgp.asks.R.id.argumentEditText);
                 String newArgument = argumentEditText.getText().toString();
 
@@ -143,6 +152,7 @@ public class BeliefArgumentsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearArgumentDialog(dialog);
                 dialog.cancel();
             }
@@ -160,6 +170,7 @@ public class BeliefArgumentsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 String newArgument = argumentEditText.getText().toString();
 
                 if (newArgument.isEmpty()) {
@@ -179,6 +190,7 @@ public class BeliefArgumentsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearArgumentDialog(dialog);
                 dialog.cancel();
             }
@@ -186,6 +198,7 @@ public class BeliefArgumentsFragment extends Fragment {
         this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 model.removeArgument(argument);
                 clearArgumentDialog(dialog);
                 dialog.dismiss();

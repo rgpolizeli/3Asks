@@ -2,8 +2,10 @@ package com.rgp.asks.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -15,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rgp.asks.activities.AsksActivity;
 import com.rgp.asks.listeners.EpisodeDateOnClick;
 import com.rgp.asks.listeners.EpisodeDescriptionTextWatcher;
 import com.rgp.asks.listeners.EpisodeTextWatcher;
@@ -24,6 +27,8 @@ import com.rgp.asks.viewmodel.EpisodeViewModel;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class WhenFragment extends Fragment {
 
@@ -66,11 +71,9 @@ public class WhenFragment extends Fragment {
     private void setupFAB(ViewGroup container) {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton saveEpisodeFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
-        saveEpisodeFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveEpisode();
-            }
+        saveEpisodeFab.setOnClickListener(v -> {
+            ((AsksActivity) getActivity()).hideKeyboard();
+            saveEpisode();
         });
     }
 
@@ -117,5 +120,12 @@ public class WhenFragment extends Fragment {
         episodeDescriptionEditText.addTextChangedListener(new EpisodeDescriptionTextWatcher(model));
         episodeDateEditText.setOnClickListener(new EpisodeDateOnClick(model, episodeDateEditText));
         episodePeriodSpinner.setOnItemSelectedListener(new OnItemSelectedListenerEpisodePeriod(model));
+        episodePeriodSpinner.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+            return false;
+        });
     }
 }

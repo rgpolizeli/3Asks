@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class BeliefObjectionsFragment extends Fragment {
 
     private RecyclerView objectionsRecyclerView;
@@ -55,6 +58,11 @@ public class BeliefObjectionsFragment extends Fragment {
         initViewModel();
 
         return rootView;
+    }
+
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setupFAB(ViewGroup container) {
@@ -127,6 +135,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 TextInputEditText objectionEditText = dialog.findViewById(com.rgp.asks.R.id.objectionEditText);
                 String newObjection = objectionEditText.getText().toString();
 
@@ -144,6 +153,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearObjectionDialog(dialog);
                 dialog.cancel();
             }
@@ -161,6 +171,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 String newObjection = objectionEditText.getText().toString();
 
                 if (newObjection.isEmpty()) {
@@ -180,6 +191,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearObjectionDialog(dialog);
                 dialog.cancel();
             }
@@ -187,6 +199,7 @@ public class BeliefObjectionsFragment extends Fragment {
         this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 model.removeObjection(objection);
                 clearObjectionDialog(dialog);
                 dialog.dismiss();

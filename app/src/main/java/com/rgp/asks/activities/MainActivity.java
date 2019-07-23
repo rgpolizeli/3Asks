@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         NewEpisodeDialog newEpisodeDialog = new NewEpisodeDialog();
         newEpisodeDialog.createNewEpisodeDialogView(getLayoutInflater(), R.layout.dialog_new_episode);
         newEpisodeDialog.setupDateOnClickListener();
+        newEpisodeDialog.setupPeriodOnTouchListener();
         newEpisodeDialog.createAlertDialog(this, this.mainViewModel);
         return newEpisodeDialog;
     }

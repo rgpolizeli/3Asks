@@ -2,8 +2,10 @@ package com.rgp.asks.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,6 +34,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class WhatFragment extends Fragment {
 
     private RecyclerView reactionsRecyclerView;
@@ -57,6 +61,11 @@ public class WhatFragment extends Fragment {
         initViewModel();
 
         return rootView;
+    }
+
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void initDialogs() {
@@ -97,14 +106,25 @@ public class WhatFragment extends Fragment {
     private AlertDialog createEditReactionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
+        View alertDialogView = inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null);
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null))
+        builder.setView(alertDialogView)
                 .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null)
                 .setNeutralButton("Delete", null)
                 .setTitle("Edit the reaction");
 
         AlertDialog dialog = builder.create();
+
+        Spinner reactionSpinner = alertDialogView.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
+        reactionSpinner.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+            return false;
+        });
+
         return dialog;
     }
 
@@ -112,13 +132,24 @@ public class WhatFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null))
+        View alertDialogView = inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null);
+        builder.setView(alertDialogView)
                 .setPositiveButton("Create", null)
                 .setNegativeButton("Cancel", null)
                 //.setNeutralButton("Delete",null)
                 .setTitle("Create a reaction");
 
         AlertDialog dialog = builder.create();
+
+        Spinner reactionSpinner = alertDialogView.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
+        reactionSpinner.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+            return false;
+        });
+
         return dialog;
     }
 
@@ -130,6 +161,7 @@ public class WhatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 TextInputEditText reactionEditText = dialog.findViewById(com.rgp.asks.R.id.reactionEditText);
                 Spinner reactionClassSpinner = dialog.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
 
@@ -150,6 +182,7 @@ public class WhatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearReactionDialog(dialog);
                 dialog.cancel();
             }
@@ -179,6 +212,7 @@ public class WhatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 String newReaction = reactionEditText.getText().toString();
                 String newReactionClass = reactionClassSpinner.getSelectedItem().toString();
 
@@ -201,6 +235,7 @@ public class WhatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 clearReactionDialog(dialog);
                 dialog.cancel();
             }
@@ -208,6 +243,7 @@ public class WhatFragment extends Fragment {
         this.editReactionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 model.removeReaction(reaction);
                 clearReactionDialog(dialog);
                 dialog.dismiss();

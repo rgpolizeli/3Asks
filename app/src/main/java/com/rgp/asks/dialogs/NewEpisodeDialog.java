@@ -3,7 +3,9 @@ package com.rgp.asks.dialogs;
 import android.content.Context;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,6 +21,8 @@ import com.rgp.asks.listeners.EpisodeDateDialogOnClick;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class NewEpisodeDialog {
 
@@ -45,6 +49,17 @@ public class NewEpisodeDialog {
         episodeDateEditText.setOnClickListener(new EpisodeDateDialogOnClick(episodeDateEditText));
         Calendar c = Calendar.getInstance();
         episodeDateEditText.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(c.getTime()));
+    }
+
+    public void setupPeriodOnTouchListener() throws NullPointerException {
+        Spinner episodePeriodSpinner = newEpisodeDialogView.findViewById(com.rgp.asks.R.id.episodePeriodSpinner);
+        episodePeriodSpinner.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+            return false;
+        });
     }
 
     /**
@@ -78,7 +93,6 @@ public class NewEpisodeDialog {
             TextInputEditText episodeNameInputEditText = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeEditText);
             TextInputEditText episodeDateEditText = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeDateEditText);
             Spinner episodePeriodSpinner = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodePeriodSpinner);
-
             String newEpisodeName = episodeNameInputEditText.getText().toString();
             String newEpisodeDate = episodeDateEditText.getText().toString();
             String newEpisodePeriod = episodePeriodSpinner.getSelectedItem().toString();
