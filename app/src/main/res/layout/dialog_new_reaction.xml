@@ -25,7 +25,7 @@
             android:id="@+id/reactionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/add_what_item_text_view"
+            android:hint="@string/hint_reaction_description"
             android:inputType="textMultiLine"
             app:fontFamily="@font/roboto"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +41,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:text="@string/add_what_item_category_text_view"
+        android:text="@string/hint_reaction_category"
         app:fontFamily="@font/roboto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionTextInputLayout" />

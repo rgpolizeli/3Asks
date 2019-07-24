@@ -28,7 +28,7 @@
                 android:id="@+id/beliefEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Belief"
+                android:hint="@string/hint_belief"
                 android:inputType="textMultiLine"
                 android:maxLines="4"
                 app:errorEnabled="true"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/textInputLayoutSpace"
             android:paddingLeft="5dp"
-            android:text="@string/unhelpful_thinking_styles_label"
+            android:text="@string/hint_unhelpful_thinking_styles"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/beliefTextInputLayout" />
 

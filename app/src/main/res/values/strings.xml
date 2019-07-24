@@ -1,28 +1,79 @@
 <resources>
+    <!-- App -->
     <string name="app_name">3Asks</string>
     <string name="title_activity_asks_activity">Episode</string>
-    <string name="tab_text_1">When</string>
-    <string name="tab_text_2">What</string>
-    <string name="tab_text_3">Why</string>
 
-    <string name="episode_name_hint">Episode Name</string>
-    <string name="episode_date_hint">Date</string>
-    <string name="episode_description_hint">Description</string>
+    <!-- Tabs -->
+    <string name="tab_when">When</string>
+    <string name="tab_what">What</string>
+    <string name="tab_why">Why</string>
+    <string name="tab_arguments">Arguments</string>
+    <string name="tab_objections">Objections</string>
+    <string name="tab_belief_details">Details</string>
 
-    <string name="add_what_item_text_view">What you feel or do?</string>
-    <string name="add_what_item_category_text_view">How do you classify this reaction?</string>
+    <!-- edittexts' hints -->
+    <!-- note that the same hint can be utilized in more than one edit text (for example, in creation and edition) -->
+    <string name="hint_episode_name">Episode Name</string>
+    <string name="hint_episode_date">Date</string>
+    <string name="hint_episode_description">Description</string>
+    <string name="hint_reaction_description">What you feel or do?</string>
+    <string name="hint_argument_description">What proves this thought?</string>
+    <string name="hint_belief_description">What were you thinking?</string>
+    <string name="hint_objection_description">What refutes this thought?</string>
+
+    <!-- text views' hints -->
+    <string name="hint_reaction_category">How do you classify this reaction?</string>
+    <string name="hint_belief">Belief</string>
+    <string name="hint_unhelpful_thinking_styles">Thinking styles</string>
+
+    <!-- dialogs' labels -->
+    <string name="episode_dialog_positive_button">Create</string>
+    <string name="episode_dialog_negative_button">Cancel</string>
+    <string name="episode_dialog_title">Create an episode</string>
+    <string name="episode_dialog_error_empty_episode_name">Episode name is required!</string>
+    <string name="episode_save_dialog_title">Save changes in the details of the episode?</string>
+    <string name="episode_save_dialog_save_button">Yes</string>
+    <string name="episode_save_dialog_discard_button">No</string>
+    <string name="belief_save_dialog_title">Save changes in the details of the belief?</string>
+    <string name="belief_save_dialog_save_button">Yes</string>
+    <string name="belief_save_dialog_discard_button">No</string>
+    <string name="reaction_dialog_edit_title">Edit the reaction</string>
+    <string name="reaction_dialog_delete_button">Delete</string>
+    <string name="reaction_dialog_cancel_button">Cancel</string>
+    <string name="reaction_dialog_save_button">Save</string>
+    <string name="reaction_dialog_create_title">Create a reaction</string>
+    <string name="reaction_dialog_create_button">Create</string>
+    <string name="reaction_dialog_error_empty_reaction">Reaction is required!</string>
+    <string name="belief_dialog_create_button">Create</string>
+    <string name="belief_dialog_cancel_button">Cancel</string>
+    <string name="belief_dialog_title">Register a belief</string>
+    <string name="belief_dialog_error_empty_thought">Thought is required!</string>
+    <string name="argument_dialog_save_button">Save</string>
+    <string name="argument_dialog_cancel_button">Cancel</string>
+    <string name="argument_dialog_delete_button">Delete</string>
+    <string name="argument_dialog_edit_title">Edit the argument</string>
+    <string name="argument_dialog_create_button">Create</string>
+    <string name="argument_dialog_create_title">Create an argument</string>
+    <string name="argument_dialog_error_empty_argument">Argument is required!</string>
+    <string name="objection_dialog_save_button">Save</string>
+    <string name="objection_dialog_delete_button">Delete</string>
+    <string name="objection_dialog_edit_title">Edit the objection</string>
+    <string name="objection_dialog_create_button">Create</string>
+    <string name="objection_dialog_create_title">Create an objection</string>
+    <string name="objection_dialog_error_empty_objection">Objection is required!</string>
+    <string name="objection_dialog_cancel_button">Cancel</string>
+
+    <!-- string arrays -->
     <string-array name="reaction_categories_array">
         <item>Physical</item>
         <item>Feeling</item>
         <item>Action</item>
     </string-array>
-
     <string-array name="episode_period_array">
         <item>Morning</item>
         <item>Evening</item>
         <item>Night</item>
     </string-array>
-    <string name="unhelpful_thinking_styles_label">Thinking styles</string>
 
     <!-- Unhelpful thinking styles' labels  -->
     <string name="unhelpful_thinking_style_mental_filter_label">Negative focusing</string>
@@ -37,12 +88,17 @@
     <string name="unhelpful_thinking_style_others_empowerment_label">Other\'s empowerment</string>
     <string name="unhelpful_thinking_style_labeling_label">Labeling</string>
 
-    <string name="arguments_label">Arguments</string>
-    <string name="objections_label">Objections</string>
-    <string name="belief_details_label">Details</string>
-
     <!-- Toast messages -->
     <string name="toast_message_creating_episode">Creating episode…</string>
+    <string name="toast_message_creating_belief">Creating belief…</string>
+    <string name="toast_message_creating_reaction">Creating reaction…</string>
+    <string name="toast_saved_episode">Episode details saved!</string>
+    <string name="toast_saved_belief">Belief details saved!</string>
+    <string name="toast_deleted_episode">Episode deleted!</string>
+    <string name="toast_error_deleted_episode">Failed to delete the episode!</string>
+    <string name="toast_deleted_belief">Belief deleted!</string>
+    <string name="toast_error_deleted_belief">Failed to delete the belief!</string>
+
     <string name="help_info_dialog_website_label">Website</string>
     <string name="help_info_dialog_example_label">Example of use</string>
     <string name="help_info_dialog_how_it_works_label">How it works?</string>
@@ -52,9 +108,10 @@
     <string name="help_info_dialog_contact_label">Contact (support and feedback)</string>
     <string name="help_info_dialog_made_by_label">Made by Ricardo Polizeli</string>
     <string name="help_info_dialog_email_label">3asksapp@gmail.com</string>
-    <string name="new_episode_dialog_positive_button_label">Create</string>
-    <string name="new_episode_dialog_negative_button_label">Cancel</string>
-    <string name="new_episode_dialog_title_label">Create an episode</string>
-    <string name="new_episode_dialog_error_empty_episode_name">Episode name is required!</string>
+
+    <!-- menus' titles-->
+    <string name="menu_delete_episode">Delete episode</string>
+    <string name="menu_delete_belief">Delete belief</string>
+    <string name="menu_help_and_info">Help and Info</string>
 
 </resources>

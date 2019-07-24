@@ -1,6 +1,5 @@
 package com.rgp.asks.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.activities.AddNewBeliefActivity;
 import com.rgp.asks.adapters.BeliefRVAdapter;
 import com.rgp.asks.auxiliaries.Constants;
@@ -59,7 +59,7 @@ public class WhyFragment extends Fragment {
         beliefsRecyclerViewAdapter = new BeliefRVAdapter();
         beliefsRecyclerView.setAdapter(beliefsRecyclerViewAdapter);
 
-        newBeliefDialog = createNewEpisodeInputDialog();
+        newBeliefDialog = createNewBeliefDialog();
 
         CoordinatorLayout coordinatorLayout2 = (CoordinatorLayout) container.getParent();
         FloatingActionButton beliefsFab = coordinatorLayout2.findViewById(com.rgp.asks.R.id.addBeliefFab);
@@ -92,14 +92,14 @@ public class WhyFragment extends Fragment {
         imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    private AlertDialog createNewEpisodeInputDialog() {
+    private AlertDialog createNewBeliefDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_belief, null))
-                .setPositiveButton("Create", null)
-                .setNegativeButton("Cancel", null)
-                .setTitle("Register a belief");
+        builder.setView(inflater.inflate(R.layout.dialog_new_belief, null))
+                .setPositiveButton(this.getString(R.string.belief_dialog_create_button), null)
+                .setNegativeButton(this.getString(R.string.belief_dialog_cancel_button), null)
+                .setTitle(this.getString(R.string.belief_dialog_title));
 
         AlertDialog dialog = builder.create();
         return dialog;
@@ -119,7 +119,7 @@ public class WhyFragment extends Fragment {
 
                 if (newBelief.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.newEpisodeNameTextInputLayout);
-                    inputLayout.setError("Thought is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.belief_dialog_error_empty_thought)); // show error
                 } else {
                     model.createBelief(newBelief);
                     clearEpisodeDialog(dialog);
@@ -147,6 +147,7 @@ public class WhyFragment extends Fragment {
         beliefEditText.setText("");
     }
 
+    /*
     private void createUnsavedDialog(@NonNull final int beliefPositionInRecyclerView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
@@ -168,6 +169,7 @@ public class WhyFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+    */
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

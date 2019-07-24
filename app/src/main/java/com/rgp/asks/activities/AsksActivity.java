@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.fragments.WhatFragment;
 import com.rgp.asks.fragments.WhenFragment;
@@ -102,14 +103,14 @@ public class AsksActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder
-                .setMessage("Save changes in the details of the episode?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setMessage(this.getString(R.string.episode_save_dialog_title))
+                .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         model.checkedSaveEpisode();
                         finish();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //nothing
                         finish();
@@ -232,15 +233,14 @@ public class AsksActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeletedEpisodeEvent(DeletedEpisodeEvent event) {
-
         if (event.result) {
             Episode currentEpisode = model.getEpisode().getValue();
             if (currentEpisode == null || currentEpisode.getId() == event.deletedEpisodeId) {
-                Toast.makeText(this, Constants.DELETED_EPISODE_MESSAGE, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, this.getString(R.string.toast_deleted_episode), Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         } else {
-            Toast.makeText(this, "Failed to delete the episode", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getString(R.string.toast_error_deleted_episode), Toast.LENGTH_SHORT).show();
         }
     }
 

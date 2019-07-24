@@ -42,19 +42,19 @@
                 android:id="@+id/tabDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/belief_details_label" />
+                android:text="@string/tab_belief_details" />
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabArguments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/arguments_label" />
+                android:text="@string/tab_arguments" />
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabObjections"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/objections_label" />
+                android:text="@string/tab_objections" />
 
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>

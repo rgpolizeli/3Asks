@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.adapters.ArgumentRVAdapter;
 import com.rgp.asks.messages.OpenEditArgumentDialogEvent;
 import com.rgp.asks.persistence.entity.Argument;
@@ -102,11 +103,11 @@ public class BeliefArgumentsFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_argument, null))
-                .setPositiveButton("Save", null)
-                .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete", null)
-                .setTitle("Edit the argument");
+        builder.setView(inflater.inflate(R.layout.dialog_new_argument, null))
+                .setPositiveButton(this.getString(R.string.argument_dialog_save_button), null)
+                .setNegativeButton(this.getString(R.string.argument_dialog_cancel_button), null)
+                .setNeutralButton(this.getString(R.string.argument_dialog_delete_button), null)
+                .setTitle(this.getString(R.string.argument_dialog_edit_title));
 
         AlertDialog dialog = builder.create();
         return dialog;
@@ -116,11 +117,10 @@ public class BeliefArgumentsFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_argument, null))
-                .setPositiveButton("Create", null)
-                .setNegativeButton("Cancel", null)
-                //.setNeutralButton("Delete",null)
-                .setTitle("Create an argument");
+        builder.setView(inflater.inflate(R.layout.dialog_new_argument, null))
+                .setPositiveButton(this.getString(R.string.argument_dialog_create_button), null)
+                .setNegativeButton(this.getString(R.string.argument_dialog_cancel_button), null)
+                .setTitle(this.getString(R.string.argument_dialog_create_title));
 
         AlertDialog dialog = builder.create();
         return dialog;
@@ -140,7 +140,7 @@ public class BeliefArgumentsFragment extends Fragment {
 
                 if (newArgument.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
-                    inputLayout.setError("Argument is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
                 } else {
                     model.createArgument(newArgument);
                     clearArgumentDialog(dialog);
@@ -175,7 +175,7 @@ public class BeliefArgumentsFragment extends Fragment {
 
                 if (newArgument.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
-                    inputLayout.setError("Argument is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
                 } else {
                     if (!newArgument.equals(argument.getArgument())) {
                         argument.setArgument(newArgument);
@@ -226,7 +226,7 @@ public class BeliefArgumentsFragment extends Fragment {
         if (argument != null) {
             this.showEditArgumentDialog(argument);
         } else {
-            Toast.makeText(this.getActivity(), "This argument don't exist!", Toast.LENGTH_SHORT);
+            Toast.makeText(this.getActivity(), "This argument don't exist!", Toast.LENGTH_SHORT).show();
         }
     }
 }

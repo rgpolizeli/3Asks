@@ -49,14 +49,14 @@ public class MainActivityUITests {
     }
 
     private void clickOnPositiveButtonOfNewEpisodeDialog() {
-        onView(withText(R.string.new_episode_dialog_positive_button_label))
+        onView(withText(R.string.episode_dialog_positive_button))
                 .inRoot(isDialog())
                 .perform(click())
         ;
     }
 
     private void clickOnNegativeButtonOfNewEpisodeDialog() {
-        onView(withText(R.string.new_episode_dialog_negative_button_label))
+        onView(withText(R.string.episode_dialog_negative_button))
                 .inRoot(isDialog())
                 .perform(click())
         ;
@@ -66,7 +66,7 @@ public class MainActivityUITests {
     public void clickOnPositiveButtonOfNewEpisodeDialog_WithEmptyEpisodeName_ShowError() {
         openNewEpisodeDialog();
         clickOnPositiveButtonOfNewEpisodeDialog();
-        onView(withText(R.string.new_episode_dialog_error_empty_episode_name)).check(matches(isDisplayed()));
+        onView(withText(R.string.episode_dialog_error_empty_episode_name)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -76,10 +76,10 @@ public class MainActivityUITests {
         //then: newEpisodeDialog is reset to a default state.
         openNewEpisodeDialog();
         clickOnPositiveButtonOfNewEpisodeDialog();
-        onView(withText(R.string.new_episode_dialog_error_empty_episode_name)).check(matches(isDisplayed()));
+        onView(withText(R.string.episode_dialog_error_empty_episode_name)).check(matches(isDisplayed()));
         clickOnNegativeButtonOfNewEpisodeDialog();
         openNewEpisodeDialog();
-        onView(withText(R.string.new_episode_dialog_error_empty_episode_name)).check(doesNotExist());
+        onView(withText(R.string.episode_dialog_error_empty_episode_name)).check(doesNotExist());
 
         String defaultEpisodeName = "";
         onView(withId(R.id.episodeEditText)).check(matches(withText(defaultEpisodeName)));

@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.fragments.BeliefArgumentsFragment;
 import com.rgp.asks.fragments.BeliefDetailsFragment;
@@ -216,16 +217,15 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeletedBeliefEvent(DeletedBeliefEvent event) {
-
         if (event.result) {
             Belief currentBelief = beliefViewModel.getBelief().getValue();
             if (currentBelief == null || currentBelief.getId() == event.deletedBeliefId) {
-                Toast.makeText(this, Constants.DELETED_BELIEF_MESSAGE, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, this.getString(R.string.toast_deleted_belief), Toast.LENGTH_SHORT).show();
                 this.finish();
 
             }
         } else {
-            Toast.makeText(this, "Failed to delete the belief", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getString(R.string.toast_error_deleted_belief), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -238,14 +238,14 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder
-                .setMessage("Save changes in the details of the belief?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setMessage(this.getString(R.string.belief_save_dialog_title))
+                .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         beliefViewModel.checkedSaveBelief();
                         finish();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //nothing
                         finish();

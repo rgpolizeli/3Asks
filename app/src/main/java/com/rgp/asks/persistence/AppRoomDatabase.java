@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.rgp.asks.auxiliaries.Constants;
+import com.rgp.asks.R;
 import com.rgp.asks.persistence.converter.DateConverter;
 import com.rgp.asks.persistence.dao.ArgumentDao;
 import com.rgp.asks.persistence.dao.BeliefDao;
@@ -34,7 +34,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
 
     private static AppRoomDatabase INSTANCE;
 
-    public static AppRoomDatabase getDatabase(final Context context) {
+    public static AppRoomDatabase getDatabase(@NonNull final Context context) {
         if (INSTANCE == null) {
             synchronized (AppRoomDatabase.class) {
                 if (INSTANCE == null) {
@@ -45,59 +45,53 @@ public abstract class AppRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static AppRoomDatabase buildDatabase(final Context context) {
+    private static AppRoomDatabase buildDatabase(@NonNull final Context context) {
         return Room.databaseBuilder(context.getApplicationContext(),
                 AppRoomDatabase.class, "3ask_database")
                 .addCallback(new Callback() {
 
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
-
                         super.onCreate(db);
 
                         Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
-
                             @Override
-
                             public void run() {
-                                getDatabase(context).thinkingStyleDao().insert(createUnhelpfulThinkingStyles());
+                                getDatabase(context).thinkingStyleDao().insert(createUnhelpfulThinkingStyles(context));
                             }
-
                         });
-
                     }
 
                 })
                 .build();
     }
 
-    private static ThinkingStyle[] createUnhelpfulThinkingStyles() {
+    private static ThinkingStyle[] createUnhelpfulThinkingStyles(@NonNull final Context context) {
 
         return new ThinkingStyle[]{
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_mental_filter_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_mental_filter_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_mind_reading_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_mind_reading_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_predictive_thinking_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_predictive_thinking_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_personalisation_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_personalisation_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_catastrophising_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_catastrophising_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_black_white_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_black_white_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_overgeneralisation_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_overgeneralisation_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_shoulding_musting_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_shoulding_musting_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_magnification_minimisation_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_magnification_minimisation_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_others_empowerment_label),
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_others_empowerment_label)),
 
-                new ThinkingStyle(Constants.unhelpful_thinking_style_labeling_label)
+                new ThinkingStyle(context.getString(R.string.unhelpful_thinking_style_labeling_label))
         };
-
     }
 
     public abstract ReactionDao reactionDao();

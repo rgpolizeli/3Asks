@@ -33,6 +33,5 @@ public class insertReactionAsyncTask extends AsyncTask<Reaction, Void, Long> {
     protected void onPostExecute(Long reactionId) {
         super.onPostExecute(reactionId);
         EventBus.getDefault().post(new CreatedReactionEvent(reactionId.intValue()));
-
     }
 }

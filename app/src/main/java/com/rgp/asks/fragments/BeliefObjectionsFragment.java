@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.adapters.ObjectionRVAdapter;
 import com.rgp.asks.messages.OpenEditObjectionDialogEvent;
 import com.rgp.asks.persistence.entity.Objection;
@@ -103,11 +104,11 @@ public class BeliefObjectionsFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_objection, null))
-                .setPositiveButton("Save", null)
-                .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete", null)
-                .setTitle("Edit the objection");
+        builder.setView(inflater.inflate(R.layout.dialog_new_objection, null))
+                .setPositiveButton(this.getString(R.string.objection_dialog_save_button), null)
+                .setNegativeButton(this.getString(R.string.objection_dialog_cancel_button), null)
+                .setNeutralButton(this.getString(R.string.objection_dialog_delete_button), null)
+                .setTitle(this.getString(R.string.objection_dialog_edit_title));
 
         AlertDialog dialog = builder.create();
         return dialog;
@@ -117,11 +118,10 @@ public class BeliefObjectionsFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
 
-        builder.setView(inflater.inflate(com.rgp.asks.R.layout.dialog_new_objection, null))
-                .setPositiveButton("Create", null)
-                .setNegativeButton("Cancel", null)
-                //.setNeutralButton("Delete",null)
-                .setTitle("Create an objection");
+        builder.setView(inflater.inflate(R.layout.dialog_new_objection, null))
+                .setPositiveButton(this.getString(R.string.objection_dialog_create_button), null)
+                .setNegativeButton(this.getString(R.string.objection_dialog_cancel_button), null)
+                .setTitle(this.getString(R.string.objection_dialog_create_title));
 
         AlertDialog dialog = builder.create();
         return dialog;
@@ -141,7 +141,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
                 if (newObjection.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
-                    inputLayout.setError("Objection is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
                 } else {
                     model.createObjection(newObjection);
                     clearObjectionDialog(dialog);
@@ -176,7 +176,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
                 if (newObjection.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
-                    inputLayout.setError("Objection is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
                 } else {
                     if (!newObjection.equals(objection.getObjection())) {
                         objection.setObjection(newObjection);

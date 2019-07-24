@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.adapters.ReactionRVAdapter;
 import com.rgp.asks.messages.CreatingReactionEvent;
 import com.rgp.asks.messages.OpenEditReactionDialogEvent;
@@ -109,10 +110,10 @@ public class WhatFragment extends Fragment {
         View alertDialogView = inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null);
 
         builder.setView(alertDialogView)
-                .setPositiveButton("Save", null)
-                .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete", null)
-                .setTitle("Edit the reaction");
+                .setPositiveButton(this.getString(R.string.reaction_dialog_save_button), null)
+                .setNegativeButton(this.getString(R.string.reaction_dialog_cancel_button), null)
+                .setNeutralButton(this.getString(R.string.reaction_dialog_delete_button), null)
+                .setTitle(this.getString(R.string.reaction_dialog_edit_title));
 
         AlertDialog dialog = builder.create();
 
@@ -134,10 +135,9 @@ public class WhatFragment extends Fragment {
 
         View alertDialogView = inflater.inflate(com.rgp.asks.R.layout.dialog_new_reaction, null);
         builder.setView(alertDialogView)
-                .setPositiveButton("Create", null)
-                .setNegativeButton("Cancel", null)
-                //.setNeutralButton("Delete",null)
-                .setTitle("Create a reaction");
+                .setPositiveButton(this.getString(R.string.reaction_dialog_create_button), null)
+                .setNegativeButton(this.getString(R.string.reaction_dialog_cancel_button), null)
+                .setTitle(this.getString(R.string.reaction_dialog_create_title));
 
         AlertDialog dialog = builder.create();
 
@@ -170,7 +170,7 @@ public class WhatFragment extends Fragment {
 
                 if (newReaction.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.reactionTextInputLayout);
-                    inputLayout.setError("Reaction is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.reaction_dialog_error_empty_reaction)); // show error
                 } else {
                     model.createReaction(newReaction, newReactionClass);
                     clearReactionDialog(dialog);
@@ -195,7 +195,7 @@ public class WhatFragment extends Fragment {
         if (reaction != null) {
             this.showEditReactionDialog(reaction);
         } else {
-            Toast.makeText(this.getActivity(), "This reaction don't exist!", Toast.LENGTH_SHORT);
+            Toast.makeText(this.getActivity(), "This reaction don't exist!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -218,7 +218,7 @@ public class WhatFragment extends Fragment {
 
                 if (newReaction.isEmpty()) {
                     TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.reactionTextInputLayout);
-                    inputLayout.setError("Reaction is required!"); // show error
+                    inputLayout.setError(dialog.getContext().getString(R.string.reaction_dialog_error_empty_reaction)); // show error
                 } else {
                     if (!newReaction.equals(reaction.getReaction()) || !newReactionClass.equals(reaction.getReactionCategory())) {
                         reaction.setReaction(newReaction);
@@ -282,6 +282,5 @@ public class WhatFragment extends Fragment {
     public void onCreatingReactionEvent(CreatingReactionEvent event) {
         Toast.makeText(this.getActivity(), event.message, Toast.LENGTH_SHORT).show();
     }
-
 
 }

@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.rgp.asks.R;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.ThinkingStyle;
 import com.rgp.asks.viewmodel.BeliefViewModel;
@@ -97,7 +98,7 @@ public class BeliefDetailsFragment extends Fragment {
             beliefTextInputLayout.setError(null); // hide error
             model.uncheckedSaveBelief();
         } else {
-            beliefTextInputLayout.setError("Belief is required!"); // show error
+            beliefTextInputLayout.setError(this.getString(R.string.belief_dialog_error_empty_thought)); // show error
         }
 
     }

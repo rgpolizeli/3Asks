@@ -25,7 +25,7 @@
             android:id="@+id/objectionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="What refutes this thought?"
+            android:hint="@string/hint_objection_description"
             android:inputType="textMultiLine"
             app:fontFamily="@font/roboto"
             app:layout_constraintBottom_toBottomOf="parent"

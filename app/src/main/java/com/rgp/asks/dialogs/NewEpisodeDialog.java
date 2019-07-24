@@ -77,9 +77,9 @@ public class NewEpisodeDialog {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(newEpisodeDialogView)
-                .setPositiveButton(context.getString(R.string.new_episode_dialog_positive_button_label), null)
-                .setNegativeButton(context.getString(R.string.new_episode_dialog_negative_button_label), null)
-                .setTitle(context.getString(R.string.new_episode_dialog_title_label));
+                .setPositiveButton(context.getString(R.string.episode_dialog_positive_button), null)
+                .setNegativeButton(context.getString(R.string.episode_dialog_negative_button), null)
+                .setTitle(context.getString(R.string.episode_dialog_title));
         this.alertDialog = builder.create();
 
         this.alertDialog.setOnShowListener(dialog -> {
@@ -99,7 +99,7 @@ public class NewEpisodeDialog {
 
             if (newEpisodeName.isEmpty()) {
                 TextInputLayout inputLayout = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.newEpisodeNameTextInputLayout);
-                inputLayout.setError(context.getString(R.string.new_episode_dialog_error_empty_episode_name)); // show error
+                inputLayout.setError(context.getString(R.string.episode_dialog_error_empty_episode_name)); // show error
             } else {
                 Toast.makeText(context, R.string.toast_message_creating_episode, Toast.LENGTH_SHORT).show();
                 controller.createEpisode(newEpisodeName, newEpisodeDate, newEpisodePeriod);

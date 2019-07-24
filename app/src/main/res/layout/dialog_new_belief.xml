@@ -25,7 +25,7 @@
             android:id="@+id/thoughtEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="What were you thinking?"
+            android:hint="@string/hint_belief_description"
             android:inputType="textMultiLine"
             android:theme="@style/Widget.AppCompat.EditText"
             app:fontFamily="@font/roboto"
