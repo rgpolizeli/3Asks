@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.rgp.asks.dialogs.I_EpisodeCreatorController;
+import com.rgp.asks.interfaces.I_EpisodeCreatorController;
 import com.rgp.asks.persistence.Repository;
 import com.rgp.asks.persistence.entity.Episode;
 

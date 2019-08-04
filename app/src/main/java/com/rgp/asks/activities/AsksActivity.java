@@ -148,7 +148,7 @@ public class AsksActivity extends AppCompatActivity {
         findViewById(com.rgp.asks.R.id.tabs).setVisibility(View.VISIBLE);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(com.rgp.asks.R.id.container);
+        mViewPager = findViewById(com.rgp.asks.R.id.asksViewPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(com.rgp.asks.R.id.tabs);

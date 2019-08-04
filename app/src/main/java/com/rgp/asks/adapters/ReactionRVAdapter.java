@@ -7,27 +7,26 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rgp.asks.listeners.EditListener;
 import com.rgp.asks.persistence.entity.Reaction;
 
 import java.util.List;
 
 public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.ViewHolder> {
     private List<Reaction> reactions;
+    private View.OnClickListener onItemClickListener;
 
-    public ReactionRVAdapter() {
+    public ReactionRVAdapter(View.OnClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
     public ReactionRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
-
         View v = LayoutInflater.from(parent.getContext()).inflate(com.rgp.asks.R.layout.item_recycler_view_reaction, parent, false);
 
-        setItemListeners(v);
+        v.setOnClickListener(this.onItemClickListener);
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     public void setReactions(List<Reaction> reactions) {
@@ -56,12 +55,6 @@ public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.Vi
         } else {
             return reactions.get(position);
         }
-    }
-
-    private void setItemListeners(View v) {
-        EditListener editListener = new EditListener();
-        editListener.setReactions(this.reactions);
-        v.setOnClickListener(editListener);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

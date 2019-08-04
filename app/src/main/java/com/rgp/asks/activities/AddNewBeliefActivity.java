@@ -129,7 +129,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         findViewById(com.rgp.asks.R.id.beliefTabs).setVisibility(View.VISIBLE);
 
         mBeliefPagerAdapter = new BeliefPagerAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(com.rgp.asks.R.id.container);
+        mViewPager = findViewById(com.rgp.asks.R.id.asksViewPager);
         mViewPager.setAdapter(mBeliefPagerAdapter);
 
         tabLayout = findViewById(com.rgp.asks.R.id.beliefTabs);

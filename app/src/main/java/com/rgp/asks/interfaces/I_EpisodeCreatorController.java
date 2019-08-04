@@ -1,4 +1,4 @@
-package com.rgp.asks.dialogs;
+package com.rgp.asks.interfaces;
 
 import androidx.annotation.NonNull;
 
