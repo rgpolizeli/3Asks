@@ -1,10 +1,7 @@
 package com.rgp.asks.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +24,7 @@ import com.rgp.asks.interfaces.ReactionDialogListener;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class ReactionDialog extends DialogFragment implements DialogInterface.OnDismissListener {
+public class ReactionDialog extends DialogFragment {
 
     //ReactionDialog fragment tag
     public static final String FRAGMENT_TAG_REACTION_DIALOG = "REACTION_DIALOG_FRAGMENT";
@@ -61,62 +58,10 @@ public class ReactionDialog extends DialogFragment implements DialogInterface.On
         }
     }
 
-
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        //if(!getActivity().isChangingConfigurations()){
-        //dismissAllowingStateLoss();
-        //}
-        super.onDismiss(dialogInterface);
-
-        //clearReactionDialog(getView());
-        //super.onDismiss(dialogInterface);
-    }
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_new_reaction, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        //setupReactionEditTextListeners(view);
-        /*
-        setupReactionClassSpinnerListeners(view);
-        setupButtonsListener(view);
-
-        Button deleteButton = view.findViewById(R.id.neutralReactionButton);
-
-        if(savedInstanceState != null){
-            restoreDialogState(savedInstanceState);
-        }
-
-        if (this.dialogMode == CREATE_MODE) {
-            clearReactionDialog(getView());
-            getDialog().setTitle(getContext().getString(R.string.reaction_dialog_create_title));
-            deleteButton.setVisibility(View.GONE);
-            Button createButton = view.findViewById(R.id.positiveReactionButton);
-            createButton.setText(getContext().getString(R.string.reaction_dialog_create_button));
-            createButton.setOnClickListener(createAlertDialogPositiveButtonListenerInCreateMode());
-        } else {
-            clearReactionDialog(getView());
-            getDialog().setTitle(getContext().getString(R.string.reaction_dialog_edit_title));
-            deleteButton.setVisibility(View.VISIBLE);
-            Button saveButton = view.findViewById(R.id.positiveReactionButton);
-            saveButton.setText(getContext().getString(R.string.reaction_dialog_save_button));
-            saveButton.setOnClickListener(createAlertDialogPositiveButtonListenerInEditMode());
-            EditText reactionEditText = view.findViewById(com.rgp.asks.R.id.reactionEditText);
-            Spinner reactionClassSpinner = view.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
-            if(this.firstCreation){
-                reactionEditText.setText(this.reactionToEdit);
-                reactionClassSpinner.setSelection(getIndex(reactionClassSpinner, this.reactionClassToEdit));
-            }
-        }
-        */
     }
 
     /**
@@ -171,50 +116,12 @@ public class ReactionDialog extends DialogFragment implements DialogInterface.On
         savedInstanceState.putString(BUNDLE_KEY_REACTION_TO_EDIT, this.reactionToEdit);
         savedInstanceState.putString(BUNDLE_KEY_REACTION_CLASS_TO_EDIT, this.reactionClassToEdit);
     }
-    /*
-    private String getValueFromReactionEditText(){
-        View reactionDialogView = getView();
-        if(reactionDialogView != null){
-            EditText reactionEditText = getView().findViewById(R.id.reactionEditText);
-            return reactionEditText.getText().toString();
-        }
-        return "";
-    }
-
-    private String getValueFromReactionClassSpinner(){
-        View reactionDialogView = getView();
-        if(reactionDialogView != null){
-            Spinner reactionClassSpinner = getView().findViewById(R.id.reactionClassSpinner);
-            return reactionClassSpinner.getSelectedItem().toString();
-        }
-        return "";
-    }
-    */
 
     private void restoreDialogState(@NonNull Bundle savedInstanceState) {
         this.firstCreation = savedInstanceState.getBoolean(BUNDLE_KEY_FIRST_CREATION_FLAG);
         this.dialogMode = savedInstanceState.getInt(BUNDLE_KEY_DIALOG_MODE);
         this.reactionToEdit = savedInstanceState.getString(BUNDLE_KEY_REACTION_TO_EDIT);
         this.reactionClassToEdit = savedInstanceState.getString(BUNDLE_KEY_REACTION_CLASS_TO_EDIT);
-    }
-
-    private void setupReactionEditTextListeners(@NonNull View view) {
-
-        EditText reactionEditText = view.findViewById(R.id.reactionEditText);
-        reactionEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ReactionDialog.this.reactionToEdit = s.toString();
-            }
-        });
     }
 
     /**
@@ -231,18 +138,6 @@ public class ReactionDialog extends DialogFragment implements DialogInterface.On
             }
             return false;
         });
-        /*
-        reactionClassSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ReactionDialog.this.reactionClassToEdit = (String)parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        */
     }
 
     private void setupButtonsListener(@NonNull View view) {
@@ -337,21 +232,6 @@ public class ReactionDialog extends DialogFragment implements DialogInterface.On
             this.reactionClassToEdit = reactionClassToEdit;
             show(fragmentManager, FRAGMENT_TAG_REACTION_DIALOG);
         }
-        /*this.alertDialog.setTitle(this.alertDialog.getContext().getString(R.string.reaction_dialog_edit_title));
-        this.alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setVisibility(View.VISIBLE);
-
-        this.alertDialog.show();
-
-        final TextInputEditText reactionEditText = this.alertDialog.findViewById(R.id.reactionEditText);
-        final Spinner reactionClassSpinner = this.alertDialog.findViewById(R.id.reactionClassSpinner);
-
-        reactionEditText.setText(reaction.getReaction());
-        reactionClassSpinner.setSelection(getIndex(reactionClassSpinner, reaction.getReactionCategory()));
-
-        this.alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(this.positiveButtonInEditModeOnClickListener);
-        this.alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(this.negativeButtonOnClickListener);
-        this.alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(this.neutralButtonOnClickListener);
-        */
     }
 
     private int getIndex(Spinner spinner, String myString) {
@@ -367,9 +247,4 @@ public class ReactionDialog extends DialogFragment implements DialogInterface.On
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
-
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
 }
