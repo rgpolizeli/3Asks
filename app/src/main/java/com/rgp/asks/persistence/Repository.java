@@ -72,31 +72,31 @@ public class Repository {
         return this.episodeDao.getAllEpisodes();
     }
 
-    public LiveData<Episode> getEpisodeById(@NonNull int episodeId) {
+    public LiveData<Episode> getEpisodeById(int episodeId) {
         return this.episodeDao.getEpisodeById(episodeId);
     }
 
-    public LiveData<Belief> getBeliefById(@NonNull int beliefId) {
+    public LiveData<Belief> getBeliefById(int beliefId) {
         return this.beliefDao.getBeliefById(beliefId);
     }
 
-    public LiveData<List<Reaction>> getReactionsForEpisode(@NonNull int episodeId) {
+    public LiveData<List<Reaction>> getReactionsForEpisode(int episodeId) {
         return this.reactionDao.getReactionsForEpisode(episodeId);
     }
 
-    public LiveData<List<Belief>> getBeliefsForEpisode(@NonNull int episodeId) {
+    public LiveData<List<Belief>> getBeliefsForEpisode(int episodeId) {
         return this.beliefDao.getBeliefsForEpisode(episodeId);
     }
 
-    public LiveData<List<Argument>> getArgumentsForBelief(@NonNull int beliefId) {
+    public LiveData<List<Argument>> getArgumentsForBelief(int beliefId) {
         return this.argumentDao.getArgumentsForBelief(beliefId);
     }
 
-    public LiveData<List<Objection>> getObjectionsForBelief(@NonNull int beliefId) {
+    public LiveData<List<Objection>> getObjectionsForBelief(int beliefId) {
         return this.objectionDao.getObjectionsForBelief(beliefId);
     }
 
-    public LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(@NonNull int beliefId) {
+    public LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(int beliefId) {
         return this.beliefThinkingStyleDao.getThinkingStylesForBelief(beliefId);
     }
 
@@ -124,7 +124,7 @@ public class Repository {
         new insertEpisodeAsyncTask(this.episodeDao).execute(e);
     }
 
-    public void createArgumentForBelief(@NonNull final int beliefId, @NonNull final String newArgument) {
+    public void createArgumentForBelief(final int beliefId, @NonNull final String newArgument) {
         Argument a = new Argument(
                 newArgument,
                 beliefId

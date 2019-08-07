@@ -10,7 +10,6 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity
 public class Reaction {
 
-    @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -20,11 +19,17 @@ public class Reaction {
     @NonNull
     private String reactionCategory;
 
-    @NonNull
     @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
     private int episodeId;
 
-    public Reaction(@NonNull String reaction, @NonNull String reactionCategory, @NonNull int episodeId) {
+    public Reaction(@NonNull String reaction, @NonNull String reactionCategory, int episodeId) {
+        this.reaction = reaction;
+        this.reactionCategory = reactionCategory;
+        this.episodeId = episodeId;
+    }
+
+    public Reaction(int reactionId, @NonNull String reaction, @NonNull String reactionCategory, @NonNull int episodeId) {
+        this.id = reactionId;
         this.reaction = reaction;
         this.reactionCategory = reactionCategory;
         this.episodeId = episodeId;
@@ -56,12 +61,11 @@ public class Reaction {
         this.reactionCategory = reactionCategory;
     }
 
-    @NonNull
     public int getEpisodeId() {
         return episodeId;
     }
 
-    public void setEpisodeId(@NonNull int episodeId) {
+    public void setEpisodeId(int episodeId) {
         this.episodeId = episodeId;
     }
 }

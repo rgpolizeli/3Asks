@@ -17,6 +17,7 @@ import com.rgp.asks.adapters.ReactionRVAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.dialogs.ReactionDialog;
 import com.rgp.asks.fragments.WhatFragment;
+import com.rgp.asks.interfaces.ReactionDialogListener;
 import com.rgp.asks.persistence.entity.Reaction;
 
 import org.junit.Before;
@@ -42,6 +43,9 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class ReactionDialogTests {
@@ -100,7 +104,7 @@ public class ReactionDialogTests {
     public void clickOnNegativeButtonOfReactionDialog_WithValidReaction_ResetStateOfReactionDialog() {
         //given: reactionDialog with a valid value in reactionTextInputLayout.
         openReactionDialogInCreateMode();
-        typeValidReaction("depressed");
+        typeReaction("depressed");
 
         //when: user click on cancel button and after reopen reaction dialog.
         clickOnButtonOfDialogWithText(R.string.reaction_dialog_cancel_button);
@@ -136,7 +140,7 @@ public class ReactionDialogTests {
         //given: reactionDialog with a valid value in reactionTextInputLayout.
         openReactionDialogInCreateMode();
         String reaction = "depressed";
-        typeValidReaction(reaction);
+        typeReaction(reaction);
         String reactionClass = selectReactionClassInSpinner(1);
 
         //when: user rotate screen.
@@ -254,7 +258,7 @@ public class ReactionDialogTests {
         openReactionDialogInEditMode();
         clearReactionEditText();
         String reaction = "depressed";
-        typeValidReaction(reaction);
+        typeReaction(reaction);
         String reactionClass = selectReactionClassInSpinner(2);
 
         //when user rotate screen
@@ -274,7 +278,7 @@ public class ReactionDialogTests {
         openReactionDialogInEditMode();
         clearReactionEditText();
         String reaction = "depressed";
-        typeValidReaction(reaction);
+        typeReaction(reaction);
         String reactionClass = selectReactionClassInSpinner(2);
         changeScreenOrientation();
 
@@ -308,7 +312,85 @@ public class ReactionDialogTests {
         testEmptyStateOfReactionDialogInCreateMode();
     }
 
-    //open in create mode after dismiss in edit mode and vice-versa.
+    ////////////
+    // LISTENER TESTS
+    ////////////
+
+    @Test
+    public void clickOnCreateButton_CallListener() {
+        //given: reactionDialog with valid inputs.
+        openReactionDialogInCreateMode();
+
+        String reaction = "depressed";
+        typeReaction(reaction);
+        String reactionClass = selectReactionClassInSpinner(1);
+
+        ReactionDialogListener listener = mock(ReactionDialogListener.class);
+        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        reactionDialog.setReactionDialogListener(listener);
+
+        //when: user clicks on createButton.
+        clickOnButtonOfDialogWithText(R.string.reaction_dialog_create_button);
+
+        //then: the listener is called with correct parameters.
+        verify(listener, times(1)).onReactionDialogCreateButtonClick(reaction, reactionClass);
+    }
+
+    @Test
+    public void clickOnSaveButton_WithValidModifiedReaction_CallListener() {
+        //given: reactionDialog with valid modification of edited reaction.
+        Reaction reactionToEdit = getReactionAtPositionOnRecyclerView(this.positionOfReactionInRecyclerView);
+        openReactionDialogInEditMode();
+        clearReactionEditText();
+
+        String newReaction = "depressed";
+        typeReaction(newReaction);
+        String newReactionClass = selectReactionClassInSpinner(1);
+
+        ReactionDialogListener listener = mock(ReactionDialogListener.class);
+        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        reactionDialog.setReactionDialogListener(listener);
+
+        //when: user clicks on saveButton.
+        clickOnButtonOfDialogWithText(R.string.reaction_dialog_save_button);
+
+        //then: the listener is called with correct parameters.
+        verify(listener, times(1)).onReactionDialogSaveButtonClick(reactionToEdit.getId(), newReaction, newReactionClass);
+    }
+
+    @Test
+    public void clickOnSaveButton_WithoutValidModifiedReaction_NotCallListener() {
+        //given: reactionDialog without modification of edited reaction.
+        Reaction reactionToEdit = getReactionAtPositionOnRecyclerView(this.positionOfReactionInRecyclerView);
+        openReactionDialogInEditMode();
+
+        ReactionDialogListener listener = mock(ReactionDialogListener.class);
+        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        reactionDialog.setReactionDialogListener(listener);
+
+        //when: user clicks on saveButton.
+        clickOnButtonOfDialogWithText(R.string.reaction_dialog_save_button);
+
+        //then: the listener is called with correct parameters.
+        verify(listener, times(0)).onReactionDialogSaveButtonClick(reactionToEdit.getId(), reactionToEdit.getReaction(), reactionToEdit.getReactionCategory());
+    }
+
+    @Test
+    public void clickOnDeleteButton_CallListener() {
+        //given: reactionDialog of edited reaction.
+        Reaction reactionToEdit = getReactionAtPositionOnRecyclerView(this.positionOfReactionInRecyclerView);
+        openReactionDialogInEditMode();
+
+        ReactionDialogListener listener = mock(ReactionDialogListener.class);
+        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        reactionDialog.setReactionDialogListener(listener);
+
+        //when: user clicks on deleteButton.
+        clickOnButtonOfDialogWithText(R.string.reaction_dialog_delete_button);
+
+        //then: the listener is called with correct parameters.
+        verify(listener, times(1)).onReactionDialogDeleteButtonClick(reactionToEdit.getId());
+    }
 
     ///////////////////////
     // Auxiliary methods //
@@ -355,7 +437,7 @@ public class ReactionDialogTests {
         onView(withText(textOfTabStringId)).perform(click());
     }
 
-    private void typeValidReaction(@NonNull String validReaction) {
+    private void typeReaction(@NonNull String validReaction) {
         onView(withId(R.id.reactionEditText))
                 .inRoot(isDialog())
                 .perform(typeText(validReaction))

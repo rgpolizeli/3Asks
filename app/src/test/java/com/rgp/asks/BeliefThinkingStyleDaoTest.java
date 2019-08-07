@@ -24,12 +24,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
-public class GetThinkingStylesForBeliefTest {
+public class BeliefThinkingStyleDaoTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule =
             new InstantTaskExecutorRule();
@@ -52,7 +51,7 @@ public class GetThinkingStylesForBeliefTest {
     }
 
     @After
-    public void closeDb() throws IOException {
+    public void closeDb() {
         mDb.close();
     }
 

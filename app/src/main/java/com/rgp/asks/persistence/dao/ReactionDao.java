@@ -1,6 +1,5 @@
 package com.rgp.asks.persistence.dao;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -26,5 +25,5 @@ public interface ReactionDao {
     @Query("SELECT * " +
             "FROM Reaction " +
             "WHERE Reaction.episodeId=:episodeId ORDER BY id DESC")
-    LiveData<List<Reaction>> getReactionsForEpisode(@NonNull final int episodeId);
+    LiveData<List<Reaction>> getReactionsForEpisode(int episodeId);
 }

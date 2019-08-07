@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -28,25 +29,28 @@ public class ReactionDialog extends DialogFragment {
 
     //ReactionDialog fragment tag
     public static final String FRAGMENT_TAG_REACTION_DIALOG = "REACTION_DIALOG_FRAGMENT";
+
     // ReactionDialog state variables keys //
     private static final String BUNDLE_KEY_FIRST_CREATION_FLAG = "BUNDLE_KEY_FIRST_CREATION_FLAG";
     private static final String BUNDLE_KEY_DIALOG_MODE = "BUNDLE_KEY_DIALOG_MODE";
+    private static final String BUNDLE_KEY_REACTION_ID_TO_EDIT = "BUNDLE_KEY_REACTION_ID_TO_EDIT";
     private static final String BUNDLE_KEY_REACTION_TO_EDIT = "BUNDLE_KEY_REACTION_TO_EDIT";
     private static final String BUNDLE_KEY_REACTION_CLASS_TO_EDIT = "BUNDLE_KEY_REACTION_CLASS_TO_EDIT";
+
     // ReactionDialog possible modes //
     private static final int CREATE_MODE = 0;
     private static final int EDIT_MODE = 1;
+
     // ReactionDialog state variables //
-    //this is a lock variable to prevent a dialog that is reopening due to a configuration change to reintroduce the initial field values in edit mode.
-    private boolean firstCreation = true;
+    private boolean firstCreation = true; //this is a lock variable to prevent a dialog that is reopening due to a configuration change to reintroduce the initial field values in edit mode.
     private int dialogMode = -1;
+    private int reactionIdToEdit;
     @Nullable
     private String reactionToEdit;
     @Nullable
     private String reactionClassToEdit;
-    // Listener to communicate with WhatFragment
     @Nullable
-    private ReactionDialogListener listener;
+    private ReactionDialogListener listener; // Listener to communicate with WhatFragment
 
     @Override
     public void onAttach(@NonNull Context context) throws ClassCastException {
@@ -113,6 +117,7 @@ public class ReactionDialog extends DialogFragment {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putBoolean(BUNDLE_KEY_FIRST_CREATION_FLAG, false);
         savedInstanceState.putInt(BUNDLE_KEY_DIALOG_MODE, this.dialogMode);
+        savedInstanceState.putInt(BUNDLE_KEY_REACTION_ID_TO_EDIT, this.reactionIdToEdit);
         savedInstanceState.putString(BUNDLE_KEY_REACTION_TO_EDIT, this.reactionToEdit);
         savedInstanceState.putString(BUNDLE_KEY_REACTION_CLASS_TO_EDIT, this.reactionClassToEdit);
     }
@@ -120,6 +125,7 @@ public class ReactionDialog extends DialogFragment {
     private void restoreDialogState(@NonNull Bundle savedInstanceState) {
         this.firstCreation = savedInstanceState.getBoolean(BUNDLE_KEY_FIRST_CREATION_FLAG);
         this.dialogMode = savedInstanceState.getInt(BUNDLE_KEY_DIALOG_MODE);
+        this.reactionIdToEdit = savedInstanceState.getInt(BUNDLE_KEY_REACTION_ID_TO_EDIT);
         this.reactionToEdit = savedInstanceState.getString(BUNDLE_KEY_REACTION_TO_EDIT);
         this.reactionClassToEdit = savedInstanceState.getString(BUNDLE_KEY_REACTION_CLASS_TO_EDIT);
     }
@@ -161,18 +167,18 @@ public class ReactionDialog extends DialogFragment {
                 inputLayout.setError(getContext().getString(R.string.reaction_dialog_error_empty_reaction)); // show error
             } else {
                 Toast.makeText(getContext(), R.string.toast_message_creating_reaction, Toast.LENGTH_SHORT).show();
-                //controller.createReaction(newReaction, newReactionClass);
-                //clearReactionDialog(v.getRootView());
-                getDialog().dismiss();
+                listener.onReactionDialogCreateButtonClick(newReaction, newReactionClass);
+                dismiss();
             }
         };
     }
 
     private View.OnClickListener createAlertDialogPositiveButtonListenerInEditMode() throws NullPointerException {
         return v -> {
-            final TextInputEditText reactionEditText = v.getRootView().findViewById(R.id.reactionEditText);
-            final Spinner reactionClassSpinner = v.getRootView().findViewById(R.id.reactionClassSpinner);
             hideKeyboard(v);
+            TextInputEditText reactionEditText = v.getRootView().findViewById(R.id.reactionEditText);
+            Spinner reactionClassSpinner = v.getRootView().findViewById(R.id.reactionClassSpinner);
+
             String newReaction = reactionEditText.getText().toString();
             String newReactionClass = reactionClassSpinner.getSelectedItem().toString();
 
@@ -180,13 +186,10 @@ public class ReactionDialog extends DialogFragment {
                 TextInputLayout inputLayout = v.getRootView().findViewById(R.id.reactionTextInputLayout);
                 inputLayout.setError(getContext().getString(R.string.reaction_dialog_error_empty_reaction)); // show error
             } else {
-                //if (!newReaction.equals(reaction.getReaction()) || !newReactionClass.equals(reaction.getReactionCategory())) {
-                //reaction.setReaction(newReaction);
-                //reaction.setReactionCategory(newReactionClass);
-                //model.editReaction(reaction);
-                // clearReactionDialog(dialog);
-                // dialog.dismiss();
-                //}
+                if (!newReaction.equals(this.reactionToEdit) || !newReactionClass.equals(this.reactionClassToEdit)) {
+                    listener.onReactionDialogSaveButtonClick(this.reactionIdToEdit, newReaction, newReactionClass);
+                    dismiss();
+                }
             }
         };
     }
@@ -194,17 +197,15 @@ public class ReactionDialog extends DialogFragment {
     private View.OnClickListener createAlertDialogNegativeButtonListener() {
         return v -> {
             hideKeyboard(v);
-            //clearReactionDialog(v.getRootView());
-            getDialog().cancel();
+            dismiss();
         };
     }
 
     private View.OnClickListener createAlertDialogNeutralButtonListener() {
         return v -> {
             hideKeyboard(v);
-            //model.removeReaction(reaction);
-            //clearReactionDialog(v.getRootView());
-            //getDialog().dismiss();
+            listener.onReactionDialogDeleteButtonClick(this.reactionIdToEdit);
+            dismiss();
         };
     }
 
@@ -225,9 +226,10 @@ public class ReactionDialog extends DialogFragment {
         }
     }
 
-    public void showInEditMode(@NonNull final FragmentManager fragmentManager, @NonNull final String reactionToEdit, @NonNull final String reactionClassToEdit) throws NullPointerException {
+    public void showInEditMode(@NonNull final FragmentManager fragmentManager, int reactionId, @NonNull final String reactionToEdit, @NonNull final String reactionClassToEdit) throws NullPointerException {
         if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_REACTION_DIALOG) == null) {
             this.dialogMode = EDIT_MODE;
+            this.reactionIdToEdit = reactionId;
             this.reactionToEdit = reactionToEdit;
             this.reactionClassToEdit = reactionClassToEdit;
             show(fragmentManager, FRAGMENT_TAG_REACTION_DIALOG);
@@ -246,5 +248,10 @@ public class ReactionDialog extends DialogFragment {
     private void hideKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public void setReactionDialogListener(@NonNull ReactionDialogListener listener) {
+        this.listener = listener;
     }
 }
