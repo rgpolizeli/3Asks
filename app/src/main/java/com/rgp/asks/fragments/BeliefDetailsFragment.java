@@ -82,12 +82,9 @@ public class BeliefDetailsFragment extends Fragment {
     private void setupFAB(ViewGroup container) {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton saveBeliefFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveBeliefFab);
-        saveBeliefFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                saveBelief();
-            }
+        saveBeliefFab.setOnClickListener(v -> {
+            hideKeyboard(v);
+            saveBelief();
         });
     }
 

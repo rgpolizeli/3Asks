@@ -8,11 +8,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +27,6 @@ import com.rgp.asks.viewmodel.BeliefViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -69,12 +65,7 @@ public class BeliefObjectionsFragment extends Fragment {
     private void setupFAB(ViewGroup container) {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton objectionsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addObjectionFab);
-        objectionsFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNewObjectionDialog();
-            }
-        });
+        objectionsFab.setOnClickListener(v -> showNewObjectionDialog());
     }
 
     private void setupRecyclerView(View rootView) {
@@ -87,12 +78,7 @@ public class BeliefObjectionsFragment extends Fragment {
 
     private void initViewModel() {
         model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
-        model.getObjections().observe(this, new Observer<List<Objection>>() {
-            @Override
-            public void onChanged(@Nullable final List<Objection> objections) {
-                objectionsRecyclerViewAdapter.setObjections(objections);
-            }
-        });
+        model.getObjections().observe(this, objections -> objectionsRecyclerViewAdapter.setObjections(objections));
     }
 
     private void initDialogs() {
@@ -131,32 +117,24 @@ public class BeliefObjectionsFragment extends Fragment {
         this.newObjectionDialog.show();
         final AlertDialog dialog = this.newObjectionDialog;
 
-        this.newObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        this.newObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            TextInputEditText objectionEditText = dialog.findViewById(R.id.objectionEditText);
+            String newObjection = objectionEditText.getText().toString();
 
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                TextInputEditText objectionEditText = dialog.findViewById(com.rgp.asks.R.id.objectionEditText);
-                String newObjection = objectionEditText.getText().toString();
-
-                if (newObjection.isEmpty()) {
-                    TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
-                    inputLayout.setError(dialog.getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
-                } else {
-                    model.createObjection(newObjection);
-                    clearObjectionDialog(dialog);
-                    dialog.dismiss();
-                }
+            if (newObjection.isEmpty()) {
+                TextInputLayout inputLayout = dialog.findViewById(R.id.objectionTextInputLayout);
+                inputLayout.setError(dialog.getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
+            } else {
+                model.createObjection(newObjection);
+                clearObjectionDialog(dialog);
+                dialog.dismiss();
             }
         });
-        this.newObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                clearObjectionDialog(dialog);
-                dialog.cancel();
-            }
+        this.newObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            clearObjectionDialog(dialog);
+            dialog.cancel();
         });
     }
 
@@ -167,43 +145,32 @@ public class BeliefObjectionsFragment extends Fragment {
 
         objectionEditText.setText(objection.getObjection());
 
-        this.editObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        this.editObjectionDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            String newObjection = objectionEditText.getText().toString();
 
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                String newObjection = objectionEditText.getText().toString();
-
-                if (newObjection.isEmpty()) {
-                    TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.objectionTextInputLayout);
-                    inputLayout.setError(dialog.getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
-                } else {
-                    if (!newObjection.equals(objection.getObjection())) {
-                        objection.setObjection(newObjection);
-                        model.editObjection(objection);
-                        clearObjectionDialog(dialog);
-                        dialog.dismiss();
-                    }
+            if (newObjection.isEmpty()) {
+                TextInputLayout inputLayout = dialog.findViewById(R.id.objectionTextInputLayout);
+                inputLayout.setError(dialog.getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
+            } else {
+                if (!newObjection.equals(objection.getObjection())) {
+                    objection.setObjection(newObjection);
+                    model.editObjection(objection);
+                    clearObjectionDialog(dialog);
+                    dialog.dismiss();
                 }
             }
         });
-        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                clearObjectionDialog(dialog);
-                dialog.cancel();
-            }
+        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            clearObjectionDialog(dialog);
+            dialog.cancel();
         });
-        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                model.removeObjection(objection);
-                clearObjectionDialog(dialog);
-                dialog.dismiss();
-            }
+        this.editObjectionDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+            hideKeyboard(v);
+            model.removeObjection(objection);
+            clearObjectionDialog(dialog);
+            dialog.dismiss();
         });
     }
 

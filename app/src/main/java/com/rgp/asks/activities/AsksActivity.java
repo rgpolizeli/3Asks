@@ -1,6 +1,5 @@
 package com.rgp.asks.activities;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,14 +7,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -63,25 +60,22 @@ public class AsksActivity extends AppCompatActivity {
 
         model = ViewModelProviders.of(this).get(EpisodeViewModel.class);
         model.loadEpisode(this.getIntent().getIntExtra(Constants.ARG_EPISODE, -1));
-        model.getEpisode().observe(this, new Observer<Episode>() {
-            @Override
-            public void onChanged(@Nullable final Episode episode) {
+        model.getEpisode().observe(this, episode -> {
 
-                setEpisodeNameInToolbar(episode);
+            setEpisodeNameInToolbar(episode);
 
-                //this way I'm sure the episode has already been loaded from the database
-                // before user click in a tab
-                if (!model.getEpisodeIsLoaded() && episode != null) {
-                    model.setEpisodeIsLoaded(true);
+            //this way I'm sure the episode has already been loaded from the database
+            // before user click in a tab
+            if (!model.getEpisodeIsLoaded() && episode != null) {
+                model.setEpisodeIsLoaded(true);
+                initTabs();
+                model.initModifiableEpisodeCopy();
+            } else {
+                if (model.getEpisodeIsLoaded() && episode != null) {
                     initTabs();
-                    model.initModifiableEpisodeCopy();
-                } else {
-                    if (model.getEpisodeIsLoaded() && episode != null) {
-                        initTabs();
-                    }
                 }
-
             }
+
         });
 
     }
@@ -104,17 +98,13 @@ public class AsksActivity extends AppCompatActivity {
 
         builder
                 .setMessage(this.getString(R.string.episode_save_dialog_title))
-                .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        model.checkedSaveEpisode();
-                        finish();
-                    }
+                .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
+                    model.checkedSaveEpisode();
+                    finish();
                 })
-                .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //nothing
-                        finish();
-                    }
+                .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
+                    //nothing
+                    finish();
                 })
         ;
 

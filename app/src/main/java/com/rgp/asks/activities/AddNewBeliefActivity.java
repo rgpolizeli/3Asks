@@ -1,6 +1,5 @@
 package com.rgp.asks.activities;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,14 +7,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -29,14 +26,11 @@ import com.rgp.asks.fragments.BeliefObjectionsFragment;
 import com.rgp.asks.messages.DeletedBeliefEvent;
 import com.rgp.asks.messages.SavedEditedBeliefEvent;
 import com.rgp.asks.persistence.entity.Belief;
-import com.rgp.asks.persistence.entity.ThinkingStyle;
 import com.rgp.asks.viewmodel.BeliefViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 public class AddNewBeliefActivity extends AppCompatActivity {
 
@@ -71,35 +65,29 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         }
 
         beliefViewModel.loadBelief(this.getIntent().getIntExtra(Constants.ARG_BELIEF, -1));
-        beliefViewModel.getBelief().observe(this, new Observer<Belief>() {
-            @Override
-            public void onChanged(@Nullable Belief belief) {
+        beliefViewModel.getBelief().observe(this, belief -> {
 
-                setBeliefNameInToolbar(belief);
+            setBeliefNameInToolbar(belief);
 
-                if (!beliefViewModel.getBeliefIsLoaded() && belief != null) {
-                    beliefViewModel.initModifiableBeliefCopy();
-                    beliefViewModel.setBeliefIsLoaded(true);
-                    if (beliefViewModel.getSelectedThinkingStylesIsLoaded()) {
-                        initTabs();
-                    }
+            if (!beliefViewModel.getBeliefIsLoaded() && belief != null) {
+                beliefViewModel.initModifiableBeliefCopy();
+                beliefViewModel.setBeliefIsLoaded(true);
+                if (beliefViewModel.getSelectedThinkingStylesIsLoaded()) {
+                    initTabs();
                 }
-
             }
+
         });
-        beliefViewModel.getSelectedThinkingStyles().observe(this, new Observer<List<ThinkingStyle>>() {
-            @Override
-            public void onChanged(@Nullable List<ThinkingStyle> selectedThinkingStyles) {
-                if (!beliefViewModel.getSelectedThinkingStylesIsLoaded() && selectedThinkingStyles != null) {
-                    beliefViewModel.initModifiableSelectedThinkingStylesCopy();
-                    beliefViewModel.setSelectedThinkingStylesIsLoaded(true);
-                    if (beliefViewModel.getBeliefIsLoaded()) {
-                        initTabs();
-                    }
-
-                } else {
-
+        beliefViewModel.getSelectedThinkingStyles().observe(this, selectedThinkingStyles -> {
+            if (!beliefViewModel.getSelectedThinkingStylesIsLoaded() && selectedThinkingStyles != null) {
+                beliefViewModel.initModifiableSelectedThinkingStylesCopy();
+                beliefViewModel.setSelectedThinkingStylesIsLoaded(true);
+                if (beliefViewModel.getBeliefIsLoaded()) {
+                    initTabs();
                 }
+
+            } else {
+
             }
         });
     }
@@ -239,17 +227,13 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
         builder
                 .setMessage(this.getString(R.string.belief_save_dialog_title))
-                .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        beliefViewModel.checkedSaveBelief();
-                        finish();
-                    }
+                .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), (dialog, id) -> {
+                    beliefViewModel.checkedSaveBelief();
+                    finish();
                 })
-                .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //nothing
-                        finish();
-                    }
+                .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), (dialog, id) -> {
+                    //nothing
+                    finish();
                 })
         ;
 

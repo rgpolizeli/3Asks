@@ -10,11 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,8 +32,6 @@ import com.rgp.asks.viewmodel.EpisodeViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -63,20 +59,10 @@ public class WhyFragment extends Fragment {
 
         CoordinatorLayout coordinatorLayout2 = (CoordinatorLayout) container.getParent();
         FloatingActionButton beliefsFab = coordinatorLayout2.findViewById(com.rgp.asks.R.id.addBeliefFab);
-        beliefsFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNewBeliefDialog();
-            }
-        });
+        beliefsFab.setOnClickListener(v -> showNewBeliefDialog());
 
         model = ViewModelProviders.of(this.getActivity()).get(EpisodeViewModel.class);
-        model.getBeliefs().observe(this, new Observer<List<Belief>>() {
-            @Override
-            public void onChanged(@Nullable final List<Belief> beliefs) {
-                beliefsRecyclerViewAdapter.setBeliefs(beliefs);
-            }
-        });
+        model.getBeliefs().observe(this, beliefs -> beliefsRecyclerViewAdapter.setBeliefs(beliefs));
 
         return rootView;
     }
@@ -109,32 +95,24 @@ public class WhyFragment extends Fragment {
         this.newBeliefDialog.show();
         final AlertDialog dialog = this.newBeliefDialog;
 
-        this.newBeliefDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        this.newBeliefDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            EditText beliefEditText = dialog.findViewById(R.id.thoughtEditText);
+            String newBelief = beliefEditText.getText().toString();
 
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                EditText beliefEditText = dialog.findViewById(com.rgp.asks.R.id.thoughtEditText);
-                String newBelief = beliefEditText.getText().toString();
-
-                if (newBelief.isEmpty()) {
-                    TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.newEpisodeNameTextInputLayout);
-                    inputLayout.setError(dialog.getContext().getString(R.string.belief_dialog_error_empty_thought)); // show error
-                } else {
-                    model.createBelief(newBelief);
-                    clearEpisodeDialog(dialog);
-                    dialog.dismiss();
-                }
+            if (newBelief.isEmpty()) {
+                TextInputLayout inputLayout = dialog.findViewById(R.id.newEpisodeNameTextInputLayout);
+                inputLayout.setError(dialog.getContext().getString(R.string.belief_dialog_error_empty_thought)); // show error
+            } else {
+                model.createBelief(newBelief);
+                clearEpisodeDialog(dialog);
+                dialog.dismiss();
             }
         });
-        this.newBeliefDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                clearEpisodeDialog(dialog);
-                dialog.cancel();
-            }
+        this.newBeliefDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            clearEpisodeDialog(dialog);
+            dialog.cancel();
         });
     }
 

@@ -54,12 +54,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
 
-                        Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                getDatabase(context).thinkingStyleDao().insert(createUnhelpfulThinkingStyles(context));
-                            }
-                        });
+                        Executors.newSingleThreadScheduledExecutor().execute(() -> getDatabase(context).thinkingStyleDao().insert(createUnhelpfulThinkingStyles(context)));
                     }
 
                 })

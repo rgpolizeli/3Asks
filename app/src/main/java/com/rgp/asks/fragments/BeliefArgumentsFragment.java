@@ -8,11 +8,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +27,6 @@ import com.rgp.asks.viewmodel.BeliefViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -76,22 +72,12 @@ public class BeliefArgumentsFragment extends Fragment {
     private void setupFAB(ViewGroup container) {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton argumentsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addArgumentFab);
-        argumentsFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNewArgumentDialog();
-            }
-        });
+        argumentsFab.setOnClickListener(v -> showNewArgumentDialog());
     }
 
     private void initViewModel() {
         model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
-        model.getArguments().observe(this, new Observer<List<Argument>>() {
-            @Override
-            public void onChanged(@Nullable final List<Argument> arguments) {
-                argumentsRecyclerViewAdapter.setArguments(arguments);
-            }
-        });
+        model.getArguments().observe(this, arguments -> argumentsRecyclerViewAdapter.setArguments(arguments));
     }
 
     private void initDialogs() {
@@ -130,32 +116,24 @@ public class BeliefArgumentsFragment extends Fragment {
         this.newArgumentDialog.show();
         final AlertDialog dialog = this.newArgumentDialog;
 
-        this.newArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        this.newArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            TextInputEditText argumentEditText = dialog.findViewById(R.id.argumentEditText);
+            String newArgument = argumentEditText.getText().toString();
 
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                TextInputEditText argumentEditText = dialog.findViewById(com.rgp.asks.R.id.argumentEditText);
-                String newArgument = argumentEditText.getText().toString();
-
-                if (newArgument.isEmpty()) {
-                    TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
-                    inputLayout.setError(dialog.getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
-                } else {
-                    model.createArgument(newArgument);
-                    clearArgumentDialog(dialog);
-                    dialog.dismiss();
-                }
+            if (newArgument.isEmpty()) {
+                TextInputLayout inputLayout = dialog.findViewById(R.id.argumentTextInputLayout);
+                inputLayout.setError(dialog.getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
+            } else {
+                model.createArgument(newArgument);
+                clearArgumentDialog(dialog);
+                dialog.dismiss();
             }
         });
-        this.newArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                clearArgumentDialog(dialog);
-                dialog.cancel();
-            }
+        this.newArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            clearArgumentDialog(dialog);
+            dialog.cancel();
         });
     }
 
@@ -166,43 +144,32 @@ public class BeliefArgumentsFragment extends Fragment {
 
         argumentEditText.setText(argument.getArgument());
 
-        this.editArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        this.editArgumentDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            String newArgument = argumentEditText.getText().toString();
 
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                String newArgument = argumentEditText.getText().toString();
-
-                if (newArgument.isEmpty()) {
-                    TextInputLayout inputLayout = dialog.findViewById(com.rgp.asks.R.id.argumentTextInputLayout);
-                    inputLayout.setError(dialog.getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
-                } else {
-                    if (!newArgument.equals(argument.getArgument())) {
-                        argument.setArgument(newArgument);
-                        model.editArgument(argument);
-                        clearArgumentDialog(dialog);
-                        dialog.dismiss();
-                    }
+            if (newArgument.isEmpty()) {
+                TextInputLayout inputLayout = dialog.findViewById(R.id.argumentTextInputLayout);
+                inputLayout.setError(dialog.getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
+            } else {
+                if (!newArgument.equals(argument.getArgument())) {
+                    argument.setArgument(newArgument);
+                    model.editArgument(argument);
+                    clearArgumentDialog(dialog);
+                    dialog.dismiss();
                 }
             }
         });
-        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                clearArgumentDialog(dialog);
-                dialog.cancel();
-            }
+        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+            hideKeyboard(v);
+            clearArgumentDialog(dialog);
+            dialog.cancel();
         });
-        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard(v);
-                model.removeArgument(argument);
-                clearArgumentDialog(dialog);
-                dialog.dismiss();
-            }
+        this.editArgumentDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+            hideKeyboard(v);
+            model.removeArgument(argument);
+            clearArgumentDialog(dialog);
+            dialog.dismiss();
         });
     }
 
