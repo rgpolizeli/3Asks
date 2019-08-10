@@ -7,31 +7,29 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity
+@Entity(
+        foreignKeys = {
+                @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
+        }
+)
 public class Belief {
 
-    @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
-
     @NonNull
     private String belief;
-
-    @NonNull
-    @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
     private int episodeId;
 
-    public Belief(@NonNull String belief, @NonNull int episodeId) {
+    public Belief(@NonNull String belief, int episodeId) {
         this.belief = belief;
         this.episodeId = episodeId;
     }
 
-    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -44,12 +42,31 @@ public class Belief {
         this.belief = belief;
     }
 
-    @NonNull
     public int getEpisodeId() {
         return episodeId;
     }
 
-    public void setEpisodeId(@NonNull int episodeId) {
+    public void setEpisodeId(int episodeId) {
         this.episodeId = episodeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Belief belief1 = (Belief) o;
+
+        if (getId() != belief1.getId()) return false;
+        if (getEpisodeId() != belief1.getEpisodeId()) return false;
+        return getBelief().equals(belief1.getBelief());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getBelief().hashCode();
+        result = 31 * result + getEpisodeId();
+        return result;
     }
 }

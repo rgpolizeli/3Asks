@@ -13,7 +13,6 @@ import java.util.List;
 
 @Dao
 public interface ArgumentDao {
-
     @Insert
     long insert(Argument argument);
 
@@ -23,9 +22,6 @@ public interface ArgumentDao {
     @Delete
     int delete(Argument... argument);
 
-    @Query("SELECT * " +
-            "FROM Argument " +
-            "WHERE Argument.beliefId=:beliefId ORDER BY id DESC")
+    @Query("SELECT * FROM Argument WHERE Argument.beliefId=:beliefId ORDER BY id DESC")
     LiveData<List<Argument>> getArgumentsForBelief(final int beliefId);
-
 }

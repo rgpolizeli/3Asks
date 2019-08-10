@@ -22,8 +22,6 @@ public interface ReactionDao {
     @Delete
     int delete(Reaction... reaction);
 
-    @Query("SELECT * " +
-            "FROM Reaction " +
-            "WHERE Reaction.episodeId=:episodeId ORDER BY id DESC")
+    @Query("SELECT * FROM Reaction WHERE Reaction.episodeId=:episodeId ORDER BY id DESC")
     LiveData<List<Reaction>> getReactionsForEpisode(int episodeId);
 }

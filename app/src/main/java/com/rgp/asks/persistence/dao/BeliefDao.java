@@ -14,7 +14,6 @@ import java.util.List;
 
 @Dao
 public interface BeliefDao {
-
     @Insert
     long insert(@NonNull Belief belief);
 
@@ -24,14 +23,9 @@ public interface BeliefDao {
     @Delete
     int delete(@NonNull Belief... belief);
 
-    @Query("SELECT * " +
-            "FROM Belief " +
-            "WHERE Belief.episodeId=:episodeId ORDER BY id DESC")
-    LiveData<List<Belief>> getBeliefsForEpisode(@NonNull final int episodeId);
+    @Query("SELECT * FROM Belief WHERE Belief.episodeId=:episodeId ORDER BY id DESC")
+    LiveData<List<Belief>> getBeliefsForEpisode(int episodeId);
 
-    @Query("SELECT * " +
-            "FROM Belief " +
-            "WHERE Belief.id=:beliefId")
-    LiveData<Belief> getBeliefById(@NonNull final int beliefId);
-
+    @Query("SELECT * FROM Belief WHERE Belief.id=:beliefId")
+    LiveData<Belief> getBeliefById(int beliefId);
 }

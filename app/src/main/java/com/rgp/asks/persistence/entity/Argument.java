@@ -7,31 +7,31 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity
+@Entity(
+        foreignKeys = {
+                @ForeignKey(entity = Belief.class, parentColumns = "id", childColumns = "beliefId", onDelete = CASCADE)
+        }
+)
 public class Argument {
 
-    @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     @NonNull
     private String argument;
 
-    @NonNull
-    @ForeignKey(entity = Belief.class, parentColumns = "id", childColumns = "beliefId", onDelete = CASCADE)
     private int beliefId;
 
-    public Argument(@NonNull String argument, @NonNull int beliefId) {
+    public Argument(@NonNull String argument, int beliefId) {
         this.argument = argument;
         this.beliefId = beliefId;
     }
 
-    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -44,12 +44,31 @@ public class Argument {
         this.argument = argument;
     }
 
-    @NonNull
     public int getBeliefId() {
         return beliefId;
     }
 
-    public void setBeliefId(@NonNull int beliefId) {
+    public void setBeliefId(int beliefId) {
         this.beliefId = beliefId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Argument argument1 = (Argument) o;
+
+        if (getId() != argument1.getId()) return false;
+        if (getBeliefId() != argument1.getBeliefId()) return false;
+        return getArgument().equals(argument1.getArgument());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getArgument().hashCode();
+        result = 31 * result + getBeliefId();
+        return result;
     }
 }

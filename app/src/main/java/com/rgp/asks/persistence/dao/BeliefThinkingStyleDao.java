@@ -13,7 +13,6 @@ import java.util.List;
 
 @Dao
 public interface BeliefThinkingStyleDao {
-
     @Insert
     void insert(BeliefThinkingStyle beliefThinkingStyle);
 
@@ -21,6 +20,5 @@ public interface BeliefThinkingStyleDao {
     int delete(BeliefThinkingStyle... beliefThinkingStyles);
 
     @Query("SELECT ThinkingStyle.thinkingStyle FROM BeliefThinkingStyle INNER JOIN ThinkingStyle ON ThinkingStyle.thinkingStyle = BeliefThinkingStyle.thinkingStyleId WHERE BeliefThinkingStyle.beliefId=:beliefId")
-    LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(final int beliefId);
-
+    LiveData<List<ThinkingStyle>> getThinkingStylesForBelief(int beliefId);
 }

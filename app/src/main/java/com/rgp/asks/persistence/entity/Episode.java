@@ -9,7 +9,6 @@ import java.util.Date;
 @Entity
 public class Episode {
 
-    @NonNull
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -56,12 +55,11 @@ public class Episode {
         return result;
     }
 
-    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

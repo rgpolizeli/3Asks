@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class ThinkingStyle {
-
     @NonNull
     @PrimaryKey
     private String thinkingStyle;
@@ -20,10 +19,6 @@ public class ThinkingStyle {
         return thinkingStyle;
     }
 
-    public void setThinkingStyle(@NonNull String thinkingStyle) {
-        this.thinkingStyle = thinkingStyle;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -32,10 +27,5 @@ public class ThinkingStyle {
         ThinkingStyle that = (ThinkingStyle) o;
 
         return getThinkingStyle().equals(that.getThinkingStyle());
-    }
-
-    @Override
-    public int hashCode() {
-        return getThinkingStyle().hashCode();
     }
 }

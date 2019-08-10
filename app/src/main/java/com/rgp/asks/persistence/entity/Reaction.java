@@ -7,7 +7,11 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity
+@Entity(
+        foreignKeys = {
+                @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
+        }
+)
 public class Reaction {
 
     @PrimaryKey(autoGenerate = true)
@@ -19,7 +23,6 @@ public class Reaction {
     @NonNull
     private String reactionCategory;
 
-    @ForeignKey(entity = Episode.class, parentColumns = "id", childColumns = "episodeId", onDelete = CASCADE)
     private int episodeId;
 
     public Reaction(@NonNull String reaction, @NonNull String reactionCategory, int episodeId) {
@@ -28,7 +31,7 @@ public class Reaction {
         this.episodeId = episodeId;
     }
 
-    public Reaction(int reactionId, @NonNull String reaction, @NonNull String reactionCategory, @NonNull int episodeId) {
+    public Reaction(int reactionId, @NonNull String reaction, @NonNull String reactionCategory, int episodeId) {
         this.id = reactionId;
         this.reaction = reaction;
         this.reactionCategory = reactionCategory;
@@ -67,5 +70,27 @@ public class Reaction {
 
     public void setEpisodeId(int episodeId) {
         this.episodeId = episodeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Reaction reaction1 = (Reaction) o;
+
+        if (getId() != reaction1.getId()) return false;
+        if (getEpisodeId() != reaction1.getEpisodeId()) return false;
+        if (!getReaction().equals(reaction1.getReaction())) return false;
+        return getReactionCategory().equals(reaction1.getReactionCategory());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getReaction().hashCode();
+        result = 31 * result + getReactionCategory().hashCode();
+        result = 31 * result + getEpisodeId();
+        return result;
     }
 }

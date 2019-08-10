@@ -13,7 +13,6 @@ import java.util.List;
 
 @Dao
 public interface EpisodeDao {
-
     @Insert
     long insert(Episode episode);
 
@@ -23,8 +22,7 @@ public interface EpisodeDao {
     @Delete
     int delete(Episode... episode);
 
-    @Query("SELECT * " +
-            "FROM Episode ORDER BY id DESC")
+    @Query("SELECT * FROM Episode ORDER BY id DESC")
     LiveData<List<Episode>> getAllEpisodes();
 
     @Query("SELECT * FROM Episode WHERE Episode.id=:episodeId")

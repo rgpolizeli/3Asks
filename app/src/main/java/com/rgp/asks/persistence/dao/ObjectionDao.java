@@ -13,7 +13,6 @@ import java.util.List;
 
 @Dao
 public interface ObjectionDao {
-
     @Insert
     long insert(Objection objection);
 
@@ -23,9 +22,6 @@ public interface ObjectionDao {
     @Delete
     int delete(Objection... objection);
 
-    @Query("SELECT * " +
-            "FROM Objection " +
-            "WHERE Objection.beliefId=:beliefId ORDER BY id DESC")
+    @Query("SELECT * FROM Objection WHERE Objection.beliefId=:beliefId ORDER BY id DESC")
     LiveData<List<Objection>> getObjectionsForBelief(final int beliefId);
-
 }
