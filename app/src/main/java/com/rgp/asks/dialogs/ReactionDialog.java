@@ -65,7 +65,7 @@ public class ReactionDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_new_reaction, container, false);
+        return inflater.inflate(R.layout.dialog_reaction, container, false);
     }
 
     /**
@@ -96,13 +96,13 @@ public class ReactionDialog extends DialogFragment {
             deleteButton.setVisibility(View.GONE);
             Button createButton = view.findViewById(R.id.positiveReactionButton);
             createButton.setText(getContext().getString(R.string.reaction_dialog_create_button));
-            createButton.setOnClickListener(createAlertDialogPositiveButtonListenerInCreateMode());
+            createButton.setOnClickListener(createDialogPositiveButtonListenerInCreateMode());
         } else {
             getDialog().setTitle(getContext().getString(R.string.reaction_dialog_edit_title));
             deleteButton.setVisibility(View.VISIBLE);
             Button saveButton = view.findViewById(R.id.positiveReactionButton);
             saveButton.setText(getContext().getString(R.string.reaction_dialog_save_button));
-            saveButton.setOnClickListener(createAlertDialogPositiveButtonListenerInEditMode());
+            saveButton.setOnClickListener(createDialogPositiveButtonListenerInEditMode());
             EditText reactionEditText = view.findViewById(com.rgp.asks.R.id.reactionEditText);
             Spinner reactionClassSpinner = view.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
             if (this.firstCreation) {
@@ -149,11 +149,11 @@ public class ReactionDialog extends DialogFragment {
     private void setupButtonsListener(@NonNull View view) {
         Button cancelButton = view.findViewById(R.id.negativeReactionButton);
         Button deleteButton = view.findViewById(R.id.neutralReactionButton);
-        cancelButton.setOnClickListener(createAlertDialogNegativeButtonListener());
-        deleteButton.setOnClickListener(createAlertDialogNeutralButtonListener());
+        cancelButton.setOnClickListener(createDialogNegativeButtonListener());
+        deleteButton.setOnClickListener(createDialogNeutralButtonListener());
     }
 
-    private View.OnClickListener createAlertDialogPositiveButtonListenerInCreateMode() throws NullPointerException {
+    private View.OnClickListener createDialogPositiveButtonListenerInCreateMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
             TextInputEditText reactionEditText = v.getRootView().findViewById(R.id.reactionEditText);
@@ -173,7 +173,7 @@ public class ReactionDialog extends DialogFragment {
         };
     }
 
-    private View.OnClickListener createAlertDialogPositiveButtonListenerInEditMode() throws NullPointerException {
+    private View.OnClickListener createDialogPositiveButtonListenerInEditMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
             TextInputEditText reactionEditText = v.getRootView().findViewById(R.id.reactionEditText);
@@ -194,14 +194,14 @@ public class ReactionDialog extends DialogFragment {
         };
     }
 
-    private View.OnClickListener createAlertDialogNegativeButtonListener() {
+    private View.OnClickListener createDialogNegativeButtonListener() {
         return v -> {
             hideKeyboard(v);
             dismiss();
         };
     }
 
-    private View.OnClickListener createAlertDialogNeutralButtonListener() {
+    private View.OnClickListener createDialogNeutralButtonListener() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
             listener.onReactionDialogDeleteButtonClick(this.reactionIdToEdit);

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rgp.asks.persistence.entity.Reaction;
@@ -19,8 +20,9 @@ public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.Vi
         this.onItemClickListener = onItemClickListener;
     }
 
+    @NonNull
     @Override
-    public ReactionRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public ReactionRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                            int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(com.rgp.asks.R.layout.item_recycler_view_reaction, parent, false);
 
@@ -35,7 +37,7 @@ public class ReactionRVAdapter extends RecyclerView.Adapter<ReactionRVAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reaction reaction = this.reactions.get(position);
         holder.reactionTextView.setText(reaction.getReaction());
         holder.reactionClassTextView.setText(reaction.getReactionCategory());

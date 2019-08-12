@@ -1,4 +1,4 @@
-package com.rgp.asks;
+package com.rgp.asks.dialogs;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -12,10 +12,10 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.rgp.asks.R;
 import com.rgp.asks.activities.AsksActivity;
 import com.rgp.asks.adapters.ReactionRVAdapter;
 import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.dialogs.ReactionDialog;
 import com.rgp.asks.fragments.WhatFragment;
 import com.rgp.asks.interfaces.ReactionDialogListener;
 import com.rgp.asks.persistence.entity.Reaction;

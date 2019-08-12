@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rgp.asks.listeners.EditListener;
 import com.rgp.asks.persistence.entity.Argument;
 
 import java.util.List;
@@ -16,17 +16,19 @@ import java.util.List;
 public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.ViewHolder> {
 
     private List<Argument> arguments;
+    private View.OnClickListener onItemClickListener;
 
-    public ArgumentRVAdapter() {
+    public ArgumentRVAdapter(View.OnClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
+    @NonNull
     @Override
-    public ArgumentRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public ArgumentRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                            int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(com.rgp.asks.R.layout.item_recycler_view_argument, parent, false);
-        setItemListeners(v);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        v.setOnClickListener(this.onItemClickListener);
+        return new ViewHolder(v);
     }
 
     public void setArguments(List<Argument> arguments) {
@@ -35,7 +37,7 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Argument argument = this.arguments.get(position);
         holder.argumentTextView.setText(argument.getArgument());
     }
@@ -54,12 +56,6 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
         } else {
             return arguments.get(position);
         }
-    }
-
-    private void setItemListeners(View v) {
-        EditListener editListener = new EditListener();
-        editListener.setArguments(this.arguments);
-        v.setOnClickListener(editListener);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

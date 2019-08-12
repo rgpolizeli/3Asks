@@ -30,7 +30,7 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
     private ReactionDialog reactionDialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_what_ask, container, false);
@@ -56,13 +56,13 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
         model.getReactions().observe(this, reactions -> reactionsRecyclerViewAdapter.setReactions(reactions));
     }
 
-    private void setupFAB(ViewGroup container) {
+    private void setupFAB(@NonNull ViewGroup container) {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton reactionFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addReactionFab);
         reactionFab.setOnClickListener(v -> showReactionDialogInCreateMode());
     }
 
-    private void setupRecyclerView(View rootView) {
+    private void setupRecyclerView(@NonNull View rootView) {
         reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.reactionsRecyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         reactionsRecyclerView.setLayoutManager(reactionsRecyclerViewLayoutManager);

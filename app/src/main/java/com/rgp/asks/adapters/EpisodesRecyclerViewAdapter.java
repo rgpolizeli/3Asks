@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rgp.asks.listeners.EditListener;
 import com.rgp.asks.persistence.entity.Episode;
 
 import java.text.DateFormat;
@@ -18,18 +17,19 @@ import java.util.List;
 public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.ViewHolder> {
     @NonNull
     private List<Episode> episodes;
+    private View.OnClickListener onItemClickListener;
 
-    public EpisodesRecyclerViewAdapter() {
+    public EpisodesRecyclerViewAdapter(View.OnClickListener onItemClickListener) {
         this.episodes = new ArrayList<>();
+        this.onItemClickListener = onItemClickListener;
     }
 
+    @NonNull
     @Override
     public EpisodesRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                      int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(com.rgp.asks.R.layout.item_recycler_view_episode, parent, false);
-
-        setItemListeners(v);
-
+        v.setOnClickListener(this.onItemClickListener);
         return new ViewHolder(v);
     }
 
@@ -52,12 +52,6 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
 
     public Episode getItem(int position) {
         return episodes.get(position);
-    }
-
-    private void setItemListeners(View v) {
-        EditListener editListener = new EditListener();
-        editListener.setEpisodes(this.episodes);
-        v.setOnClickListener(editListener);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

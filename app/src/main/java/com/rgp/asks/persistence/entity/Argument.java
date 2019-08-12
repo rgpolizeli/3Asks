@@ -27,6 +27,12 @@ public class Argument {
         this.beliefId = beliefId;
     }
 
+    public Argument(int argumentId, String argument, int beliefId) {
+        this.id = argumentId;
+        this.argument = argument;
+        this.beliefId = beliefId;
+    }
+
     public int getId() {
         return id;
     }

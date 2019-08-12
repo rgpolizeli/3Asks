@@ -27,6 +27,12 @@ public class Objection {
         this.beliefId = beliefId;
     }
 
+    public Objection(int objectionId, @NonNull String objection, int beliefId) {
+        this.id = objectionId;
+        this.objection = objection;
+        this.beliefId = beliefId;
+    }
+
     public int getId() {
         return id;
     }

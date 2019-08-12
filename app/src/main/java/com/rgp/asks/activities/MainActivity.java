@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,6 +19,7 @@ import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.dialogs.HelpInfoDialog;
 import com.rgp.asks.dialogs.NewEpisodeDialog;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
+import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         episodesRecyclerView = this.findViewById(R.id.episodesRecyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(this);
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
-        episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter();
+        episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
         episodesRecyclerView.setAdapter(episodesRecyclerViewAdapter);
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -62,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    private View.OnClickListener createOnItemRecyclerViewClickListener() {
+        return v -> {
+            RecyclerView recyclerView = (RecyclerView) v.getParent();
+            int position = recyclerView.getChildAdapterPosition(v);
+            Episode episode = ((EpisodesRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
+
+            if (episode != null) {
+                startEditEpisodeActivity(episode.getId());
+            } else {
+                Toast.makeText(this, "This episode don't exist!", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     private NewEpisodeDialog createNewEpisodeDialog() {
@@ -140,5 +156,4 @@ public class MainActivity extends AppCompatActivity {
         this.newEpisodeDialog.dismiss();
         this.helpInfoDialog.dismiss();
     }
-
 }
