@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rgp.asks.R;
 import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
+import com.rgp.asks.dialogs.EpisodeDialog;
 import com.rgp.asks.dialogs.HelpInfoDialog;
-import com.rgp.asks.dialogs.NewEpisodeDialog;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView episodesRecyclerView;
     private EpisodesRecyclerViewAdapter episodesRecyclerViewAdapter;
     private MainViewModel mainViewModel;
-    private NewEpisodeDialog newEpisodeDialog;
+    private EpisodeDialog newEpisodeDialog;
     private HelpInfoDialog helpInfoDialog;
 
     @Override
@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private NewEpisodeDialog createNewEpisodeDialog() {
-        NewEpisodeDialog newEpisodeDialog = new NewEpisodeDialog();
-        newEpisodeDialog.createNewEpisodeDialogView(getLayoutInflater(), R.layout.dialog_new_episode);
+    private EpisodeDialog createNewEpisodeDialog() {
+        EpisodeDialog newEpisodeDialog = new EpisodeDialog();
+        newEpisodeDialog.createNewEpisodeDialogView(getLayoutInflater(), R.layout.dialog_episode);
         newEpisodeDialog.setupDateOnClickListener();
         newEpisodeDialog.setupPeriodOnTouchListener();
         newEpisodeDialog.createAlertDialog(this, this.mainViewModel);

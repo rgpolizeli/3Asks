@@ -47,7 +47,7 @@
     <string name="belief_dialog_create_button">Create</string>
     <string name="belief_dialog_cancel_button">Cancel</string>
     <string name="belief_dialog_title">Register a belief</string>
-    <string name="belief_dialog_error_empty_thought">Thought is required!</string>
+    <string name="belief_dialog_error_empty_belief">Thought is required!</string>
     <string name="argument_dialog_save_button">Save</string>
     <string name="argument_dialog_cancel_button">Cancel</string>
     <string name="argument_dialog_delete_button">Delete</string>

@@ -15,7 +15,6 @@ public class insertArgumentAsyncTask extends AsyncTask<Argument, Void, Long> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //EventBus.getDefault().post(new CreatingReactionEvent(Constants.START_CREATE_REACTION_MESSAGE));
     }
 
     @Override
@@ -27,6 +26,5 @@ public class insertArgumentAsyncTask extends AsyncTask<Argument, Void, Long> {
     @Override
     protected void onPostExecute(Long argumentId) {
         super.onPostExecute(argumentId);
-        //EventBus.getDefault().post(new CreatedReactionEvent(argumentId.intValue()));
     }
 }

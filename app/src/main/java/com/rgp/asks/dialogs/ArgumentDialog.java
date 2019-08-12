@@ -181,7 +181,6 @@ public class ArgumentDialog extends DialogFragment {
     private void clearArgumentDialog(@NonNull View dialogView) throws NullPointerException {
         TextInputLayout inputLayout = dialogView.findViewById(R.id.argumentTextInputLayout);
         EditText argumentEditText = dialogView.findViewById(R.id.argumentEditText);
-
         inputLayout.setError(null);
         argumentEditText.setText("");
     }

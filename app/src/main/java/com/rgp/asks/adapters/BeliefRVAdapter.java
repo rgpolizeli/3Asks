@@ -5,29 +5,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rgp.asks.listeners.EditListener;
 import com.rgp.asks.persistence.entity.Belief;
 
 import java.util.List;
 
 public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHolder> {
     private List<Belief> beliefs;
+    private View.OnClickListener onItemClickListener;
 
-    public BeliefRVAdapter() {
+    public BeliefRVAdapter(View.OnClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
+    @NonNull
     @Override
-    public BeliefRVAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
+    public BeliefRVAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent,
                                                          int viewType) {
-
         View v = LayoutInflater.from(parent.getContext()).inflate(com.rgp.asks.R.layout.item_recycler_view_belief, parent, false);
-
-        setItemListeners(v);
-
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        v.setOnClickListener(this.onItemClickListener);
+        return new ViewHolder(v);
     }
 
     public void setBeliefs(List<Belief> beliefs) {
@@ -44,7 +43,7 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.beliefTextView.setText(beliefs.get(position).getBelief());
     }
 
@@ -52,12 +51,6 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
     public int getItemCount() {
         if (this.beliefs == null) return 0;
         else return this.beliefs.size();
-    }
-
-    private void setItemListeners(View v) {
-        EditListener editListener = new EditListener();
-        editListener.setBeliefs(this.beliefs);
-        v.setOnClickListener(editListener);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

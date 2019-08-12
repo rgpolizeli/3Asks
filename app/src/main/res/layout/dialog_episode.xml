@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newEpisodeNameTextInputLayout"
+        android:id="@+id/episodeNameTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -61,7 +61,7 @@
         app:hintTextAppearance="@style/MyHintText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newEpisodeNameTextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/episodeNameTextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/episodeDateEditText"

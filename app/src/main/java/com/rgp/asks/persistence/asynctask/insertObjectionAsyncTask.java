@@ -15,7 +15,6 @@ public class insertObjectionAsyncTask extends AsyncTask<Objection, Void, Long> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //EventBus.getDefault().post(new CreatingReactionEvent(Constants.START_CREATE_REACTION_MESSAGE));
     }
 
     @Override
@@ -27,6 +26,5 @@ public class insertObjectionAsyncTask extends AsyncTask<Objection, Void, Long> {
     @Override
     protected void onPostExecute(Long objectionId) {
         super.onPostExecute(objectionId);
-        //EventBus.getDefault().post(new CreatedReactionEvent(objectionId.intValue()));
     }
 }

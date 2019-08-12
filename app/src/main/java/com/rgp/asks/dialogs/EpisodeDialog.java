@@ -25,7 +25,7 @@ import java.util.Calendar;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class NewEpisodeDialog {
+public class EpisodeDialog {
 
     @Nullable
     private View newEpisodeDialogView;
@@ -91,34 +91,34 @@ public class NewEpisodeDialog {
 
     private View.OnClickListener createAlertDialogPositiveButtonListener(@NonNull Context context, @NonNull final I_EpisodeCreatorController controller) throws NullPointerException {
         return v -> {
-            TextInputEditText episodeNameInputEditText = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeEditText);
-            TextInputEditText episodeDateEditText = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeDateEditText);
-            Spinner episodePeriodSpinner = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodePeriodSpinner);
+            TextInputEditText episodeNameInputEditText = EpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeEditText);
+            TextInputEditText episodeDateEditText = EpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeDateEditText);
+            Spinner episodePeriodSpinner = EpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodePeriodSpinner);
             String newEpisodeName = episodeNameInputEditText.getText().toString();
             String newEpisodeDate = episodeDateEditText.getText().toString();
             String newEpisodePeriod = episodePeriodSpinner.getSelectedItem().toString();
 
             if (newEpisodeName.isEmpty()) {
-                TextInputLayout inputLayout = NewEpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.newEpisodeNameTextInputLayout);
+                TextInputLayout inputLayout = EpisodeDialog.this.newEpisodeDialogView.findViewById(R.id.episodeNameTextInputLayout);
                 inputLayout.setError(context.getString(R.string.episode_dialog_error_empty_episode_name)); // show error
             } else {
                 Toast.makeText(context, R.string.toast_message_creating_episode, Toast.LENGTH_SHORT).show();
                 controller.createEpisode(newEpisodeName, newEpisodeDate, newEpisodePeriod);
-                NewEpisodeDialog.this.clearNewEpisodeDialog();
-                NewEpisodeDialog.this.alertDialog.dismiss();
+                EpisodeDialog.this.clearNewEpisodeDialog();
+                EpisodeDialog.this.alertDialog.dismiss();
             }
         };
     }
 
     private View.OnClickListener createAlertDialogNegativeButtonListener(@NonNull Context context) {
         return v -> {
-            NewEpisodeDialog.this.clearNewEpisodeDialog();
-            NewEpisodeDialog.this.alertDialog.cancel();
+            EpisodeDialog.this.clearNewEpisodeDialog();
+            EpisodeDialog.this.alertDialog.cancel();
         };
     }
 
     private void clearNewEpisodeDialog() throws NullPointerException {
-        TextInputLayout inputLayout = this.newEpisodeDialogView.findViewById(R.id.newEpisodeNameTextInputLayout);
+        TextInputLayout inputLayout = this.newEpisodeDialogView.findViewById(R.id.episodeNameTextInputLayout);
         EditText episodeNameInputEditText = this.newEpisodeDialogView.findViewById(com.rgp.asks.R.id.episodeEditText);
         EditText episodeDateEditText = this.newEpisodeDialogView.findViewById(com.rgp.asks.R.id.episodeDateEditText);
         Spinner episodePeriodSpinner = this.newEpisodeDialogView.findViewById(com.rgp.asks.R.id.episodePeriodSpinner);

@@ -95,7 +95,7 @@ public class BeliefDetailsFragment extends Fragment {
             beliefTextInputLayout.setError(null); // hide error
             model.uncheckedSaveBelief();
         } else {
-            beliefTextInputLayout.setError(this.getString(R.string.belief_dialog_error_empty_thought)); // show error
+            beliefTextInputLayout.setError(this.getString(R.string.belief_dialog_error_empty_belief)); // show error
         }
 
     }
