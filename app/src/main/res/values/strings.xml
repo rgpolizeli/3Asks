@@ -11,17 +11,16 @@
     <string name="tab_objections">Objections</string>
     <string name="tab_belief_details">Details</string>
 
-    <!-- edittexts' hints -->
-    <!-- note that the same hint can be utilized in more than one edit text (for example, in creation and edition) -->
+    <!-- hints -->
+    <!-- note that the same hint can be utilized in more than one view (for example, in creation and edition) -->
     <string name="hint_episode_name">Episode Name</string>
     <string name="hint_episode_date">Date</string>
+    <string name="hint_episode_period">Day Period</string>
     <string name="hint_episode_description">Description</string>
     <string name="hint_reaction_description">What you feel or do?</string>
     <string name="hint_argument_description">What proves this thought?</string>
     <string name="hint_belief_description">What were you thinking?</string>
     <string name="hint_objection_description">What refutes this thought?</string>
-
-    <!-- text views' hints -->
     <string name="hint_reaction_category">How do you classify this reaction?</string>
     <string name="hint_belief">Belief</string>
     <string name="hint_unhelpful_thinking_styles">Thinking styles</string>
@@ -71,6 +70,7 @@
     </string-array>
     <string-array name="episode_period_array">
         <item>Morning</item>
+        <item>Afternoon</item>
         <item>Evening</item>
         <item>Night</item>
     </string-array>

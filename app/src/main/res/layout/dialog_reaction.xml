@@ -5,60 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <com.rgp.asks.views.TextInputLayout
         android:id="@+id/reactionTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        app:errorEnabled="true"
-        app:errorTextAppearance="@style/ErrorMessageTextStyle"
-        app:hintTextAppearance="@style/MyHintText"
+        app:errorMessage="@string/reaction_dialog_error_empty_reaction"
+        app:label="@string/hint_reaction_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:numberOfLines="2" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/reactionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/hint_reaction_description"
-            android:inputType="textMultiLine"
-            app:fontFamily="@font/roboto"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/add_what_item_category_text_view"
+    <com.rgp.asks.views.SpinnerInputLayout
+        android:id="@+id/reactionClassSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:text="@string/hint_reaction_category"
+        app:entries="@array/reaction_categories_array"
+        app:spinnerLabel="@string/hint_reaction_category"
         app:fontFamily="@font/roboto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionTextInputLayout" />
-
-    <Spinner
-        android:id="@+id/reactionClassSpinner"
-        style="@style/Widget.AppCompat.Spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:entries="@array/reaction_categories_array"
-        app:fontFamily="@font/roboto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_what_item_category_text_view" />
 
     <Button
         android:id="@+id/neutralReactionButton"

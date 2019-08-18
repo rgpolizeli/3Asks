@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +14,9 @@ import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.interfaces.ArgumentDialogListener;
+import com.rgp.asks.views.TextInputLayout;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -96,9 +94,9 @@ public class ArgumentDialog extends DialogFragment {
             Button saveButton = view.findViewById(R.id.positiveArgumentButton);
             saveButton.setText(getContext().getString(R.string.argument_dialog_save_button));
             saveButton.setOnClickListener(createDialogPositiveButtonListenerInEditMode());
-            EditText argumentEditText = view.findViewById(R.id.argumentEditText);
+            TextInputLayout argumentEditText = view.findViewById(R.id.argumentTextInputLayout);
             if (this.firstCreation) {
-                argumentEditText.setText(this.argumentToEdit);
+                argumentEditText.setValue(this.argumentToEdit);
             }
         }
     }
@@ -129,15 +127,12 @@ public class ArgumentDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListenerInCreateMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText argumentEditText = v.getRootView().findViewById(R.id.argumentEditText);
-
-            String newArgument = argumentEditText.getText().toString();
+            TextInputLayout argumentEditText = v.getRootView().findViewById(R.id.argumentTextInputLayout);
+            String newArgument = argumentEditText.getValue().toString();
 
             if (newArgument.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.argumentTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
+                argumentEditText.goToState(TextInputLayout.STATE_ERROR);
             } else {
-                //Toast.makeText(getContext(), R.string.toast_message_creating_argument, Toast.LENGTH_SHORT).show();
                 listener.onArgumentDialogCreateButtonClick(newArgument);
                 dismiss();
             }
@@ -147,13 +142,11 @@ public class ArgumentDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListenerInEditMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText argumentEditText = v.getRootView().findViewById(R.id.argumentEditText);
-
-            String newArgument = argumentEditText.getText().toString();
+            TextInputLayout argumentEditText = v.getRootView().findViewById(R.id.argumentTextInputLayout);
+            String newArgument = argumentEditText.getValue().toString();
 
             if (newArgument.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.argumentTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.argument_dialog_error_empty_argument)); // show error
+                argumentEditText.goToState(TextInputLayout.STATE_ERROR);
             } else {
                 if (!newArgument.equals(this.argumentToEdit)) {
                     listener.onArgumentDialogSaveButtonClick(this.argumentIdToEdit, newArgument);
@@ -179,10 +172,8 @@ public class ArgumentDialog extends DialogFragment {
     }
 
     private void clearArgumentDialog(@NonNull View dialogView) throws NullPointerException {
-        TextInputLayout inputLayout = dialogView.findViewById(R.id.argumentTextInputLayout);
-        EditText argumentEditText = dialogView.findViewById(R.id.argumentEditText);
-        inputLayout.setError(null);
-        argumentEditText.setText("");
+        TextInputLayout argumentEditText = dialogView.findViewById(R.id.argumentTextInputLayout);
+        argumentEditText.clear();
     }
 
     public void showInCreateMode(@NonNull FragmentManager fragmentManager) throws NullPointerException {

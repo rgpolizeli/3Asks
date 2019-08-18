@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <com.rgp.asks.views.TextInputLayout
         android:id="@+id/beliefTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -13,28 +13,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:theme="@style/Widget.Design.TextInputLayout"
-        app:errorEnabled="true"
-        app:errorTextAppearance="@style/ErrorMessageTextStyle"
-        app:hintTextAppearance="@style/MyHintText"
+        app:errorMessage="@string/belief_dialog_error_empty_belief"
+        app:label="@string/hint_belief_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/beliefEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/hint_belief_description"
-            android:inputType="textMultiLine"
-            android:maxLines="6"
-            app:fontFamily="@font/roboto"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:numberOfLines="6" />
 
     <Button
         android:id="@+id/negativeBeliefButton"

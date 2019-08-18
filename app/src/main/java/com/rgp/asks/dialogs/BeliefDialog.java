@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,10 +15,9 @@ import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.interfaces.BeliefDialogListener;
+import com.rgp.asks.views.TextInputLayout;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -79,7 +77,6 @@ public class BeliefDialog extends DialogFragment {
         Button createButton = view.findViewById(R.id.positiveBeliefButton);
         createButton.setText(getContext().getString(R.string.belief_dialog_create_button));
         createButton.setOnClickListener(createDialogPositiveButtonListener());
-
     }
 
     @Override
@@ -102,13 +99,11 @@ public class BeliefDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListener() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText beliefEditText = v.getRootView().findViewById(R.id.beliefEditText);
-
-            String newBelief = beliefEditText.getText().toString();
+            TextInputLayout beliefEditText = v.getRootView().findViewById(R.id.beliefTextInputLayout);
+            String newBelief = beliefEditText.getValue().toString();
 
             if (newBelief.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.beliefTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.belief_dialog_error_empty_belief)); // show error
+                beliefEditText.goToState(TextInputLayout.STATE_ERROR);
             } else {
                 Toast.makeText(getContext(), R.string.toast_message_creating_belief, Toast.LENGTH_SHORT).show();
                 listener.onBeliefDialogCreateButtonClick(newBelief);
@@ -125,11 +120,8 @@ public class BeliefDialog extends DialogFragment {
     }
 
     private void clearBeliefDialog(@NonNull View dialogView) throws NullPointerException {
-        TextInputLayout inputLayout = dialogView.findViewById(R.id.beliefTextInputLayout);
-        EditText beliefEditText = dialogView.findViewById(R.id.beliefEditText);
-
-        inputLayout.setError(null);
-        beliefEditText.setText("");
+        TextInputLayout beliefEditText = dialogView.findViewById(R.id.beliefTextInputLayout);
+        beliefEditText.clear();
     }
 
     public void show(@NonNull FragmentManager fragmentManager) throws NullPointerException {

@@ -2,27 +2,24 @@ package com.rgp.asks.listeners;
 
 import android.app.DatePickerDialog;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 public class EpisodeDateDialogOnClick implements View.OnClickListener {
-    private EditText episodeDateEditText;
+    private EpisodeDateOnDateSetDialogListener episodeDateOnDateSetDialogListener;
+    private DatePickerDialog datePickerDialog;
 
-    public EpisodeDateDialogOnClick(EditText episodeDateEditText) {
-        this.episodeDateEditText = episodeDateEditText;
+    public EpisodeDateDialogOnClick(TextView episodeDateTextView) {
+        this.episodeDateOnDateSetDialogListener = new EpisodeDateOnDateSetDialogListener(episodeDateTextView);
     }
 
     @Override
     public void onClick(View v) {
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-        final Calendar c = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(v.getContext(), new EpisodeDateOnDateSetDialogListener(this.episodeDateEditText), c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
+        if (v.isShown()) {
+            final Calendar c = Calendar.getInstance();
+            this.datePickerDialog = new DatePickerDialog(v.getContext(), this.episodeDateOnDateSetDialogListener, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+            this.datePickerDialog.show();
+        }
     }
 }

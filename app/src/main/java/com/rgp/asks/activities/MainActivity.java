@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,7 @@ import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.dialogs.EpisodeDialog;
 import com.rgp.asks.dialogs.HelpInfoDialog;
+import com.rgp.asks.interfaces.EpisodeDialogListener;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
@@ -26,12 +29,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EpisodeDialogListener {
 
-    private RecyclerView episodesRecyclerView;
     private EpisodesRecyclerViewAdapter episodesRecyclerViewAdapter;
     private MainViewModel mainViewModel;
-    private EpisodeDialog newEpisodeDialog;
+    private EpisodeDialog episodeDialog;
     private HelpInfoDialog helpInfoDialog;
 
     @Override
@@ -42,22 +44,34 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        episodesRecyclerView = this.findViewById(R.id.episodesRecyclerView);
-        RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(this);
-        episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
-        episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
-        episodesRecyclerView.setAdapter(episodesRecyclerViewAdapter);
+        setupRecyclerView();
 
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        helpInfoDialog = createHelpInfoDialog();
-        newEpisodeDialog = createNewEpisodeDialog();
+        initDialogs();
 
-        mainViewModel.getAllEpisodes().observe(this, episodes -> {
+        initViewModel();
+
+        hideViews();
+    }
+
+    private void initViewModel() {
+        this.mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        this.mainViewModel.getAllEpisodes().observe(this, episodes -> {
             episodesRecyclerViewAdapter.setEpisodes(episodes);
             showViews();
         });
+    }
 
-        hideViews();
+    private void initDialogs() {
+        this.helpInfoDialog = createHelpInfoDialog();
+        createEpisodeDialog();
+    }
+
+    private void setupRecyclerView() {
+        RecyclerView episodesRecyclerView = this.findViewById(R.id.episodesRecyclerView);
+        RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(this);
+        episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
+        this.episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        episodesRecyclerView.setAdapter(this.episodesRecyclerViewAdapter);
     }
 
     @Override
@@ -80,13 +94,9 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private EpisodeDialog createNewEpisodeDialog() {
-        EpisodeDialog newEpisodeDialog = new EpisodeDialog();
-        newEpisodeDialog.createNewEpisodeDialogView(getLayoutInflater(), R.layout.dialog_episode);
-        newEpisodeDialog.setupDateOnClickListener();
-        newEpisodeDialog.setupPeriodOnTouchListener();
-        newEpisodeDialog.createAlertDialog(this, this.mainViewModel);
-        return newEpisodeDialog;
+    private void createEpisodeDialog() {
+        this.episodeDialog = new EpisodeDialog();
+        this.episodeDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
     }
 
     private HelpInfoDialog createHelpInfoDialog() {
@@ -104,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Handle click on newEpisodeFloatingActionButton and show newEpisodeDialog.
+     * Handle click on newEpisodeFloatingActionButton and show episodeDialog.
      *
      * @param newEpisodeFloatingActionButton clicked.
      */
     public void showNewEpisodeDialog(View newEpisodeFloatingActionButton) {
-        this.newEpisodeDialog.show();
+        this.episodeDialog.show(getSupportFragmentManager());
     }
 
     private void showHelpInfoDialog() {
@@ -153,7 +163,11 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        this.newEpisodeDialog.dismiss();
         this.helpInfoDialog.dismiss();
+    }
+
+    @Override
+    public void onEpisodeDialogCreateButtonClick(@NonNull String newEpisode, @NonNull String newDate, @NonNull String newPeriod) {
+        mainViewModel.createEpisode(newEpisode, newDate, newPeriod);
     }
 }

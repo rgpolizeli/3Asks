@@ -3,13 +3,10 @@ package com.rgp.asks.dialogs;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,10 +15,10 @@ import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.interfaces.ReactionDialogListener;
+import com.rgp.asks.views.SpinnerInputLayout;
+import com.rgp.asks.views.TextInputLayout;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -86,7 +83,6 @@ public class ReactionDialog extends DialogFragment {
             clearReactionDialog(view);
         }
 
-        setupReactionClassSpinnerListeners(view);
         setupButtonsListener(view);
 
         Button deleteButton = view.findViewById(R.id.neutralReactionButton);
@@ -103,11 +99,11 @@ public class ReactionDialog extends DialogFragment {
             Button saveButton = view.findViewById(R.id.positiveReactionButton);
             saveButton.setText(getContext().getString(R.string.reaction_dialog_save_button));
             saveButton.setOnClickListener(createDialogPositiveButtonListenerInEditMode());
-            EditText reactionEditText = view.findViewById(com.rgp.asks.R.id.reactionEditText);
-            Spinner reactionClassSpinner = view.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
+            TextInputLayout reactionTextInputLayout = view.getRootView().findViewById(R.id.reactionTextInputLayout);
+            SpinnerInputLayout reactionClassSpinner = view.findViewById(com.rgp.asks.R.id.reactionClassSpinner);
             if (this.firstCreation) {
-                reactionEditText.setText(this.reactionToEdit);
-                reactionClassSpinner.setSelection(getIndex(reactionClassSpinner, this.reactionClassToEdit));
+                reactionTextInputLayout.setValue(this.reactionToEdit);
+                reactionClassSpinner.setValue(this.reactionClassToEdit);
             }
         }
     }
@@ -130,22 +126,6 @@ public class ReactionDialog extends DialogFragment {
         this.reactionClassToEdit = savedInstanceState.getString(BUNDLE_KEY_REACTION_CLASS_TO_EDIT);
     }
 
-    /**
-     * Create and set listeners to reaction category spinner.
-     *
-     * @throws NullPointerException
-     */
-    private void setupReactionClassSpinnerListeners(@NonNull View view) throws NullPointerException {
-        Spinner reactionClassSpinner = view.findViewById(R.id.reactionClassSpinner);
-        reactionClassSpinner.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-            return false;
-        });
-    }
-
     private void setupButtonsListener(@NonNull View view) {
         Button cancelButton = view.findViewById(R.id.negativeReactionButton);
         Button deleteButton = view.findViewById(R.id.neutralReactionButton);
@@ -156,15 +136,14 @@ public class ReactionDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListenerInCreateMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText reactionEditText = v.getRootView().findViewById(R.id.reactionEditText);
-            Spinner reactionClassSpinner = v.getRootView().findViewById(R.id.reactionClassSpinner);
+            TextInputLayout reactionTextInputLayout = v.getRootView().findViewById(R.id.reactionTextInputLayout);
+            SpinnerInputLayout reactionClassSpinner = v.getRootView().findViewById(R.id.reactionClassSpinner);
 
-            String newReaction = reactionEditText.getText().toString();
-            String newReactionClass = reactionClassSpinner.getSelectedItem().toString();
+            String newReaction = reactionTextInputLayout.getValue().toString();
+            String newReactionClass = reactionClassSpinner.getValue();
 
             if (newReaction.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.reactionTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.reaction_dialog_error_empty_reaction)); // show error
+                reactionTextInputLayout.goToState(TextInputLayout.STATE_ERROR);
             } else {
                 Toast.makeText(getContext(), R.string.toast_message_creating_reaction, Toast.LENGTH_SHORT).show();
                 listener.onReactionDialogCreateButtonClick(newReaction, newReactionClass);
@@ -176,15 +155,14 @@ public class ReactionDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListenerInEditMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText reactionEditText = v.getRootView().findViewById(R.id.reactionEditText);
-            Spinner reactionClassSpinner = v.getRootView().findViewById(R.id.reactionClassSpinner);
+            TextInputLayout reactionTextInputLayout = v.getRootView().findViewById(R.id.reactionTextInputLayout);
+            SpinnerInputLayout reactionClassSpinner = v.getRootView().findViewById(R.id.reactionClassSpinner);
 
-            String newReaction = reactionEditText.getText().toString();
-            String newReactionClass = reactionClassSpinner.getSelectedItem().toString();
+            String newReaction = reactionTextInputLayout.getValue().toString();
+            String newReactionClass = reactionClassSpinner.getValue();
 
             if (newReaction.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.reactionTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.reaction_dialog_error_empty_reaction)); // show error
+                reactionTextInputLayout.goToState(TextInputLayout.STATE_ERROR);
             } else {
                 if (!newReaction.equals(this.reactionToEdit) || !newReactionClass.equals(this.reactionClassToEdit)) {
                     listener.onReactionDialogSaveButtonClick(this.reactionIdToEdit, newReaction, newReactionClass);
@@ -210,13 +188,11 @@ public class ReactionDialog extends DialogFragment {
     }
 
     private void clearReactionDialog(View dialogView) throws NullPointerException {
-        TextInputLayout inputLayout = dialogView.findViewById(R.id.reactionTextInputLayout);
-        EditText reactionEditText = dialogView.findViewById(R.id.reactionEditText);
-        Spinner reactionClassSpinner = dialogView.findViewById(R.id.reactionClassSpinner);
+        TextInputLayout reactionTextInputLayout = dialogView.findViewById(R.id.reactionTextInputLayout);
+        SpinnerInputLayout reactionClassSpinner = dialogView.findViewById(R.id.reactionClassSpinner);
 
-        inputLayout.setError(null);
-        reactionEditText.setText("");
-        reactionClassSpinner.setSelection(0);
+        reactionTextInputLayout.clear();
+        reactionClassSpinner.clear();
     }
 
     public void showInCreateMode(@NonNull FragmentManager fragmentManager) throws NullPointerException {
@@ -234,15 +210,6 @@ public class ReactionDialog extends DialogFragment {
             this.reactionClassToEdit = reactionClassToEdit;
             show(fragmentManager, FRAGMENT_TAG_REACTION_DIALOG);
         }
-    }
-
-    private int getIndex(Spinner spinner, String myString) {
-        for (int i = 0; i < spinner.getCount(); i++) {
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
-                return i;
-            }
-        }
-        return 0;
     }
 
     private void hideKeyboard(View v) {

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +14,9 @@ import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.interfaces.ObjectionDialogListener;
+import com.rgp.asks.views.TextInputLayout;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -96,9 +94,9 @@ public class ObjectionDialog extends DialogFragment {
             Button saveButton = view.findViewById(R.id.positiveObjectionButton);
             saveButton.setText(getContext().getString(R.string.objection_dialog_save_button));
             saveButton.setOnClickListener(createDialogPositiveButtonListenerInEditMode());
-            EditText objectionEditText = view.findViewById(R.id.objectionEditText);
+            TextInputLayout objectionEditText = view.findViewById(R.id.objectionTextInputLayout);
             if (this.firstCreation) {
-                objectionEditText.setText(this.objectionToEdit);
+                objectionEditText.setValue(this.objectionToEdit);
             }
         }
     }
@@ -129,15 +127,12 @@ public class ObjectionDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListenerInCreateMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText objectionEditText = v.getRootView().findViewById(R.id.objectionEditText);
-
-            String newObjection = objectionEditText.getText().toString();
+            TextInputLayout objectionEditText = v.getRootView().findViewById(R.id.objectionTextInputLayout);
+            String newObjection = objectionEditText.getValue().toString();
 
             if (newObjection.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.objectionTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
+                objectionEditText.goToState(TextInputLayout.STATE_ERROR);
             } else {
-                //Toast.makeText(getContext(), R.string.toast_message_creating_objection, Toast.LENGTH_SHORT).show();
                 listener.onObjectionDialogCreateButtonClick(newObjection);
                 dismiss();
             }
@@ -147,13 +142,11 @@ public class ObjectionDialog extends DialogFragment {
     private View.OnClickListener createDialogPositiveButtonListenerInEditMode() throws NullPointerException {
         return v -> {
             hideKeyboard(v);
-            TextInputEditText objectionEditText = v.getRootView().findViewById(R.id.objectionEditText);
-
-            String newObjection = objectionEditText.getText().toString();
+            TextInputLayout objectionEditText = v.getRootView().findViewById(R.id.objectionTextInputLayout);
+            String newObjection = objectionEditText.getValue().toString();
 
             if (newObjection.isEmpty()) {
-                TextInputLayout inputLayout = v.getRootView().findViewById(R.id.objectionTextInputLayout);
-                inputLayout.setError(getContext().getString(R.string.objection_dialog_error_empty_objection)); // show error
+                objectionEditText.goToState(TextInputLayout.STATE_ERROR);
             } else {
                 if (!newObjection.equals(this.objectionToEdit)) {
                     listener.onObjectionDialogSaveButtonClick(this.objectionIdToEdit, newObjection);
@@ -179,11 +172,8 @@ public class ObjectionDialog extends DialogFragment {
     }
 
     private void clearObjectionDialog(@NonNull View dialogView) throws NullPointerException {
-        TextInputLayout inputLayout = dialogView.findViewById(R.id.objectionTextInputLayout);
-        EditText objectionEditText = dialogView.findViewById(R.id.objectionEditText);
-
-        inputLayout.setError(null);
-        objectionEditText.setText("");
+        TextInputLayout objectionEditText = dialogView.findViewById(R.id.objectionTextInputLayout);
+        objectionEditText.clear();
     }
 
     public void showInCreateMode(@NonNull FragmentManager fragmentManager) throws NullPointerException {
