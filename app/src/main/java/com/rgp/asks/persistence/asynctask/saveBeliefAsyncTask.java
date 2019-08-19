@@ -2,9 +2,6 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
-
-import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.messages.SavedEditedBeliefEvent;
 import com.rgp.asks.persistence.dao.BeliefDao;
 import com.rgp.asks.persistence.dao.BeliefThinkingStyleDao;
@@ -27,7 +24,6 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
         this.beliefThinkingStyleDao = beliefThinkingStyleDao;
         this.toDeleteThinkingStyles = toDeleteThinkingStyles;
         this.toInsertThinkingStyles = toInsertThinkingStyles;
-
     }
 
     @Override
@@ -41,7 +37,7 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
         return deleteThinkingStylesResult && updateThoughtResult == 1;
     }
 
-    private boolean deleteThinkingStyles(@NonNull final int beliefId) {
+    private boolean deleteThinkingStyles(final int beliefId) {
         boolean result = true;
         int intermediateResult;
         for (ThinkingStyle th : toDeleteThinkingStyles) {
@@ -53,7 +49,7 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
         return result;
     }
 
-    private void insertThinkingStyles(@NonNull final int beliefId) {
+    private void insertThinkingStyles(final int beliefId) {
 
         for (ThinkingStyle th : toInsertThinkingStyles) {
             beliefThinkingStyleDao.insert(new BeliefThinkingStyle(beliefId, th.getThinkingStyle()));
@@ -65,7 +61,7 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
         if (result) {
-            EventBus.getDefault().post(new SavedEditedBeliefEvent(Constants.SAVED_EDITED_BELIEF_MESSAGE));
+            EventBus.getDefault().post(new SavedEditedBeliefEvent(""));
         }
     }
 }

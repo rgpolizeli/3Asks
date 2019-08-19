@@ -3,6 +3,7 @@ package com.rgp.asks.viewmodel;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -14,109 +15,82 @@ import com.rgp.asks.persistence.entity.Reaction;
 import java.util.List;
 
 public class EpisodeViewModel extends AndroidViewModel {
+    private int episodeId;
     private LiveData<Episode> episode;
     private Episode modifiableEpisodeCopy;
     private LiveData<List<Reaction>> reactions;
     private LiveData<List<Belief>> beliefs;
-
-    private boolean episodeIsLoaded;
 
     private Repository repository;
 
     public EpisodeViewModel(Application application) {
         super(application);
         this.repository = new Repository(application);
-        this.episodeIsLoaded = false;
     }
 
-    public boolean getEpisodeIsLoaded() {
-        return this.episodeIsLoaded;
+    public int getEpisodeId() {
+        return this.episodeId;
     }
 
-    public void setEpisodeIsLoaded(boolean value) {
-        episodeIsLoaded = true;
+    public void setEpisodeId(int episodeId) {
+        this.episodeId = episodeId;
     }
 
-    public void loadEpisode(@NonNull final int episodeId) {
-        this.episode = this.repository.getEpisodeById(episodeId);
-        this.reactions = this.repository.getReactionsForEpisode(episodeId);
-        this.beliefs = this.repository.getBeliefsForEpisode(episodeId);
+    public LiveData<Episode> getEpisodeById() {
+        if (this.episode == null) {
+            loadEpisodeById();
+        }
+        return this.episode;
     }
 
-    public LiveData<Episode> getEpisode() {
-        return episode;
+    private void loadEpisodeById() {
+        this.episode = this.repository.getEpisodeById(this.episodeId);
     }
 
-    public LiveData<List<Reaction>> getReactions() {
+    public LiveData<List<Reaction>> getReactionsForEpisode() {
+        if (this.reactions == null) {
+            loadReactionsForEpisode();
+        }
         return reactions;
     }
 
-    public LiveData<List<Belief>> getBeliefs() {
+    private void loadReactionsForEpisode() {
+        this.reactions = this.repository.getReactionsForEpisode(this.episodeId);
+    }
+
+    public LiveData<List<Belief>> getBeliefsForEpisode() {
+        if (this.beliefs == null) {
+            loadBeliefsForEpisode();
+        }
         return beliefs;
     }
 
-    public Episode getModifiableEpisodeCopy() {
-        return modifiableEpisodeCopy;
-    }
-
-    public void setModifiableEpisodeCopy(@NonNull Episode newEpisode) {
-
-        if (this.modifiableEpisodeCopy != null && this.modifiableEpisodeCopy.getId() == newEpisode.getId()) {
-            this.modifiableEpisodeCopy = newEpisode;
-        } else {
-            //not permit
-        }
-
-    }
-
-    public void initModifiableEpisodeCopy() {
-        Episode currentEpisode = this.episode.getValue();
-
-        if (currentEpisode != null) {
-            this.modifiableEpisodeCopy = new Episode(
-                    currentEpisode.getEpisode(),
-                    currentEpisode.getDescription(),
-                    currentEpisode.getDate(),
-                    currentEpisode.getPeriod()
-            );
-            this.modifiableEpisodeCopy.setId(currentEpisode.getId());
-        } else {
-            //err
-        }
-
-
+    private void loadBeliefsForEpisode() {
+        this.beliefs = this.repository.getBeliefsForEpisode(this.episodeId);
     }
 
     public void createReaction(@NonNull String newReaction, @NonNull String newReactionClass) {
-        Episode e = this.episode.getValue();
-        if (e != null) {
-            this.repository.createReactionForEpisode(e.getId(), newReaction, newReactionClass);
-        }
+        this.repository.createReactionForEpisode(this.episodeId, newReaction, newReactionClass);
     }
 
-    public void editReaction(@NonNull final Reaction reaction) {
-        Episode e = this.episode.getValue();
-        if (e != null && e.getId() == reaction.getEpisodeId()) {
-            this.repository.editReactionForEpisode(reaction);
+    public void editReactionForEpisode(@NonNull final Reaction reaction) {
+        if (reaction.getEpisodeId() == this.episodeId) {
+            this.repository.editReaction(reaction);
         } else {
             //err
         }
     }
 
-    public void removeReaction(@NonNull final Reaction reaction) {
-        Episode e = this.episode.getValue();
-        if (e != null && e.getId() == reaction.getEpisodeId()) {
-            this.repository.deleteReactionForEpisode(reaction);
+    public void removeReactionForEpisode(@NonNull final Reaction reaction) {
+        if (reaction.getEpisodeId() == this.episodeId) {
+            this.repository.deleteReaction(reaction);
         } else {
             //err
         }
     }
 
-    public void createBelief(@NonNull final String newBelief) {
-        Episode e = this.episode.getValue();
-        if (e != null) {
-            this.repository.createBeliefForEpisode(e.getId(), newBelief);
-        }
+    public void createBeliefForEpisode(@NonNull final String newBelief) {
+        this.repository.createBeliefForEpisode(episodeId, newBelief);
     }
 
     public void uncheckedSaveEpisode() {
@@ -132,10 +106,11 @@ public class EpisodeViewModel extends AndroidViewModel {
     }
 
     public boolean episodeWasChanged() {
-        Episode currentEpisode = this.getEpisode().getValue();
-        Episode modifiedEpisode = this.getModifiableEpisodeCopy();
 
-        if (currentEpisode != null && currentEpisode.getId() == modifiedEpisode.getId()) {
+        Episode currentEpisode = getEpisodeFromLiveData();
+        Episode modifiedEpisode = getModifiableEpisodeCopy();
+
+        if (currentEpisode != null && modifiedEpisode != null && currentEpisode.getId() == modifiedEpisode.getId()) {
             if (!modifiedEpisode.getEpisode().isEmpty()) {
                 return !currentEpisode.equals(modifiedEpisode);
             } else {
@@ -152,14 +127,38 @@ public class EpisodeViewModel extends AndroidViewModel {
         }
     }
 
-
     public void removeEpisode() {
-        Episode e = this.getEpisode().getValue();
-        if (e != null) {
-            this.repository.deleteEpisode(e);
+        Episode episode = getEpisodeFromLiveData();
+        if (episode != null) {
+            this.repository.deleteEpisode(episode);
         } else {
-            //err
+            //todo: err
         }
+
+    }
+
+    @Nullable
+    public Episode getModifiableEpisodeCopy() {
+        return modifiableEpisodeCopy;
+    }
+
+    public void initModifiableEpisodeCopy(@NonNull Episode loadedEpisode) {
+        if (loadedEpisode.getId() == this.episodeId) {
+            this.modifiableEpisodeCopy = new Episode(
+                    loadedEpisode.getEpisode(),
+                    loadedEpisode.getDescription(),
+                    loadedEpisode.getDate(),
+                    loadedEpisode.getPeriod()
+            );
+            this.modifiableEpisodeCopy.setId(loadedEpisode.getId());
+        } else {
+            //todo: err
+        }
+    }
+
+    @Nullable
+    private Episode getEpisodeFromLiveData() {
+        return this.episode.getValue();
     }
 
 }

@@ -24,7 +24,6 @@ import com.rgp.asks.viewmodel.EpisodeViewModel;
 
 public class WhatFragment extends Fragment implements ReactionDialogListener {
 
-    private RecyclerView reactionsRecyclerView;
     private ReactionRVAdapter reactionsRecyclerViewAdapter;
     private EpisodeViewModel model;
     private ReactionDialog reactionDialog;
@@ -32,18 +31,29 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_what_ask, container, false);
-
         setupFAB(container);
-
         setupRecyclerView(rootView);
-
         initDialogs();
-
         initViewModel();
-
+        int episodeIdToLoad = model.getEpisodeId();
+        if (episodeIdToLoad != -1) {
+            this.model.getReactionsForEpisode().observe(this, reactions -> reactionsRecyclerViewAdapter.setReactions(reactions));
+        } else {
+            //todo: err: episode not loaded
+        }
         return rootView;
+    }
+
+    /**
+     * Handle click on addReactionButtonView and open ReactionDialog.
+     *
+     * @param container is the viewgroup of this fragment.
+     */
+    private void setupFAB(@NonNull ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
+        FloatingActionButton reactionFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addReactionFab);
+        reactionFab.setOnClickListener(v -> showReactionDialogInCreateMode());
     }
 
     private void initDialogs() {
@@ -52,18 +62,11 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(getActivity()).get(EpisodeViewModel.class);
-        model.getReactions().observe(this, reactions -> reactionsRecyclerViewAdapter.setReactions(reactions));
-    }
-
-    private void setupFAB(@NonNull ViewGroup container) {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
-        FloatingActionButton reactionFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addReactionFab);
-        reactionFab.setOnClickListener(v -> showReactionDialogInCreateMode());
+        this.model = ViewModelProviders.of(getActivity()).get(EpisodeViewModel.class);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
-        reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.reactionsRecyclerView);
+        RecyclerView reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.reactionsRecyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         reactionsRecyclerView.setLayoutManager(reactionsRecyclerViewLayoutManager);
         reactionsRecyclerViewAdapter = new ReactionRVAdapter(createOnItemRecyclerViewClickListener());
@@ -98,18 +101,18 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
 
     @Override
     public void onReactionDialogCreateButtonClick(@NonNull String newReaction, @NonNull String newReactionClass) {
-        model.createReaction(newReaction, newReactionClass);
+        this.model.createReaction(newReaction, newReactionClass);
     }
 
     @Override
     public void onReactionDialogSaveButtonClick(int reactionId, @NonNull String newReaction, @NonNull String newReactionClass) {
-        Reaction reactionToEdit = new Reaction(reactionId, newReaction, newReactionClass, model.getEpisode().getValue().getId());
-        model.editReaction(reactionToEdit);
+        Reaction reactionToEdit = new Reaction(reactionId, newReaction, newReactionClass, model.getEpisodeId());
+        model.editReactionForEpisode(reactionToEdit);
     }
 
     @Override
     public void onReactionDialogDeleteButtonClick(int reactionId) {
-        Reaction reactionToDelete = new Reaction(reactionId, "", "", model.getEpisode().getValue().getId());
-        model.removeReaction(reactionToDelete);
+        Reaction reactionToDelete = new Reaction(reactionId, "", "", model.getEpisodeId());
+        model.removeReactionForEpisode(reactionToDelete);
     }
 }

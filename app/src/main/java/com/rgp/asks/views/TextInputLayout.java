@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -39,6 +41,9 @@ public class TextInputLayout extends LinearLayout {
                 R.styleable.TextInputLayout, 0, 0);
         String label = a.getString(R.styleable.TextInputLayout_label);
         String errorMessage = a.getString(R.styleable.TextInputLayout_errorMessage);
+        if (errorMessage == null) {
+            errorMessage = "";
+        }
         int numberOfLines = a.getInt(R.styleable.TextInputLayout_numberOfLines, 1);
         a.recycle();
 
@@ -73,6 +78,8 @@ public class TextInputLayout extends LinearLayout {
 
         this.errorMessageTextView = getErrorMessageTextView();
         this.errorMessageTextView.setText(errorMessage);
+
+        goToState(STATE_NORMAL);
     }
 
     @Override
@@ -188,5 +195,9 @@ public class TextInputLayout extends LinearLayout {
             super.writeToParcel(out, flags);
             out.writeInt(state);
         }
+    }
+
+    public void addTextChangedListener(@NonNull TextWatcher textWatcher) {
+        this.editText.addTextChangedListener(textWatcher);
     }
 }

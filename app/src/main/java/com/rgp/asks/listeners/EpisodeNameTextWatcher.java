@@ -6,10 +6,10 @@ import android.text.TextWatcher;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
-public class EpisodeTextWatcher implements TextWatcher {
+public class EpisodeNameTextWatcher implements TextWatcher {
     private EpisodeViewModel model;
 
-    public EpisodeTextWatcher(EpisodeViewModel model) {
+    public EpisodeNameTextWatcher(EpisodeViewModel model) {
         this.model = model;
     }
 

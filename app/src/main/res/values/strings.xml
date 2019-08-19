@@ -92,8 +92,8 @@
     <string name="toast_message_creating_episode">Creating episode…</string>
     <string name="toast_message_creating_belief">Creating belief…</string>
     <string name="toast_message_creating_reaction">Creating reaction…</string>
-    <string name="toast_saved_episode">Episode details saved!</string>
-    <string name="toast_saved_belief">Belief details saved!</string>
+    <string name="toast_message_belief_saved">Belief details saved!</string>
+    <string name="toast_message_episode_saved">Episode details saved!</string>
     <string name="toast_deleted_episode">Episode deleted!</string>
     <string name="toast_error_deleted_episode">Failed to delete the episode!</string>
     <string name="toast_deleted_belief">Belief deleted!</string>

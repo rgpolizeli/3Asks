@@ -165,11 +165,11 @@ public class Repository {
         new insertReactionAsyncTask(this.reactionDao).execute(r);
     }
 
-    public void editReactionForEpisode(@NonNull final Reaction reaction) {
+    public void editReaction(@NonNull final Reaction reaction) {
         new saveReactionAsyncTask(this.reactionDao).execute(reaction);
     }
 
-    public void deleteReactionForEpisode(@NonNull final Reaction reaction) {
+    public void deleteReaction(@NonNull final Reaction reaction) {
         new deleteReactionAsyncTask(this.reactionDao).execute(reaction);
     }
 

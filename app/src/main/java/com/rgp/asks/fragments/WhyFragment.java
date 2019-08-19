@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class WhyFragment extends Fragment implements BeliefDialogListener {
 
-    private RecyclerView beliefsRecyclerView;
     private BeliefRVAdapter beliefsRecyclerViewAdapter;
     private EpisodeViewModel model;
     private BeliefDialog beliefDialog;
@@ -40,18 +39,29 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_why_ask, container, false);
-
         setupFAB(container);
-
         setupRecyclerView(rootView);
-
         initDialogs();
-
         initViewModel();
-
+        int episodeIdToLoad = model.getEpisodeId();
+        if (episodeIdToLoad != -1) {
+            model.getBeliefsForEpisode().observe(this, beliefs -> beliefsRecyclerViewAdapter.setBeliefs(beliefs));
+        } else {
+            //todo:err
+        }
         return rootView;
+    }
+
+    /**
+     * Handle click on addBeliefButtonView and open BeliefDialog.
+     *
+     * @param container is the viewGroup of this fragment.
+     */
+    private void setupFAB(@NonNull ViewGroup container) {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
+        FloatingActionButton beliefsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addBeliefFab);
+        beliefsFab.setOnClickListener(v -> showBeliefDialog());
     }
 
     @Override
@@ -72,12 +82,11 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(this.getActivity()).get(EpisodeViewModel.class);
-        model.getBeliefs().observe(this, beliefs -> beliefsRecyclerViewAdapter.setBeliefs(beliefs));
+        model = ViewModelProviders.of(getActivity()).get(EpisodeViewModel.class);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
-        beliefsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.beliefsRecyclerView);
+        RecyclerView beliefsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.beliefsRecyclerView);
         beliefsRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         beliefsRecyclerViewAdapter = new BeliefRVAdapter(createOnItemRecyclerViewClickListener());
         beliefsRecyclerView.setAdapter(beliefsRecyclerViewAdapter);
@@ -97,12 +106,6 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
         };
     }
 
-    private void setupFAB(@NonNull ViewGroup container) {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
-        FloatingActionButton beliefsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addBeliefFab);
-        beliefsFab.setOnClickListener(v -> showBeliefDialog());
-    }
-
     private BeliefDialog createBeliefDialog() {
         return new BeliefDialog();
     }
@@ -113,7 +116,7 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCreatedBeliefEvent(CreatedBeliefEvent event) {
-        //startEditBeliefActivity(event.beliefId);
+
     }
 
     private void startEditBeliefActivity(int beliefId) {
@@ -124,6 +127,6 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
 
     @Override
     public void onBeliefDialogCreateButtonClick(@NonNull String newBelief) {
-        model.createBelief(newBelief);
+        this.model.createBeliefForEpisode(newBelief);
     }
 }

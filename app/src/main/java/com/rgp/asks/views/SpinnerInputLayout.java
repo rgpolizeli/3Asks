@@ -8,11 +8,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -76,41 +78,7 @@ public class SpinnerInputLayout extends LinearLayout {
             }
         });
 
-        /*
-        this.spinner.setOnFocusChangeListener((v, hasFocus) -> {
-            if(hasFocus){
-                if (textInputLayoutState == STATE_NORMAL) {
-                    SpinnerInputLayout.this.goToState(STATE_FOCUSED);
-                }
-            } else{
-                if (textInputLayoutState == STATE_FOCUSED) {
-                    SpinnerInputLayout.this.goToState(STATE_NORMAL);
-                }
-            }
-        });
-       */
-        /*
-        this.spinner.setOnTouchListener((v, event) -> {
-            if (textInputLayoutState == STATE_NORMAL) {
-                SpinnerInputLayout.this.goToState(STATE_FOCUSED);
-            }
-            return v.performClick();
-        });
-
-        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (textInputLayoutState == STATE_FOCUSED) {
-                    SpinnerInputLayout.this.goToState(STATE_NORMAL);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        */
+        goToState(STATE_NORMAL);
     }
 
     @Override
@@ -218,4 +186,9 @@ public class SpinnerInputLayout extends LinearLayout {
             out.writeInt(state);
         }
     }
+
+    public void setOnItemSelectedListener(@NonNull AdapterView.OnItemSelectedListener onItemSelectedListener) {
+        this.spinner.setOnItemSelectedListener(onItemSelectedListener);
+    }
+
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:scrollbarStyle="insideOverlay">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,84 +11,51 @@
         android:layout_height="match_parent"
         android:padding="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/episodeTextInputLayout"
+        <com.rgp.asks.views.TextInputLayout
+            android:id="@+id/episodeNameTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:hintTextAppearance="@style/MyHintText"
+            app:errorMessage="@string/episode_dialog_error_empty_episode_name"
+            app:label="@string/hint_episode_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:numberOfLines="1" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/episode_name_edit_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/hint_episode_name"
-                android:inputType="text"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@color/errorColor"
-                app:fontFamily="@font/roboto"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/episodeTextInputLayout" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/episodeDateTextInputLayout"
+        <com.rgp.asks.views.DateInputLayout
+            android:id="@+id/episodeDateInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/textInputLayoutSpace"
-            app:hintTextAppearance="@style/MyHintText"
+            app:dateLabel="@string/hint_episode_date"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/episodeTextInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/episodeNameTextInputLayout" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/episode_date_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="false"
-                android:hint="@string/hint_episode_date"
-                android:inputType="date"
-                android:longClickable="false"
-                app:fontFamily="@font/roboto" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Spinner
-            android:id="@+id/episode_period_spinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
+        <com.rgp.asks.views.SpinnerInputLayout
+            android:id="@+id/episodePeriodSpinnerInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:entries="@array/episode_period_array"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/episodeDateTextInputLayout"
-            app:layout_constraintStart_toEndOf="@+id/episodeDateTextInputLayout"
-            app:layout_constraintTop_toTopOf="@+id/episodeDateTextInputLayout" />
+            app:entries="@array/episode_period_array"
+            app:fontFamily="@font/roboto"
+            app:layout_constraintBottom_toBottomOf="@+id/episodeDateInputLayout"
+            app:layout_constraintStart_toEndOf="@+id/episodeDateInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/episodeDateInputLayout"
+            app:spinnerLabel="@string/hint_episode_period" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.rgp.asks.views.TextInputLayout
             android:id="@+id/episodeDescriptionTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/textInputLayoutSpace"
             app:fontFamily="@font/roboto"
-            app:hintTextAppearance="@style/MyHintText"
+            app:label="@string/hint_episode_description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/episodeDateTextInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/episode_description_edit_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/hint_episode_description"
-                android:inputType="textMultiLine"
-                app:fontFamily="@font/roboto"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/episodeDescriptionTextInputLayout" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/episodeDateInputLayout"
+            app:numberOfLines="8" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>
+

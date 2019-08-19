@@ -199,7 +199,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedBeliefEvent(SavedEditedBeliefEvent event) {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_message_belief_saved), Toast.LENGTH_SHORT).show();
         setBeliefNameInToolbar(beliefViewModel.getModifiableBeliefCopy());
     }
 
@@ -208,7 +208,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         if (event.result) {
             Belief currentBelief = beliefViewModel.getBelief().getValue();
             if (currentBelief == null || currentBelief.getId() == event.deletedBeliefId) {
-                Toast.makeText(this, this.getString(R.string.toast_deleted_belief), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.toast_deleted_belief), Toast.LENGTH_SHORT).show();
                 this.finish();
 
             }

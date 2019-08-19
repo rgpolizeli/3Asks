@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,8 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class AsksActivity extends AppCompatActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private EpisodeViewModel model;
     private Toolbar toolbar;
 
@@ -50,34 +50,34 @@ public class AsksActivity extends AppCompatActivity {
 
         EventBus.getDefault().register(this);
 
-        toolbar = findViewById(com.rgp.asks.R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("Episode");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        configToolbarAsActionBar();
 
         loadFABs();
 
-        model = ViewModelProviders.of(this).get(EpisodeViewModel.class);
-        model.loadEpisode(this.getIntent().getIntExtra(Constants.ARG_EPISODE, -1));
-        model.getEpisode().observe(this, episode -> {
+        initViewModel();
 
-            setEpisodeNameInToolbar(episode);
+        int episodeIdToLoad = getIntent().getIntExtra(Constants.ARG_EPISODE, -1);
+        this.model.setEpisodeId(episodeIdToLoad);
 
-            //this way I'm sure the episode has already been loaded from the database
-            // before user click in a tab
-            if (!model.getEpisodeIsLoaded() && episode != null) {
-                model.setEpisodeIsLoaded(true);
-                initTabs();
-                model.initModifiableEpisodeCopy();
-            } else {
-                if (model.getEpisodeIsLoaded() && episode != null) {
-                    initTabs();
-                }
-            }
+        initTabs();
+    }
 
-        });
+    private void initViewModel() {
+        this.model = ViewModelProviders.of(this).get(EpisodeViewModel.class);
+    }
 
+    private void configToolbarAsActionBar() {
+        this.toolbar = findViewById(com.rgp.asks.R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.toolbar.setTitle("Episode");
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        } else {
+            //todo: err load action bar
+        }
     }
 
     public void hideKeyboard() {
@@ -95,11 +95,10 @@ public class AsksActivity extends AppCompatActivity {
 
     private AlertDialog createUnsavedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder
                 .setMessage(this.getString(R.string.episode_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    model.checkedSaveEpisode();
+                    this.model.checkedSaveEpisode();
                     finish();
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
@@ -107,9 +106,7 @@ public class AsksActivity extends AppCompatActivity {
                     finish();
                 })
         ;
-
-        AlertDialog dialog = builder.create();
-        return dialog;
+        return builder.create();
     }
 
     private void openUnsavedDialog() {
@@ -137,8 +134,8 @@ public class AsksActivity extends AppCompatActivity {
         findViewById(com.rgp.asks.R.id.indeterminateBar).setVisibility(View.GONE);
         findViewById(com.rgp.asks.R.id.tabs).setVisibility(View.VISIBLE);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(com.rgp.asks.R.id.asksViewPager);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = findViewById(com.rgp.asks.R.id.asksViewPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(com.rgp.asks.R.id.tabs);
@@ -166,7 +163,6 @@ public class AsksActivity extends AppCompatActivity {
     }
 
     private void showRightFab(int tabPosition) {
-
         switch (tabPosition) {
             case 0:
                 beliefsFab.hide();
@@ -178,7 +174,6 @@ public class AsksActivity extends AppCompatActivity {
                 beliefsFab.hide();
                 reactionsFab.show();
                 break;
-
             case 2:
                 saveEpisodeFab.hide();
                 reactionsFab.hide();
@@ -196,10 +191,9 @@ public class AsksActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case com.rgp.asks.R.id.action_delete_episode:
-                model.removeEpisode();
+                this.model.removeEpisode();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -217,36 +211,34 @@ public class AsksActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_message_episode_saved), Toast.LENGTH_SHORT).show();
         setEpisodeNameInToolbar(model.getModifiableEpisodeCopy());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeletedEpisodeEvent(DeletedEpisodeEvent event) {
         if (event.result) {
-            Episode currentEpisode = model.getEpisode().getValue();
-            if (currentEpisode == null || currentEpisode.getId() == event.deletedEpisodeId) {
-                Toast.makeText(this, this.getString(R.string.toast_deleted_episode), Toast.LENGTH_SHORT).show();
+            if (this.model.getEpisodeId() == event.deletedEpisodeId) {
+                Toast.makeText(this, getString(R.string.toast_deleted_episode), Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         } else {
-            Toast.makeText(this, this.getString(R.string.toast_error_deleted_episode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_error_deleted_episode), Toast.LENGTH_SHORT).show();
         }
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        SectionsPagerAdapter(FragmentManager fm) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
-
-            Fragment f = null;
-
+            Fragment f;
             switch (position) {
-                case 0:
+                default:
                     f = new WhenFragment();
                     break;
                 case 1:
@@ -256,7 +248,6 @@ public class AsksActivity extends AppCompatActivity {
                     f = new WhyFragment();
                     break;
             }
-
             return f;
         }
 

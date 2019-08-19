@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -74,6 +76,8 @@ public class DateInputLayout extends LinearLayout {
                 v.performClick();
             }
         });
+
+        goToState(STATE_NORMAL);
     }
 
     @Override
@@ -177,5 +181,9 @@ public class DateInputLayout extends LinearLayout {
             out.writeInt(state);
             out.writeString(date);
         }
+    }
+
+    public void addTextChangedListener(@NonNull TextWatcher textWatcher) {
+        this.dateTextView.addTextChangedListener(textWatcher);
     }
 }
