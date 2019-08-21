@@ -16,113 +16,126 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BeliefViewModel extends AndroidViewModel {
-    private LiveData<Belief> belief;
+    private int beliefId;
+    private LiveData<Belief> beliefLiveData;
+    private boolean isBeliefFirstLoad;
     private Belief modifiableBeliefCopy;
-    private LiveData<List<ThinkingStyle>> selectedThinkingStyles;
-    private List<ThinkingStyle> modifiableSelectedThinkingStylesCopy;
-    private LiveData<List<Argument>> arguments;
-    private LiveData<List<Objection>> objections;
-    private boolean beliefIsLoaded;
-    private boolean selectedThinkingStylesIsLoaded;
+    private LiveData<List<ThinkingStyle>> thinkingStylesLiveData;
+    private boolean isThinkingStylesFirstLoad;
+    private List<ThinkingStyle> modifiableThinkingStylesCopy;
+    private LiveData<List<Argument>> argumentsLiveData;
+    private LiveData<List<Objection>> objectionsLiveData;
     private Repository repository;
 
     public BeliefViewModel(@NonNull Application application) {
         super(application);
         this.repository = new Repository(application);
-
-        this.beliefIsLoaded = false;
-        this.selectedThinkingStylesIsLoaded = false;
+        this.isBeliefFirstLoad = true;
+        this.isThinkingStylesFirstLoad = true;
     }
 
-    public boolean getBeliefIsLoaded() {
-        return this.beliefIsLoaded;
+    public boolean isBeliefFirstLoad() {
+        return this.isBeliefFirstLoad;
     }
 
-    public void setBeliefIsLoaded(boolean value) {
-        beliefIsLoaded = true;
+    public void setIsBeliefFirstLoad(boolean is) {
+        this.isBeliefFirstLoad = is;
     }
 
-    public boolean getSelectedThinkingStylesIsLoaded() {
-        return this.selectedThinkingStylesIsLoaded;
+    public boolean isThinkingStylesFirstLoad() {
+        return this.isThinkingStylesFirstLoad;
     }
 
-    public void setSelectedThinkingStylesIsLoaded(boolean value) {
-        selectedThinkingStylesIsLoaded = true;
+    public void setIsThinkingStylesFirstLoad(boolean is) {
+        this.isThinkingStylesFirstLoad = is;
     }
 
-    public void loadBelief(@NonNull final int beliefId) {
-        this.belief = this.repository.getBeliefById(beliefId);
-        this.selectedThinkingStyles = this.repository.getThinkingStylesForBelief(beliefId);
-        this.arguments = this.repository.getArgumentsForBelief(beliefId);
-        this.objections = this.repository.getObjectionsForBelief(beliefId);
+    public int getBeliefId() {
+        return this.beliefId;
     }
 
-    public LiveData<Belief> getBelief() {
-        return belief;
+    public void setBeliefId(int beliefId) {
+        this.beliefId = beliefId;
     }
 
-    public LiveData<List<ThinkingStyle>> getSelectedThinkingStyles() {
-        return selectedThinkingStyles;
+    public LiveData<Belief> getBeliefLiveData() {
+        if (this.beliefLiveData == null) {
+            loadBelief();
+        }
+        return this.beliefLiveData;
     }
 
-    public LiveData<List<Argument>> getArguments() {
-        return arguments;
+    private void loadBelief() {
+        this.beliefLiveData = this.repository.getBeliefById(beliefId);
     }
 
-    public LiveData<List<Objection>> getObjections() {
-        return objections;
+    public LiveData<List<ThinkingStyle>> getThinkingStylesLiveData() {
+        if (this.thinkingStylesLiveData == null) {
+            loadThinkingStyles();
+        }
+        return this.thinkingStylesLiveData;
+    }
+
+    private void loadThinkingStyles() {
+        this.thinkingStylesLiveData = this.repository.getThinkingStylesForBelief(beliefId);
+    }
+
+    public LiveData<List<Argument>> getArgumentsLiveData() {
+        if (this.argumentsLiveData == null) {
+            loadArguments();
+        }
+        return argumentsLiveData;
+    }
+
+    private void loadArguments() {
+        this.argumentsLiveData = this.repository.getArgumentsForBelief(this.beliefId);
+    }
+
+    public LiveData<List<Objection>> getObjectionsLiveData() {
+        if (this.objectionsLiveData == null) {
+            loadObjections();
+        }
+        return objectionsLiveData;
+    }
+
+    private void loadObjections() {
+        this.objectionsLiveData = this.repository.getObjectionsForBelief(this.beliefId);
+    }
+
+    public void initModifiableBeliefCopy(@NonNull Belief belief) {
+        this.modifiableBeliefCopy = new Belief(belief.getBelief(), belief.getEpisodeId());
+        this.modifiableBeliefCopy.setId(belief.getId());
     }
 
     public Belief getModifiableBeliefCopy() {
         return modifiableBeliefCopy;
     }
 
-    public void setModifiableBeliefCopy(@NonNull Belief newBelief) {
-
-        if (this.modifiableBeliefCopy != null && this.modifiableBeliefCopy.getId() == newBelief.getId()) {
-            this.modifiableBeliefCopy = newBelief;
-        } else {
-            //not permit
-        }
-
+    public void initModifiableSelectedThinkingStylesCopy(@NonNull List<ThinkingStyle> thinkingStyles) {
+        this.modifiableThinkingStylesCopy = new ArrayList<>(thinkingStyles);
     }
 
-    public List<ThinkingStyle> getModifiableSelectedThinkingStylesCopy() {
-        return modifiableSelectedThinkingStylesCopy;
+    private List<ThinkingStyle> getModifiableThinkingStylesCopy() {
+        return modifiableThinkingStylesCopy;
     }
 
     public void addUnhelpfulThinkingStyle(@NonNull final ThinkingStyle unhelpfulThinkingStyle) {
-        this.getModifiableSelectedThinkingStylesCopy().add(unhelpfulThinkingStyle);
+        this.getModifiableThinkingStylesCopy().add(unhelpfulThinkingStyle);
     }
 
     public void removeUnhelpfulThinkingStyle(@NonNull final ThinkingStyle unhelpfulThinkingStyle) {
-        this.getModifiableSelectedThinkingStylesCopy().remove(unhelpfulThinkingStyle);
-    }
-
-    public void initModifiableBeliefCopy() {
-        Belief b = this.belief.getValue();
-        if (b != null) {
-            this.modifiableBeliefCopy = new Belief(b.getBelief(), b.getEpisodeId());
-            this.modifiableBeliefCopy.setId(b.getId());
-        }
-    }
-
-    public void initModifiableSelectedThinkingStylesCopy() {
-        List<ThinkingStyle> selectedThinkingStyles = this.selectedThinkingStyles.getValue();
-        if (selectedThinkingStyles != null) {
-            this.modifiableSelectedThinkingStylesCopy = new ArrayList<>(selectedThinkingStyles);
-        }
+        this.getModifiableThinkingStylesCopy().remove(unhelpfulThinkingStyle);
     }
 
     public void createArgument(@NonNull final String newArgument) {
-        Belief b = belief.getValue();
+        Belief b = beliefLiveData.getValue();
         if (b != null) {
             this.repository.createArgumentForBelief(b.getId(), newArgument);
         }
     }
 
     public void editArgument(@NonNull final Argument argument) {
-        Belief b = this.belief.getValue();
+        Belief b = this.beliefLiveData.getValue();
         if (b != null && b.getId() == argument.getBeliefId()) {
             this.repository.editArgumentForBelief(argument);
         } else {
@@ -131,7 +144,7 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     public void removeArgument(@NonNull final Argument argument) {
-        Belief b = this.belief.getValue();
+        Belief b = this.beliefLiveData.getValue();
         if (b != null && b.getId() == argument.getBeliefId()) {
             this.repository.deleteArgumentForBelief(argument);
         } else {
@@ -140,14 +153,14 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     public void createObjection(@NonNull final String newObjection) {
-        Belief b = belief.getValue();
+        Belief b = beliefLiveData.getValue();
         if (b != null) {
             this.repository.createObjectionForBelief(b.getId(), newObjection);
         }
     }
 
     public void editObjection(@NonNull final Objection objection) {
-        Belief b = this.belief.getValue();
+        Belief b = this.beliefLiveData.getValue();
         if (b != null && b.getId() == objection.getBeliefId()) {
             this.repository.editObjectionForBelief(objection);
         } else {
@@ -156,7 +169,7 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     public void removeObjection(@NonNull final Objection objection) {
-        Belief b = this.belief.getValue();
+        Belief b = this.beliefLiveData.getValue();
         if (b != null && b.getId() == objection.getBeliefId()) {
             this.repository.deleteObjectionForBelief(objection);
         } else {
@@ -165,7 +178,7 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     private void saveBelief() {
-        Belief b = this.belief.getValue();
+        Belief b = this.beliefLiveData.getValue();
         if (b != null && this.modifiableBeliefCopy.getId() == b.getId()) {
             List<ThinkingStyle> toDelete = this.getToDeleteThinkingStyles();
             List<ThinkingStyle> toInsert = this.getToInsertThinkingStyles();
@@ -174,8 +187,8 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     private List<ThinkingStyle> getToDeleteThinkingStyles() {
-        List<ThinkingStyle> oldSelectedThinkingStyles = this.selectedThinkingStyles.getValue();
-        List<ThinkingStyle> newSelectedThinkingStyles = this.getModifiableSelectedThinkingStylesCopy();
+        List<ThinkingStyle> oldSelectedThinkingStyles = this.thinkingStylesLiveData.getValue();
+        List<ThinkingStyle> newSelectedThinkingStyles = this.getModifiableThinkingStylesCopy();
         List<ThinkingStyle> toDelete = new ArrayList<>();
 
         for (ThinkingStyle thinkingStyle : oldSelectedThinkingStyles) {
@@ -188,8 +201,8 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     private List<ThinkingStyle> getToInsertThinkingStyles() {
-        List<ThinkingStyle> oldSelectedThinkingStyles = this.selectedThinkingStyles.getValue();
-        List<ThinkingStyle> newSelectedThinkingStyles = this.getModifiableSelectedThinkingStylesCopy();
+        List<ThinkingStyle> oldSelectedThinkingStyles = this.thinkingStylesLiveData.getValue();
+        List<ThinkingStyle> newSelectedThinkingStyles = this.getModifiableThinkingStylesCopy();
         List<ThinkingStyle> toInsert = new ArrayList<>();
 
         for (ThinkingStyle thinkingStyle : newSelectedThinkingStyles) {
@@ -202,7 +215,7 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     public void removeBelief() {
-        Belief b = this.getBelief().getValue();
+        Belief b = this.getBeliefLiveData().getValue();
         if (b != null) {
             this.repository.deleteBelief(b);
         } else {
@@ -211,21 +224,20 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     public boolean beliefWasChanged() {
-        Belief currentBelief = this.getBelief().getValue();
+        Belief currentBelief = this.getBeliefLiveData().getValue();
         Belief modifiedBelief = this.getModifiableBeliefCopy();
 
-        List<ThinkingStyle> selectedThinkingStyles = this.getSelectedThinkingStyles().getValue();
-        List<ThinkingStyle> modifiableSelectedThinkingStylesCopy = this.getModifiableSelectedThinkingStylesCopy();
-
+        List<ThinkingStyle> selectedThinkingStyles = this.getThinkingStylesLiveData().getValue();
+        List<ThinkingStyle> modifiableSelectedThinkingStylesCopy = this.getModifiableThinkingStylesCopy();
 
         if (currentBelief != null && currentBelief.getId() == modifiedBelief.getId()) {
             if (!modifiedBelief.getBelief().isEmpty()) {
                 return (
                         !currentBelief.getBelief().equals(modifiedBelief.getBelief()) ||
-                                !equalsLists(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy)
+                                isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy)
                 );
             } else {
-                return !equalsLists(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy);
+                return isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy);
             }
 
         } else {
@@ -246,13 +258,11 @@ public class BeliefViewModel extends AndroidViewModel {
         saveBelief();
     }
 
-    private boolean equalsLists(List<?> A, List<?> B) {
-
+    private boolean isListsEquals(List<?> A, List<?> B) {
         if (A.size() != B.size()) {
-            return false;
+            return true;
         }
-
-        return A.containsAll(B) && B.containsAll(A);
+        return !A.containsAll(B) || !B.containsAll(A);
     }
 
 }

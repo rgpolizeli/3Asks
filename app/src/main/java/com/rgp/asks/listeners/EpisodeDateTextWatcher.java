@@ -6,6 +6,8 @@ import android.text.TextWatcher;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 public class EpisodeDateTextWatcher implements TextWatcher {
@@ -26,6 +28,12 @@ public class EpisodeDateTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         Episode e = model.getModifiableEpisodeCopy();
-        e.setDate(new Date(s.toString()));
+        Date date;
+        try {
+            date = DateFormat.getDateInstance(DateFormat.SHORT).parse(s.toString());
+        } catch (ParseException e1) {
+            date = new Date();
+        }
+        e.setDate(date);
     }
 }

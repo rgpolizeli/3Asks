@@ -17,6 +17,7 @@ import java.util.List;
 public class EpisodeViewModel extends AndroidViewModel {
     private int episodeId;
     private LiveData<Episode> episode;
+    private boolean isEpisodeInFirstLoad;
     private Episode modifiableEpisodeCopy;
     private LiveData<List<Reaction>> reactions;
     private LiveData<List<Belief>> beliefs;
@@ -26,6 +27,15 @@ public class EpisodeViewModel extends AndroidViewModel {
     public EpisodeViewModel(Application application) {
         super(application);
         this.repository = new Repository(application);
+        this.isEpisodeInFirstLoad = true;
+    }
+
+    public boolean isEpisodeInFirstLoad() {
+        return isEpisodeInFirstLoad;
+    }
+
+    public void setIsEpisodeInFirstLoad(boolean is) {
+        this.isEpisodeInFirstLoad = is;
     }
 
     public int getEpisodeId() {

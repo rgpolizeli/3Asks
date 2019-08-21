@@ -87,6 +87,7 @@ public class TextInputLayout extends LinearLayout {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
         ss.state = textInputLayoutState;
+        ss.text = getValue().toString();
         return ss;
     }
 
@@ -94,6 +95,7 @@ public class TextInputLayout extends LinearLayout {
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
+        setValue(ss.text);
         goToState(ss.state);
     }
 
@@ -156,6 +158,7 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private void drawStateFocused() {
+        this.requestFocus();
         this.labelTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent3));
         this.editText.setBackgroundResource(R.drawable.edit_text_dialog_multiline_focused);
         this.errorMessageTextView.setVisibility(GONE);
@@ -180,10 +183,12 @@ public class TextInputLayout extends LinearLayout {
             }
         };
         int state;
+        String text;
 
         SavedState(Parcel source) {
             super(source);
             state = source.readInt();
+            text = source.readString();
         }
 
         SavedState(Parcelable superState) {
@@ -194,6 +199,7 @@ public class TextInputLayout extends LinearLayout {
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(state);
+            out.writeString(text);
         }
     }
 

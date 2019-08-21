@@ -6,21 +6,18 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/labelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/dark_gray"
         app:fontFamily="@font/roboto" />
 
     <EditText
-        android:id="@+id/inputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
         app:fontFamily="@font/roboto" />
 
     <TextView
-        android:id="@+id/errorMessageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/errorColor"

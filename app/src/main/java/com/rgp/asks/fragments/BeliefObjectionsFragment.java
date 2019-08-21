@@ -24,7 +24,6 @@ import com.rgp.asks.viewmodel.BeliefViewModel;
 
 public class BeliefObjectionsFragment extends Fragment implements ObjectionDialogListener {
 
-    private RecyclerView objectionsRecyclerView;
     private ObjectionRVAdapter objectionsRecyclerViewAdapter;
     private BeliefViewModel model;
     private ObjectionDialog objectionDialog;
@@ -42,6 +41,8 @@ public class BeliefObjectionsFragment extends Fragment implements ObjectionDialo
         initDialogs();
 
         initViewModel();
+
+        this.model.getObjectionsLiveData().observe(this, objections -> objectionsRecyclerViewAdapter.setObjections(objections));
 
         return rootView;
     }
@@ -65,7 +66,7 @@ public class BeliefObjectionsFragment extends Fragment implements ObjectionDialo
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
-        objectionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.objectionRV);
+        RecyclerView objectionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.objectionRV);
         LinearLayoutManager objectionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         objectionsRecyclerView.setLayoutManager(objectionsRecyclerViewLayoutManager);
         objectionsRecyclerViewAdapter = new ObjectionRVAdapter(createOnItemRecyclerViewClickListener());
@@ -81,14 +82,13 @@ public class BeliefObjectionsFragment extends Fragment implements ObjectionDialo
             if (objection != null) {
                 this.showObjectionDialogInEditMode(objection.getId(), objection.getObjection());
             } else {
-                Toast.makeText(this.getActivity(), "This objection don't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "This objection don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
-        model.getObjections().observe(this, objections -> objectionsRecyclerViewAdapter.setObjections(objections));
+        model = ViewModelProviders.of(getActivity()).get(BeliefViewModel.class);
     }
 
     private void initDialogs() {
@@ -103,13 +103,13 @@ public class BeliefObjectionsFragment extends Fragment implements ObjectionDialo
 
     @Override
     public void onObjectionDialogSaveButtonClick(int objectionId, @NonNull String newObjection) {
-        Objection objection = new Objection(objectionId, newObjection, model.getBelief().getValue().getId());
+        Objection objection = new Objection(objectionId, newObjection, this.model.getBeliefId());
         model.editObjection(objection);
     }
 
     @Override
     public void onObjectionDialogDeleteButtonClick(int objectionId) {
-        Objection objectionToDelete = new Objection(objectionId, "", model.getBelief().getValue().getId());
+        Objection objectionToDelete = new Objection(objectionId, "", this.model.getBeliefId());
         model.removeObjection(objectionToDelete);
     }
 }

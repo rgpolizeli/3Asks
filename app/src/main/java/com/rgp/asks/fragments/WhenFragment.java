@@ -47,8 +47,12 @@ public class WhenFragment extends Fragment {
         if (episodeIdToLoad != -1) {
             this.model.getEpisodeById().observe(this, episode -> {
                 initViews(rootView);
-                loadFragmentFromViewModel(episode);
-                model.initModifiableEpisodeCopy(episode);
+                //if the activity is changing configuration, the views will restore their values automatically and they don't get value from episode.
+                if (model.isEpisodeInFirstLoad()) {
+                    loadFragmentFromViewModel(episode);
+                    model.initModifiableEpisodeCopy(episode);
+                    model.setIsEpisodeInFirstLoad(false);
+                }
                 setupViewListeners();
             });
         } else {

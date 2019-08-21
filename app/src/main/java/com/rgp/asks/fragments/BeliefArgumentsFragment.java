@@ -24,7 +24,6 @@ import com.rgp.asks.viewmodel.BeliefViewModel;
 
 public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogListener {
 
-    private RecyclerView argumentsRecyclerView;
     private ArgumentRVAdapter argumentsRecyclerViewAdapter;
     private BeliefViewModel model;
     private ArgumentDialog argumentDialog;
@@ -42,11 +41,13 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
 
         initViewModel();
 
+        this.model.getArgumentsLiveData().observe(this, arguments -> argumentsRecyclerViewAdapter.setArguments(arguments));
+
         return rootView;
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
-        argumentsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.argumentRV);
+        RecyclerView argumentsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.argumentRV);
         LinearLayoutManager argumentsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         argumentsRecyclerView.setLayoutManager(argumentsRecyclerViewLayoutManager);
         argumentsRecyclerViewAdapter = new ArgumentRVAdapter(createOnItemRecyclerViewClickListener());
@@ -86,8 +87,7 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
-        model.getArguments().observe(this, arguments -> argumentsRecyclerViewAdapter.setArguments(arguments));
+        model = ViewModelProviders.of(getActivity()).get(BeliefViewModel.class);
     }
 
     private void initDialogs() {
@@ -102,13 +102,13 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
 
     @Override
     public void onArgumentDialogSaveButtonClick(int argumentId, @NonNull String newArgument) {
-        Argument argument = new Argument(argumentId, newArgument, model.getBelief().getValue().getId());
+        Argument argument = new Argument(argumentId, newArgument, this.model.getBeliefId());
         model.editArgument(argument);
     }
 
     @Override
     public void onArgumentDialogDeleteButtonClick(int argumentId) {
-        Argument argumentToDelete = new Argument(argumentId, "", model.getBelief().getValue().getId());
+        Argument argumentToDelete = new Argument(argumentId, "", this.model.getBeliefId());
         model.removeArgument(argumentToDelete);
     }
 }

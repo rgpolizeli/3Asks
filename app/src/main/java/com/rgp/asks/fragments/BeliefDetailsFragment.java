@@ -7,7 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -15,14 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.ThinkingStyle;
 import com.rgp.asks.viewmodel.BeliefViewModel;
+import com.rgp.asks.views.TextInputLayout;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,45 +32,113 @@ public class BeliefDetailsFragment extends Fragment {
 
     private BeliefViewModel model;
     private TextInputLayout beliefTextInputLayout;
-    private TextInputEditText thoughtEditText;
-    private Map<Button, ThinkingStyle> thinkingStyleButtonsMap;
+    private Map<String, CheckBox> thinkingStylesCheckBoxes;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_belief_details, container, false);
 
         setupFAB(container);
 
-        this.beliefTextInputLayout = rootView.findViewById(com.rgp.asks.R.id.beliefTextInputLayout);
-        this.thoughtEditText = rootView.findViewById(com.rgp.asks.R.id.beliefEditText);
-        this.thinkingStyleButtonsMap = getUnhelpfulThinkingStylesButtons(rootView);
+        initViewModel();
 
-        model = ViewModelProviders.of(this.getActivity()).get(BeliefViewModel.class);
+        int beliefId = this.model.getBeliefId();
+        if (beliefId != -1) {
+            model.getThinkingStylesLiveData().observe(this, thinkingStyles -> {
+                initThinkingStylesViews(rootView);
+                if (this.model.isThinkingStylesFirstLoad()) {
+                    loadFragmentThinkingStylesViewsFromViewModel(thinkingStyles);
+                    this.model.initModifiableSelectedThinkingStylesCopy(thinkingStyles);
+                    this.model.setIsThinkingStylesFirstLoad(false);
+                }
 
-        Belief b = model.getModifiableBeliefCopy();
-        List<ThinkingStyle> selectedThinkingStyles = model.getModifiableSelectedThinkingStylesCopy();
-        if (b == null || selectedThinkingStyles == null) {
-            new Exception();
+                setupThinkingStylesViewsListeners();
+            });
+            model.getBeliefLiveData().observe(this, belief -> {
+                initBeliefViews(rootView);
+                if (this.model.isBeliefFirstLoad()) {
+                    loadFragmentBeliefViewsFromViewModel(belief);
+                    this.model.initModifiableBeliefCopy(belief);
+                    this.model.setIsBeliefFirstLoad(false);
+                }
+                setupBeliefViewsListeners();
+            });
         } else {
-            loadFragmentFromViewModel(b, selectedThinkingStyles);
+            //todo: err
         }
 
-        /*
-        model.getSelectedThinkingStyles().observe(this, new Observer<List<ThinkingStyle>>() {
-            @Override
-            public void onChanged(@Nullable List<ThinkingStyle> thinkingStyles) {
-                setupSelectUnhelpfulThinkingStyles(getUnhelpfulThinkingStylesButtons(rootView), model);
-            }
-        });
-        model.getBelief().observe(this, new Observer<Belief>() {
-            @Override
-            public void onChanged(@Nullable Belief belief) {
-                setupThought(rootView,model);
-            }
-        });
-        */
         return rootView;
+    }
+
+    private void initBeliefViews(@NonNull View rootView) {
+        this.beliefTextInputLayout = rootView.findViewById(com.rgp.asks.R.id.beliefTextInputLayout);
+    }
+
+    private void initThinkingStylesViews(@NonNull View rootView) {
+        this.thinkingStylesCheckBoxes = new HashMap<>();
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_black_white_label), rootView.findViewById(R.id.radicalisationCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_catastrophising_label), rootView.findViewById(R.id.catastrophisingCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_magnification_minimisation_label), rootView.findViewById(R.id.comparationCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_mental_filter_label), rootView.findViewById(R.id.negativeFocusingCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_overgeneralisation_label), rootView.findViewById(R.id.generalisationCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_predictive_thinking_label), rootView.findViewById(R.id.fortuneTellingCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_shoulding_musting_label), rootView.findViewById(R.id.pressuringCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_others_empowerment_label), rootView.findViewById(R.id.othersEmpowermentCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_personalisation_label), rootView.findViewById(R.id.personalisationCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_mind_reading_label), rootView.findViewById(R.id.mindReadingCheckBox));
+        this.thinkingStylesCheckBoxes.put(getString(R.string.unhelpful_thinking_style_labeling_label), rootView.findViewById(R.id.labelingCheckBox));
+    }
+
+    private void loadFragmentBeliefViewsFromViewModel(@NonNull Belief belief) {
+        this.beliefTextInputLayout.setValue(belief.getBelief());
+    }
+
+    private void loadFragmentThinkingStylesViewsFromViewModel(@NonNull List<ThinkingStyle> thinkingStyles) {
+        for (ThinkingStyle thinkingStyle : thinkingStyles) {
+            this.thinkingStylesCheckBoxes
+                    .get(thinkingStyle.getThinkingStyle())
+                    .setChecked(true);
+            ;
+        }
+    }
+
+    private void setupBeliefViewsListeners() {
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Belief b = model.getModifiableBeliefCopy();
+                b.setBelief(s.toString());
+            }
+        };
+        this.beliefTextInputLayout.addTextChangedListener(textWatcher);
+    }
+
+    private void setupThinkingStylesViewsListeners() {
+        CompoundButton.OnCheckedChangeListener onCheckedChangeListener = (buttonView, isChecked) -> {
+            CheckBox checkBox = (CheckBox) buttonView;
+            String thinkingStyleAsString = checkBox.getText().toString();
+            ThinkingStyle thinkingStyle = new ThinkingStyle(thinkingStyleAsString);
+            if (isChecked) {
+                this.model.addUnhelpfulThinkingStyle(thinkingStyle);
+            } else {
+                this.model.removeUnhelpfulThinkingStyle(thinkingStyle);
+            }
+        };
+        for (CheckBox checkBox : this.thinkingStylesCheckBoxes.values()) {
+            checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
+        }
+    }
+
+    private void initViewModel() {
+        this.model = ViewModelProviders.of(getActivity()).get(BeliefViewModel.class);
     }
 
     private void hideKeyboard(View v) {
@@ -89,112 +156,16 @@ public class BeliefDetailsFragment extends Fragment {
     }
 
     private void saveBelief() {
-        String newBeliefName = thoughtEditText.getText().toString();
-
+        String newBeliefName = this.beliefTextInputLayout.getValue().toString();
         if (!newBeliefName.isEmpty()) {
-            beliefTextInputLayout.setError(null); // hide error
+            if (this.beliefTextInputLayout.hasFocus()) {
+                this.beliefTextInputLayout.goToState(TextInputLayout.STATE_FOCUSED);
+            } else {
+                this.beliefTextInputLayout.goToState(TextInputLayout.STATE_NORMAL);
+            }
             model.uncheckedSaveBelief();
         } else {
-            beliefTextInputLayout.setError(this.getString(R.string.belief_dialog_error_empty_belief)); // show error
-        }
-
-    }
-
-    private void loadFragmentFromViewModel(@NonNull final Belief b, @NonNull final List<ThinkingStyle> selectedThinkingStyles) {
-        setupThought(b.getBelief());
-        setupSelectUnhelpfulThinkingStyles(selectedThinkingStyles);
-    }
-
-    private Map<Button, ThinkingStyle> getUnhelpfulThinkingStylesButtons(View rootView) {
-        Map<Button, ThinkingStyle> buttonsMap = new HashMap<>();
-        List<Button> buttonsList = new ArrayList<>();
-
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.radicalisation_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.catastrophising_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.comparation_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.negative_focusing_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.generalisation_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.fortune_telling_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.pressuring_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.others_empowerment_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.personalisation_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.mind_reading_button));
-        buttonsList.add((Button) rootView.findViewById(com.rgp.asks.R.id.labeling_button));
-
-        for (Button button : buttonsList) {
-            buttonsMap.put(button, new ThinkingStyle(button.getText().toString()));
-        }
-
-        return buttonsMap;
-    }
-
-
-    private void setupSelectUnhelpfulThinkingStyles(@NonNull final List<ThinkingStyle> selectedThinkingStyles) {
-
-        for (Button button : thinkingStyleButtonsMap.keySet()) {
-            button.setOnClickListener(new OnClickListenerUnhelpfulThinkingStyleButton(selectedThinkingStyles));
-
-            if (selectedThinkingStyles.contains(thinkingStyleButtonsMap.get(button))) {
-                button.setSelected(Boolean.TRUE);
-            }
-        }
-
-    }
-
-    private void setupThought(String thought) {
-        if (!thought.isEmpty()) {
-            thoughtEditText.setText(thought);
-        }
-
-        thoughtEditText.addTextChangedListener(new ThoughtTextWatcher());
-    }
-
-    // //////////
-    // LISTENERS //
-    // //////////
-
-    private class OnClickListenerUnhelpfulThinkingStyleButton implements View.OnClickListener {
-
-        List<ThinkingStyle> selectedThinkingStyles;
-
-        public OnClickListenerUnhelpfulThinkingStyleButton(@NonNull final List<ThinkingStyle> selectedThinkingStyles) {
-            this.selectedThinkingStyles = selectedThinkingStyles;
-        }
-
-        @Override
-        public void onClick(View v) {
-            hideKeyboard(v);
-            Button button = (Button) v;
-
-            if (!button.isSelected()) {
-                button.setSelected(Boolean.TRUE);
-                model.addUnhelpfulThinkingStyle(thinkingStyleButtonsMap.get(button));
-            } else {
-                button.setSelected(Boolean.FALSE);
-                model.removeUnhelpfulThinkingStyle(thinkingStyleButtonsMap.get(button));
-            }
-        }
-
-    }
-
-
-    private class ThoughtTextWatcher implements TextWatcher {
-
-        public ThoughtTextWatcher() {
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            Belief b = model.getModifiableBeliefCopy();
-            b.setBelief(s.toString());
+            this.beliefTextInputLayout.goToState(TextInputLayout.STATE_ERROR); // show error
         }
     }
 }
