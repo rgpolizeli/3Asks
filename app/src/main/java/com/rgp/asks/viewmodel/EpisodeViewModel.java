@@ -16,6 +16,7 @@ import java.util.List;
 
 public class EpisodeViewModel extends AndroidViewModel {
     private int episodeId;
+    private String episodeNameForToolbarTitle;
     private LiveData<Episode> episode;
     private boolean isEpisodeInFirstLoad;
     private Episode modifiableEpisodeCopy;
@@ -28,6 +29,15 @@ public class EpisodeViewModel extends AndroidViewModel {
         super(application);
         this.repository = new Repository(application);
         this.isEpisodeInFirstLoad = true;
+        this.episodeNameForToolbarTitle = "Episode";
+    }
+
+    public String getEpisodeNameForToolbarTitle() {
+        return this.episodeNameForToolbarTitle;
+    }
+
+    public void setEpisodeNameForToolbarTitle(@NonNull String episodeNameForToolbarTitle) {
+        this.episodeNameForToolbarTitle = episodeNameForToolbarTitle;
     }
 
     public boolean isEpisodeInFirstLoad() {

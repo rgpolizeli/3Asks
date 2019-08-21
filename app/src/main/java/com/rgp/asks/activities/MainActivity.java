@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements EpisodeDialogList
             Episode episode = ((EpisodesRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (episode != null) {
-                startEditEpisodeActivity(episode.getId());
+                startEditEpisodeActivity(episode.getId(), episode.getEpisode());
             } else {
                 Toast.makeText(this, "This episode don't exist!", Toast.LENGTH_SHORT).show();
             }
@@ -140,12 +140,13 @@ public class MainActivity extends AppCompatActivity implements EpisodeDialogList
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCreatedEpisodeEvent(CreatedEpisodeEvent event) {
-        startEditEpisodeActivity(event.episodeId);
+        startEditEpisodeActivity(event.episodeId, event.episodeName);
     }
 
-    private void startEditEpisodeActivity(int episodeId) {
+    private void startEditEpisodeActivity(int episodeId, String episodeName) {
         Intent intent = new Intent(this, AsksActivity.class);
         intent.putExtra(Constants.ARG_EPISODE_ID, episodeId);
+        intent.putExtra(Constants.ARG_EPISODE_TITLE, episodeName);
         startActivity(intent);
     }
 

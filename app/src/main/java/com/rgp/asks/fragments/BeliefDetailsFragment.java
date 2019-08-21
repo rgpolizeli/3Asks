@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
-import com.rgp.asks.activities.AddNewBeliefActivity;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.ThinkingStyle;
 import com.rgp.asks.viewmodel.BeliefViewModel;
@@ -57,7 +56,6 @@ public class BeliefDetailsFragment extends Fragment {
                 setupThinkingStylesViewsListeners();
             });
             model.getBeliefLiveData().observe(this, belief -> {
-                ((AddNewBeliefActivity) getActivity()).changeToolbarTitle(belief.getBelief());
                 initBeliefViews(rootView);
                 if (this.model.isBeliefFirstLoad()) {
                     loadFragmentBeliefViewsFromViewModel(belief);

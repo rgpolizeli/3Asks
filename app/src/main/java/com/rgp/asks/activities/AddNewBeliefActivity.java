@@ -47,11 +47,11 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.rgp.asks.R.layout.activity_add_belief);
 
-        configToolbarAsActionBar();
-
         loadFABs();
 
         initViewModel();
+
+        configToolbarAsActionBar();
 
         int beliefIdToLoad = this.getIntent().getIntExtra(Constants.ARG_BELIEF_ID, -1);
         this.beliefViewModel.setBeliefId(beliefIdToLoad);
@@ -66,7 +66,8 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     private void configToolbarAsActionBar() {
         this.toolbar = findViewById(com.rgp.asks.R.id.belief_toolbar);
         setSupportActionBar(toolbar);
-        this.toolbar.setTitle("Belief");
+
+        initToolbarTitle();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -77,8 +78,12 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         }
     }
 
-    public void changeToolbarTitle(@NonNull String newTitle) {
-        this.toolbar.setTitle(newTitle);
+    private void initToolbarTitle() {
+        String toolbarTitle = this.beliefViewModel.getBeliefNameForToolbarTitle();
+        if (toolbarTitle.equals("Belief")) {
+            toolbarTitle = getIntent().getStringExtra(Constants.ARG_BELIEF_TITLE);
+        }
+        this.toolbar.setTitle(toolbarTitle);
     }
 
     public void hideKeyboard() {
@@ -191,6 +196,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedBeliefEvent(SavedEditedBeliefEvent event) {
         Toast.makeText(this, getString(R.string.toast_message_belief_saved), Toast.LENGTH_SHORT).show();
+        beliefViewModel.setBeliefNameForToolbarTitle(beliefViewModel.getModifiableBeliefCopy().getBelief());
         setBeliefNameInToolbar(beliefViewModel.getModifiableBeliefCopy());
     }
 

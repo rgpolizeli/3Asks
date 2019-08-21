@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class insertEpisodeAsyncTask extends AsyncTask<Episode, Void, Long> {
     private EpisodeDao mAsyncTaskDao;
+    private Episode episode;
 
     public insertEpisodeAsyncTask(EpisodeDao dao) {
         this.mAsyncTaskDao = dao;
@@ -22,12 +23,13 @@ public class insertEpisodeAsyncTask extends AsyncTask<Episode, Void, Long> {
 
     @Override
     protected Long doInBackground(final Episode... params) {
+        this.episode = params[0];
         return mAsyncTaskDao.insert(params[0]);
     }
 
     @Override
     protected void onPostExecute(Long episodeId) {
         super.onPostExecute(episodeId);
-        EventBus.getDefault().post(new CreatedEpisodeEvent(episodeId.intValue()));
+        EventBus.getDefault().post(new CreatedEpisodeEvent(episodeId.intValue(), episode.getEpisode()));
     }
 }

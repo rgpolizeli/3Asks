@@ -50,11 +50,11 @@ public class AsksActivity extends AppCompatActivity {
 
         EventBus.getDefault().register(this);
 
-        configToolbarAsActionBar();
-
         loadFABs();
 
         initViewModel();
+
+        configToolbarAsActionBar();
 
         int episodeIdToLoad = getIntent().getIntExtra(Constants.ARG_EPISODE_ID, -1);
         this.model.setEpisodeId(episodeIdToLoad);
@@ -69,7 +69,8 @@ public class AsksActivity extends AppCompatActivity {
     private void configToolbarAsActionBar() {
         this.toolbar = findViewById(com.rgp.asks.R.id.toolbar);
         setSupportActionBar(toolbar);
-        this.toolbar.setTitle("Episode");
+
+        initToolbarTitle();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -80,8 +81,12 @@ public class AsksActivity extends AppCompatActivity {
         }
     }
 
-    public void changeToolbarTitle(@NonNull String newTitle) {
-        this.toolbar.setTitle(newTitle);
+    private void initToolbarTitle() {
+        String toolbarTitle = this.model.getEpisodeNameForToolbarTitle();
+        if (toolbarTitle.equals("Episode")) {
+            toolbarTitle = getIntent().getStringExtra(Constants.ARG_EPISODE_TITLE);
+        }
+        this.toolbar.setTitle(toolbarTitle);
     }
 
     public void hideKeyboard() {
@@ -216,6 +221,7 @@ public class AsksActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
         Toast.makeText(this, getString(R.string.toast_message_episode_saved), Toast.LENGTH_SHORT).show();
+        model.setEpisodeNameForToolbarTitle(model.getModifiableEpisodeCopy().getEpisode());
         setEpisodeNameInToolbar(model.getModifiableEpisodeCopy());
     }
 

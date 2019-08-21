@@ -46,7 +46,6 @@ public class WhenFragment extends Fragment {
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
             this.model.getEpisodeById().observe(this, episode -> {
-                ((AsksActivity) getActivity()).changeToolbarTitle(episode.getEpisode());
                 initViews(rootView);
                 if (model.isEpisodeInFirstLoad()) {
                     loadFragmentFromViewModel(episode);

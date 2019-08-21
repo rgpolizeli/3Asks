@@ -17,6 +17,7 @@ import java.util.List;
 
 public class BeliefViewModel extends AndroidViewModel {
     private int beliefId;
+    private String beliefNameForToolbarTitle;
     private LiveData<Belief> beliefLiveData;
     private boolean isBeliefFirstLoad;
     private Belief modifiableBeliefCopy;
@@ -32,6 +33,15 @@ public class BeliefViewModel extends AndroidViewModel {
         this.repository = new Repository(application);
         this.isBeliefFirstLoad = true;
         this.isThinkingStylesFirstLoad = true;
+        this.beliefNameForToolbarTitle = "Belief";
+    }
+
+    public String getBeliefNameForToolbarTitle() {
+        return this.beliefNameForToolbarTitle;
+    }
+
+    public void setBeliefNameForToolbarTitle(@NonNull String beliefNameForToolbarTitle) {
+        this.beliefNameForToolbarTitle = beliefNameForToolbarTitle;
     }
 
     public boolean isBeliefFirstLoad() {

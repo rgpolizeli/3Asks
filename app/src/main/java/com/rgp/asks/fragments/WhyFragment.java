@@ -99,7 +99,7 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
             Belief belief = ((BeliefRVAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (belief != null) {
-                this.startEditBeliefActivity(belief.getId());
+                this.startEditBeliefActivity(belief.getId(), belief.getBelief());
             } else {
                 Toast.makeText(this.getActivity(), "This belief don't exist!", Toast.LENGTH_SHORT).show();
             }
@@ -116,12 +116,12 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCreatedBeliefEvent(CreatedBeliefEvent event) {
-
     }
 
-    private void startEditBeliefActivity(int beliefId) {
+    private void startEditBeliefActivity(int beliefId, @NonNull String belief) {
         Intent intent = new Intent(this.getActivity(), AddNewBeliefActivity.class);
         intent.putExtra(Constants.ARG_BELIEF_ID, beliefId);
+        intent.putExtra(Constants.ARG_BELIEF_TITLE, belief);
         startActivity(intent);
     }
 
