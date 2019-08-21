@@ -121,7 +121,7 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
 
     private void startEditBeliefActivity(int beliefId) {
         Intent intent = new Intent(this.getActivity(), AddNewBeliefActivity.class);
-        intent.putExtra(Constants.ARG_BELIEF, beliefId);
+        intent.putExtra(Constants.ARG_BELIEF_ID, beliefId);
         startActivity(intent);
     }
 

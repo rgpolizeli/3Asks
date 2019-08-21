@@ -426,7 +426,7 @@ public class ReactionDialogTests {
 
     private void openAsksActivityWithIntent() {
         Intent intent = new Intent();
-        intent.putExtra(Constants.ARG_EPISODE, this.episodeId);
+        intent.putExtra(Constants.ARG_EPISODE_ID, this.episodeId);
         asksActivityActivityTestRule.launchActivity(intent);
     }
 

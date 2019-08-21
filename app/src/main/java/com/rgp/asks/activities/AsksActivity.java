@@ -56,7 +56,7 @@ public class AsksActivity extends AppCompatActivity {
 
         initViewModel();
 
-        int episodeIdToLoad = getIntent().getIntExtra(Constants.ARG_EPISODE, -1);
+        int episodeIdToLoad = getIntent().getIntExtra(Constants.ARG_EPISODE_ID, -1);
         this.model.setEpisodeId(episodeIdToLoad);
 
         initTabs();
@@ -78,6 +78,10 @@ public class AsksActivity extends AppCompatActivity {
         } else {
             //todo: err load action bar
         }
+    }
+
+    public void changeToolbarTitle(@NonNull String newTitle) {
+        this.toolbar.setTitle(newTitle);
     }
 
     public void hideKeyboard() {

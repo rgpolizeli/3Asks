@@ -46,8 +46,8 @@ public class WhenFragment extends Fragment {
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
             this.model.getEpisodeById().observe(this, episode -> {
+                ((AsksActivity) getActivity()).changeToolbarTitle(episode.getEpisode());
                 initViews(rootView);
-                //if the activity is changing configuration, the views will restore their values automatically and they don't get value from episode.
                 if (model.isEpisodeInFirstLoad()) {
                     loadFragmentFromViewModel(episode);
                     model.initModifiableEpisodeCopy(episode);

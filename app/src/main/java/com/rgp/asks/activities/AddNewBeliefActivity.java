@@ -53,7 +53,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
         initViewModel();
 
-        int beliefIdToLoad = this.getIntent().getIntExtra(Constants.ARG_BELIEF, -1);
+        int beliefIdToLoad = this.getIntent().getIntExtra(Constants.ARG_BELIEF_ID, -1);
         this.beliefViewModel.setBeliefId(beliefIdToLoad);
 
         initTabs();
@@ -75,6 +75,10 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         } else {
             //todo: err load action bar
         }
+    }
+
+    public void changeToolbarTitle(@NonNull String newTitle) {
+        this.toolbar.setTitle(newTitle);
     }
 
     public void hideKeyboard() {

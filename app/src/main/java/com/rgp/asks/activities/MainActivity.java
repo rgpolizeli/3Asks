@@ -50,15 +50,16 @@ public class MainActivity extends AppCompatActivity implements EpisodeDialogList
 
         initViewModel();
 
+        this.mainViewModel.getAllEpisodes().observe(this, episodes -> {
+            episodesRecyclerViewAdapter.setEpisodes(episodes);
+            showViews();
+        });
+
         hideViews();
     }
 
     private void initViewModel() {
         this.mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        this.mainViewModel.getAllEpisodes().observe(this, episodes -> {
-            episodesRecyclerViewAdapter.setEpisodes(episodes);
-            showViews();
-        });
     }
 
     private void initDialogs() {
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements EpisodeDialogList
 
     private void startEditEpisodeActivity(int episodeId) {
         Intent intent = new Intent(this, AsksActivity.class);
-        intent.putExtra(Constants.ARG_EPISODE, episodeId);
+        intent.putExtra(Constants.ARG_EPISODE_ID, episodeId);
         startActivity(intent);
     }
 
