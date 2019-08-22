@@ -133,6 +133,7 @@ public class TextInputLayout extends LinearLayout {
         EditText editText = getInputEditText();
         editText.getText().clear();
         goToState(TextInputLayout.STATE_NORMAL);
+        this.clearFocus();
     }
 
     public Editable getValue() {
