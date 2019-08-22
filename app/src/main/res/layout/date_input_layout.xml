@@ -16,8 +16,10 @@
         android:id="@+id/inputDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="start"
+        android:gravity="center"
         android:textColor="@color/black"
+        android:minHeight="@dimen/minHeightForInputViews"
+        android:textSize="16sp"
         app:fontFamily="@font/roboto" />
 
 </LinearLayout>

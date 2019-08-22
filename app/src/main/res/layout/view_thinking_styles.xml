@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/thinkingStylesLabelTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_unhelpful_thinking_styles"
+        app:fontFamily="@font/roboto" />
+
     <CheckBox
         android:id="@+id/radicalisationCheckBox"
         style="@style/thinkingStyleCheckBoxStyle"
@@ -102,13 +109,6 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/minHeightItemRecyclerView"
         android:text="@string/unhelpful_thinking_style_labeling_label"
-        app:fontFamily="@font/roboto" />
-
-    <TextView
-        android:id="@+id/thinkingStylesLabelTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hint_unhelpful_thinking_styles"
         app:fontFamily="@font/roboto" />
 
 </LinearLayout>

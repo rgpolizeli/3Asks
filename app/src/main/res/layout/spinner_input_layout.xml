@@ -16,6 +16,10 @@
         android:id="@+id/inputSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="@dimen/minHeightForInputViews"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:fontFamily="@font/roboto" />
 
 </LinearLayout>
