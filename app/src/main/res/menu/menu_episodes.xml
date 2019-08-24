@@ -4,9 +4,15 @@
     tools:context="com.rgp.asks.activities.MainActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="100"
+        android:title="Search"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_help"
         android:icon="@drawable/ic_help_outline_white_24dp"
-        android:orderInCategory="400"
+        android:orderInCategory="200"
         android:title="@string/menu_help_and_info"
         app:showAsAction="ifRoom" />
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainCoordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/episodesFragmentToolbar"
+        style="@style/AppTheme.AppBarOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/episodesRecyclerView"
+        style="@style/Widget.Support.CoordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_recycler_view_episode" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newEpisodeFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_add_white_24dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

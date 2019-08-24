@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/searchLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/searchFragmentToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minWidth="50dp"
+            android:minHeight="50dp"
+            app:defaultQueryHint="Search..."
+            app:iconifiedByDefault="false"
+            app:queryBackground="@android:color/transparent"
+            app:searchIcon="@null" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>
