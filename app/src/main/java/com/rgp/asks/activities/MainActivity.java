@@ -2,15 +2,18 @@ package com.rgp.asks.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.fragments.EpisodesFragment;
-import com.rgp.asks.interfaces.EpisodeDialogListener;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
 import com.rgp.asks.viewmodel.MainViewModel;
 
@@ -18,27 +21,50 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainActivity extends AppCompatActivity implements EpisodeDialogListener {
-
-    private MainViewModel mainViewModel;
+public class MainActivity extends AppCompatActivity {
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setupToolbar();
         initViewModel();
+    }
 
-        if (getSupportFragmentManager().findFragmentByTag("EpisodesFragment") == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.mainFrameLayout, new EpisodesFragment(), "EpisodesFragment")
-                    .commit();
-        }
+    private void setupToolbar() {
+        this.toolbar = findViewById(R.id.mainToolbar);
+        setSupportActionBar(this.toolbar);
+        getSupportActionBar().setTitle(R.string.destination_episodes);
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(toolbar, navController);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            switch (destination.getId()) {
+                default:
+                    this.toolbar.removeView(this.toolbar.findViewById(R.id.search));
+                    this.toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    this.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+                    this.toolbar.setContentInsetStartWithNavigation(16);
+                    break;
+                case R.id.searchFragment:
+                    getLayoutInflater().inflate(R.layout.search_view, this.toolbar);
+                    this.toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+                    this.toolbar.setContentInsetStartWithNavigation(0);
+                    break;
+            }
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, new AppBarConfiguration.Builder().build())
+                || super.onSupportNavigateUp();
     }
 
     private void initViewModel() {
-        this.mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
     @Override
@@ -57,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements EpisodeDialogList
         startEditEpisodeActivity(event.episodeId, event.episodeName);
     }
 
-    private void startEditEpisodeActivity(int episodeId, String episodeName) {
+    public void startEditEpisodeActivity(int episodeId, String episodeName) {
         Intent intent = new Intent(this, AsksActivity.class);
         intent.putExtra(Constants.ARG_EPISODE_ID, episodeId);
         intent.putExtra(Constants.ARG_EPISODE_TITLE, episodeName);
@@ -68,11 +94,12 @@ public class MainActivity extends AppCompatActivity implements EpisodeDialogList
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-
     }
 
     @Override
-    public void onEpisodeDialogCreateButtonClick(@NonNull String newEpisode, @NonNull String newDate, @NonNull String newPeriod) {
-        mainViewModel.createEpisode(newEpisode, newDate, newPeriod);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
     }
 }

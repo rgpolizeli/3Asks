@@ -114,4 +114,9 @@
     <string name="menu_delete_belief">Delete belief</string>
     <string name="menu_help_and_info">Help and Info</string>
 
+    <!-- Nav destinations labels -->
+    <string name="destination_episodes">Episodes</string>
+    <string name="destination_help_info">Help and Info</string>
+    <string name="destination_search">Search</string>
+
 </resources>

@@ -8,6 +8,23 @@
     <fragment
         android:id="@+id/episodesFragment"
         android:name="com.rgp.asks.fragments.EpisodesFragment"
-        android:label="fragment_recycler_view_episodes"
-        tools:layout="@layout/fragment_recycler_view_episodes" />
+        android:label="@string/destination_episodes"
+        tools:layout="@layout/fragment_recycler_view_episodes">
+        <action
+            android:id="@+id/action_episodesFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_episodesFragment_to_helpInfoFragment"
+            app:destination="@id/helpInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.rgp.asks.fragments.SearchFragment"
+        android:label="@string/destination_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/helpInfoFragment"
+        android:name="com.rgp.asks.fragments.HelpInfoFragment"
+        android:label="@string/destination_help_info"
+        tools:layout="@layout/fragment_help_info" />
 </navigation>

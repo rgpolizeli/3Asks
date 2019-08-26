@@ -8,24 +8,11 @@
     android:background="@color/backgroundColor"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/episodesFragmentToolbar"
-        style="@style/AppTheme.AppBarOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="top"
-        android:layout_weight="1"
-        android:background="?attr/colorPrimary"
-        app:layout_scrollFlags="enterAlways"
-        app:popupTheme="@style/ThemeOverlay.AppCompat" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/episodesRecyclerView"
-        style="@style/Widget.Support.CoordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="?attr/actionBarSize"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_recycler_view_episode" />
 
