@@ -37,7 +37,7 @@ public class BeliefDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_belief_details, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_belief_details, container, false);
 
         setupFAB(container);
 
@@ -52,7 +52,6 @@ public class BeliefDetailsFragment extends Fragment {
                     this.model.initModifiableSelectedThinkingStylesCopy(thinkingStyles);
                     this.model.setIsThinkingStylesFirstLoad(false);
                 }
-
                 setupThinkingStylesViewsListeners();
             });
             model.getBeliefLiveData().observe(this, belief -> {
@@ -72,7 +71,7 @@ public class BeliefDetailsFragment extends Fragment {
     }
 
     private void initBeliefViews(@NonNull View rootView) {
-        this.beliefTextInputLayout = rootView.findViewById(com.rgp.asks.R.id.beliefTextInputLayout);
+        this.beliefTextInputLayout = rootView.findViewById(R.id.beliefTextInputLayout);
     }
 
     private void initThinkingStylesViews(@NonNull View rootView) {
@@ -138,7 +137,7 @@ public class BeliefDetailsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        this.model = ViewModelProviders.of(getActivity()).get(BeliefViewModel.class);
+        this.model = ViewModelProviders.of(requireParentFragment()).get(BeliefViewModel.class);
     }
 
     private void hideKeyboard(View v) {

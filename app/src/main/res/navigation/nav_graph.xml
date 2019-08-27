@@ -42,5 +42,22 @@
         android:id="@+id/asksActivity"
         android:name="com.rgp.asks.fragments.AsksFragment"
         android:label="{ARG_EPISODE_TITLE}"
-        tools:layout="@layout/fragment_asks" />
+        tools:layout="@layout/fragment_asks">
+        <action
+            android:id="@+id/action_asksActivity_to_addNewBeliefFragment"
+            app:destination="@id/addNewBeliefFragment">
+            <argument
+                android:name="BELIEF_ID"
+                android:defaultValue="-1"
+                app:argType="integer" />
+            <argument
+                android:name="ARG_BELIEF_TITLE"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/addNewBeliefFragment"
+        android:name="com.rgp.asks.fragments.AddNewBeliefFragment"
+        android:label="{ARG_BELIEF_TITLE}"
+        tools:layout="@layout/fragment_add_belief" />
 </navigation>

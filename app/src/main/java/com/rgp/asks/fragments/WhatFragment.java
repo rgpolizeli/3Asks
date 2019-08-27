@@ -62,7 +62,7 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
     }
 
     private void initViewModel() {
-        this.model = ViewModelProviders.of(getParentFragment()).get(EpisodeViewModel.class);
+        this.model = ViewModelProviders.of(requireParentFragment()).get(EpisodeViewModel.class);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
@@ -82,7 +82,7 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
             if (reaction != null) {
                 this.showReactionDialogInEditMode(reaction.getId(), reaction.getReaction(), reaction.getReactionCategory());
             } else {
-                Toast.makeText(getParentFragment().requireContext(), "This reaction don't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireParentFragment().requireContext(), "This reaction don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }

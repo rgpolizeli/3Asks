@@ -1,3 +1,4 @@
+/*
 package com.rgp.asks.dialogs;
 
 import android.content.Intent;
@@ -595,3 +596,4 @@ public class ReactionDialogTests {
         testInvalidTypedReactionMessageIsNotDisplayedOnReactionDialog();
     }
 }
+ */

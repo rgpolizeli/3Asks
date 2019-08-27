@@ -12,13 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.rgp.asks.R;
-import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.messages.CreatedEpisodeEvent;
 import com.rgp.asks.viewmodel.MainViewModel;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -57,35 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViewModel() {
         ViewModelProviders.of(this).get(MainViewModel.class);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    /**
-     * Invoked after the creation of a new Episode.
-     *
-     * @param event contains information about the created episode.
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCreatedEpisodeEvent(CreatedEpisodeEvent event) {
-        startEditEpisodeActivity(event.episodeId, event.episodeName);
-    }
-
-    public void startEditEpisodeActivity(int episodeId, String episodeName) {
-        Bundle argumentsBundle = new Bundle();
-        argumentsBundle.putInt(Constants.ARG_EPISODE_ID, episodeId);
-        argumentsBundle.putString(Constants.ARG_EPISODE_TITLE, episodeName);
-        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override

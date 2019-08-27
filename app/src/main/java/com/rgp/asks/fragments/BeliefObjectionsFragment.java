@@ -82,13 +82,13 @@ public class BeliefObjectionsFragment extends Fragment implements ObjectionDialo
             if (objection != null) {
                 this.showObjectionDialogInEditMode(objection.getId(), objection.getObjection());
             } else {
-                Toast.makeText(getActivity(), "This objection don't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "This objection don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(getActivity()).get(BeliefViewModel.class);
+        model = ViewModelProviders.of(requireParentFragment()).get(BeliefViewModel.class);
     }
 
     private void initDialogs() {

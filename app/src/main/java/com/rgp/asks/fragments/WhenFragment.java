@@ -22,7 +22,6 @@ import com.rgp.asks.views.SpinnerInputLayout;
 import com.rgp.asks.views.TextInputLayout;
 
 import java.text.DateFormat;
-import java.util.Objects;
 
 public class WhenFragment extends Fragment {
 
@@ -69,13 +68,13 @@ public class WhenFragment extends Fragment {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton saveEpisodeFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
         saveEpisodeFab.setOnClickListener(v -> {
-            ((AsksFragment) getParentFragment()).hideKeyboard();
+            ((AsksFragment) requireParentFragment()).hideKeyboard();
             saveEpisode();
         });
     }
 
     private void initViewModel() {
-        this.model = ViewModelProviders.of(Objects.requireNonNull(getParentFragment())).get(EpisodeViewModel.class);
+        this.model = ViewModelProviders.of(requireParentFragment()).get(EpisodeViewModel.class);
     }
 
     private void initViews(View rootView) {

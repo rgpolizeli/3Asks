@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class insertBeliefAsyncTask extends AsyncTask<Belief, Void, Long> {
     private BeliefDao mAsyncTaskDao;
+    private Belief belief;
 
     public insertBeliefAsyncTask(BeliefDao dao) {
         mAsyncTaskDao = dao;
@@ -22,12 +23,13 @@ public class insertBeliefAsyncTask extends AsyncTask<Belief, Void, Long> {
 
     @Override
     protected Long doInBackground(final Belief... params) {
+        this.belief = params[0];
         return mAsyncTaskDao.insert(params[0]);
     }
 
     @Override
     protected void onPostExecute(Long beliefId) {
         super.onPostExecute(beliefId);
-        EventBus.getDefault().post(new CreatedBeliefEvent(beliefId.intValue()));
+        EventBus.getDefault().post(new CreatedBeliefEvent(beliefId.intValue(), this.belief.getBelief()));
     }
 }

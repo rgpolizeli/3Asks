@@ -119,5 +119,6 @@
     <string name="destination_help_info">Help and Info</string>
     <string name="destination_search">Search</string>
     <string name="destination_asks_unnamed_episode">Unnamed Episode</string>
+    <string name="destination_asks_unnamed_belief">Unnamed Belief</string>
 
 </resources>

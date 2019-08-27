@@ -1,120 +1,126 @@
-package com.rgp.asks.activities;
+package com.rgp.asks.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.fragments.BeliefArgumentsFragment;
-import com.rgp.asks.fragments.BeliefDetailsFragment;
-import com.rgp.asks.fragments.BeliefObjectionsFragment;
 import com.rgp.asks.messages.DeletedBeliefEvent;
 import com.rgp.asks.messages.SavedEditedBeliefEvent;
-import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.viewmodel.BeliefViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class AddNewBeliefActivity extends AppCompatActivity {
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
-    private BeliefViewModel beliefViewModel;
+public class AddNewBeliefFragment extends Fragment {
+
+    private BeliefViewModel model;
     private FloatingActionButton saveBeliefFab;
     private FloatingActionButton argumentsFab;
     private FloatingActionButton objectionsFab;
-    private Toolbar toolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.rgp.asks.R.layout.activity_add_belief);
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                openUnsavedDialog();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
-        loadFABs();
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_add_belief, container, false);
+
+        loadFABs(rootView);
 
         initViewModel();
 
-        configToolbarAsActionBar();
-
-        int beliefIdToLoad = this.getIntent().getIntExtra(Constants.ARG_BELIEF_ID, -1);
-        this.beliefViewModel.setBeliefId(beliefIdToLoad);
-
-        initTabs();
-    }
-
-    private void initViewModel() {
-        this.beliefViewModel = ViewModelProviders.of(this).get(BeliefViewModel.class);
-    }
-
-    private void configToolbarAsActionBar() {
-        this.toolbar = findViewById(com.rgp.asks.R.id.belief_toolbar);
-        setSupportActionBar(toolbar);
+        this.model.setBeliefId(getArguments().getInt(Constants.ARG_BELIEF_ID));
 
         initToolbarTitle();
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        } else {
-            //todo: err load action bar
-        }
+        initTabs(rootView);
+
+        return rootView;
+    }
+
+    private void initViewModel() {
+        this.model = ViewModelProviders.of(this).get(BeliefViewModel.class);
+    }
+
+    private void finish() {
+        Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigateUp();
     }
 
     private void initToolbarTitle() {
-        String toolbarTitle = this.beliefViewModel.getBeliefNameForToolbarTitle();
-        if (toolbarTitle.equals("Belief")) {
-            toolbarTitle = getIntent().getStringExtra(Constants.ARG_BELIEF_TITLE);
+        String toolbarTitle = this.model.getBeliefNameForToolbarTitle();
+        if (toolbarTitle == null) {
+            toolbarTitle = getArguments().getString(Constants.ARG_BELIEF_TITLE);
         }
-        this.toolbar.setTitle(toolbarTitle);
+        setBeliefNameInToolbar(toolbarTitle);
     }
 
     public void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        View focusedView = getCurrentFocus();
+        InputMethodManager inputManager = (InputMethodManager) requireActivity().getSystemService(INPUT_METHOD_SERVICE);
+        View focusedView = requireActivity().getCurrentFocus();
         if (focusedView != null) {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
-    private void loadFABs() {
-        saveBeliefFab = findViewById(com.rgp.asks.R.id.saveBeliefFab);
-        argumentsFab = findViewById(com.rgp.asks.R.id.addArgumentFab);
-        objectionsFab = findViewById(com.rgp.asks.R.id.addObjectionFab);
+    private void loadFABs(View fragmentView) {
+        saveBeliefFab = fragmentView.findViewById(com.rgp.asks.R.id.saveBeliefFab);
+        argumentsFab = fragmentView.findViewById(com.rgp.asks.R.id.addArgumentFab);
+        objectionsFab = fragmentView.findViewById(com.rgp.asks.R.id.addObjectionFab);
     }
 
-    private void setBeliefNameInToolbar(final Belief b) {
-        if (b != null) {
-            toolbar.setTitle(b.getBelief());
+    private void setBeliefNameInToolbar(String beliefInToolbar) {
+        if (beliefInToolbar.isEmpty()) {
+            beliefInToolbar = getResources().getString(R.string.destination_asks_unnamed_belief);
         }
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(beliefInToolbar);
     }
 
-    private void initTabs() {
-        findViewById(com.rgp.asks.R.id.indeterminateBar2).setVisibility(View.GONE);
-        findViewById(com.rgp.asks.R.id.beliefTabs).setVisibility(View.VISIBLE);
+    private void initTabs(View fragmentView) {
+        fragmentView.findViewById(com.rgp.asks.R.id.indeterminateBar2).setVisibility(View.GONE);
+        fragmentView.findViewById(com.rgp.asks.R.id.beliefTabs).setVisibility(View.VISIBLE);
 
-        BeliefPagerAdapter mBeliefPagerAdapter = new BeliefPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = findViewById(com.rgp.asks.R.id.asksViewPager);
+        BeliefPagerAdapter mBeliefPagerAdapter = new BeliefPagerAdapter(getChildFragmentManager());
+        ViewPager mViewPager = fragmentView.findViewById(com.rgp.asks.R.id.asksViewPager);
         mViewPager.setAdapter(mBeliefPagerAdapter);
 
-        TabLayout tabLayout = findViewById(com.rgp.asks.R.id.beliefTabs);
+        TabLayout tabLayout = fragmentView.findViewById(com.rgp.asks.R.id.beliefTabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -159,70 +165,61 @@ public class AddNewBeliefActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(com.rgp.asks.R.menu.menu_belief, menu);
-        return true;
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_belief, menu);
+        super.onCreateOptionsMenu(menu, menuInflater);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         hideKeyboard();
         switch (id) {
-            case com.rgp.asks.R.id.action_delete_belief:
-                beliefViewModel.removeBelief();
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return true;
+            case R.id.action_delete_belief:
+                model.removeBelief();
+                break;
         }
+        return true;
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedBeliefEvent(SavedEditedBeliefEvent event) {
-        Toast.makeText(this, getString(R.string.toast_message_belief_saved), Toast.LENGTH_SHORT).show();
-        beliefViewModel.setBeliefNameForToolbarTitle(beliefViewModel.getModifiableBeliefCopy().getBelief());
-        setBeliefNameInToolbar(beliefViewModel.getModifiableBeliefCopy());
+        Toast.makeText(requireContext(), getString(R.string.toast_message_belief_saved), Toast.LENGTH_SHORT).show();
+        String savedBelief = model.getModifiableBeliefCopy().getBelief();
+        model.setBeliefNameForToolbarTitle(savedBelief);
+        setBeliefNameInToolbar(savedBelief);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeletedBeliefEvent(DeletedBeliefEvent event) {
         if (event.result) {
-            if (this.beliefViewModel.getBeliefId() == event.deletedBeliefId) {
-                Toast.makeText(this, getString(R.string.toast_deleted_belief), Toast.LENGTH_SHORT).show();
+            if (this.model.getBeliefId() == event.deletedBeliefId) {
+                Toast.makeText(requireContext(), getString(R.string.toast_deleted_belief), Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         } else {
-            Toast.makeText(this, this.getString(R.string.toast_error_deleted_belief), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), this.getString(R.string.toast_error_deleted_belief), Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        openUnsavedDialog();
-    }
-
     private AlertDialog createUnsavedDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder
                 .setMessage(this.getString(R.string.belief_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), (dialog, id) -> {
-                    beliefViewModel.checkedSaveBelief();
+                    model.checkedSaveBelief();
                     finish();
                 })
                 .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), (dialog, id) -> {
@@ -235,7 +232,7 @@ public class AddNewBeliefActivity extends AppCompatActivity {
 
     private void openUnsavedDialog() {
         AlertDialog unsavedDialog = createUnsavedDialog();
-        if (beliefViewModel.beliefWasChanged()) {
+        if (model.beliefWasChanged()) {
             unsavedDialog.show();
         } else {
             finish();
@@ -270,4 +267,3 @@ public class AddNewBeliefActivity extends AppCompatActivity {
         }
     }
 }
-

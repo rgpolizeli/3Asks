@@ -11,15 +11,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
-import com.rgp.asks.activities.MainActivity;
 import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
+import com.rgp.asks.auxiliaries.Constants;
+import com.rgp.asks.messages.CreatedEpisodeEvent;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -53,8 +59,37 @@ public class EpisodesFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * Invoked after the creation of a new Episode.
+     *
+     * @param event contains information about the created episode.
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCreatedEpisodeEvent(CreatedEpisodeEvent event) {
+        startEditEpisodeActivity(event.episodeId, event.episodeName);
+    }
+
+    private void startEditEpisodeActivity(int episodeId, String episodeName) {
+        Bundle argumentsBundle = new Bundle();
+        argumentsBundle.putInt(Constants.ARG_EPISODE_ID, episodeId);
+        argumentsBundle.putString(Constants.ARG_EPISODE_TITLE, episodeName);
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
+    }
+
     private void initViewModel() {
-        this.mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        this.mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
     }
 
     private void setupFAB(@NonNull View rootView) {
@@ -91,7 +126,7 @@ public class EpisodesFragment extends Fragment {
             Episode episode = ((EpisodesRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (episode != null) {
-                ((MainActivity) getActivity()).startEditEpisodeActivity(episode.getId(), episode.getEpisode());
+                startEditEpisodeActivity(episode.getId(), episode.getEpisode());
             } else {
                 Toast.makeText(getActivity(), "This episode don't exist!", Toast.LENGTH_SHORT).show();
             }

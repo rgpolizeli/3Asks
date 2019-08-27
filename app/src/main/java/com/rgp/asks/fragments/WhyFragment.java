@@ -1,6 +1,5 @@
 package com.rgp.asks.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,19 +8,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
-import com.rgp.asks.activities.AddNewBeliefActivity;
 import com.rgp.asks.adapters.BeliefRVAdapter;
 import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.dialogs.BeliefDialog;
-import com.rgp.asks.interfaces.BeliefDialogListener;
 import com.rgp.asks.messages.CreatedBeliefEvent;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
@@ -30,11 +26,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class WhyFragment extends Fragment implements BeliefDialogListener {
+public class WhyFragment extends Fragment {
 
     private BeliefRVAdapter beliefsRecyclerViewAdapter;
     private EpisodeViewModel model;
-    private BeliefDialog beliefDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -42,7 +37,6 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
         View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_why_ask, container, false);
         setupFAB(container);
         setupRecyclerView(rootView);
-        initDialogs();
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
@@ -54,14 +48,14 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
     }
 
     /**
-     * Handle click on addBeliefButtonView and open BeliefDialog.
+     * Handle click on addBeliefButtonView and create a new empty Belief.
      *
      * @param container is the viewGroup of this fragment.
      */
     private void setupFAB(@NonNull ViewGroup container) {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton beliefsFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addBeliefFab);
-        beliefsFab.setOnClickListener(v -> showBeliefDialog());
+        beliefsFab.setOnClickListener(v -> createNewBelief());
     }
 
     @Override
@@ -76,13 +70,8 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
         EventBus.getDefault().unregister(this);
     }
 
-    private void initDialogs() {
-        this.beliefDialog = createBeliefDialog();
-        this.beliefDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
-    }
-
     private void initViewModel() {
-        model = ViewModelProviders.of(getParentFragment()).get(EpisodeViewModel.class);
+        model = ViewModelProviders.of(requireParentFragment()).get(EpisodeViewModel.class);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
@@ -101,32 +90,24 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
             if (belief != null) {
                 this.startEditBeliefActivity(belief.getId(), belief.getBelief());
             } else {
-                Toast.makeText(getParentFragment().requireContext(), "This belief don't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "This belief don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
 
-    private BeliefDialog createBeliefDialog() {
-        return new BeliefDialog();
-    }
-
-    private void showBeliefDialog() {
-        this.beliefDialog.show(getChildFragmentManager());
+    private void createNewBelief() {
+        model.createBeliefForEpisode("");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCreatedBeliefEvent(CreatedBeliefEvent event) {
+        this.startEditBeliefActivity(event.beliefId, event.thought);
     }
 
-    private void startEditBeliefActivity(int beliefId, @NonNull String belief) {
-        Intent intent = new Intent(getParentFragment().requireContext(), AddNewBeliefActivity.class);
-        intent.putExtra(Constants.ARG_BELIEF_ID, beliefId);
-        intent.putExtra(Constants.ARG_BELIEF_TITLE, belief);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onBeliefDialogCreateButtonClick(@NonNull String newBelief) {
-        this.model.createBeliefForEpisode(newBelief);
+    private void startEditBeliefActivity(int beliefId, @NonNull String thought) {
+        Bundle argumentsBundle = new Bundle();
+        argumentsBundle.putInt(Constants.ARG_BELIEF_ID, beliefId);
+        argumentsBundle.putString(Constants.ARG_BELIEF_TITLE, thought);
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_asksActivity_to_addNewBeliefFragment, argumentsBundle);
     }
 }

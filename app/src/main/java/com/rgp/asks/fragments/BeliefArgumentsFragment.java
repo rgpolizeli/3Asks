@@ -63,7 +63,7 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
             if (argument != null) {
                 this.showArgumentDialogInEditMode(argument.getId(), argument.getArgument());
             } else {
-                Toast.makeText(this.getActivity(), "This argument don't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "This argument don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -87,7 +87,7 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(getActivity()).get(BeliefViewModel.class);
+        model = ViewModelProviders.of(requireParentFragment()).get(BeliefViewModel.class);
     }
 
     private void initDialogs() {

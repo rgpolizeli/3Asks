@@ -33,7 +33,6 @@ public class BeliefViewModel extends AndroidViewModel {
         this.repository = new Repository(application);
         this.isBeliefFirstLoad = true;
         this.isThinkingStylesFirstLoad = true;
-        this.beliefNameForToolbarTitle = "Belief";
     }
 
     public String getBeliefNameForToolbarTitle() {
