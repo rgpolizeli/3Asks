@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                     this.toolbar.setContentInsetStartWithNavigation(16);
                     break;
                 case R.id.searchFragment:
-                    getLayoutInflater().inflate(R.layout.search_view, this.toolbar);
+                    getLayoutInflater().inflate(R.layout.view_search, this.toolbar);
                     this.toolbar.setBackgroundColor(getResources().getColor(R.color.white));
                     this.toolbar.setContentInsetStartWithNavigation(0);
                     break;

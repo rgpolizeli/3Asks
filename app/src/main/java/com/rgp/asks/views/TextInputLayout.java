@@ -49,7 +49,7 @@ public class TextInputLayout extends LinearLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.text_input_layout, this, true);
+        inflater.inflate(R.layout.view_text_input_layout, this, true);
 
         this.labelTextView = getLabelTextView();
         this.labelTextView.setText(label);

@@ -44,7 +44,7 @@ public class EpisodesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view_episodes, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_episodes, container, false);
 
         setupFAB(rootView);
 
