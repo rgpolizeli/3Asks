@@ -5,8 +5,8 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.rgp.asks.activities.AsksActivity;
 import com.rgp.asks.activities.MainActivity;
+import com.rgp.asks.fragments.AsksFragment;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -125,11 +125,11 @@ public class MainActivityUITests {
     public void clickOnItemInEpisodesRecyclerView_OpenAsksActivity() {
         //given: the EpisodesRecyclerView isn't empty
         //when: user click on any episode.
-        //then: AsksActivity is opened.
+        //then: AsksFragment is opened.
 
         if (getRVcount() > 0) {
             onView(withId(R.id.episodesRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-            intended(hasComponent(AsksActivity.class.getName()));
+            intended(hasComponent(AsksFragment.class.getName()));
         }
     }
 
@@ -143,7 +143,7 @@ public class MainActivityUITests {
         }
     }
 
-    //click on positive button of the newEpisodeDialog, create episode and go to AsksActivity.
+    //click on positive button of the newEpisodeDialog, create episode and go to AsksFragment.
 
     //click on negative button, close dialog, clean views to default values.
 

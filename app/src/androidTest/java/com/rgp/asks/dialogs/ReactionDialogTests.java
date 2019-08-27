@@ -12,9 +12,9 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.rgp.asks.R;
-import com.rgp.asks.activities.AsksActivity;
 import com.rgp.asks.adapters.ReactionRVAdapter;
 import com.rgp.asks.auxiliaries.Constants;
+import com.rgp.asks.fragments.AsksFragment;
 import com.rgp.asks.fragments.WhatFragment;
 import com.rgp.asks.interfaces.ReactionDialogListener;
 import com.rgp.asks.persistence.entity.Reaction;
@@ -48,8 +48,8 @@ import static org.mockito.Mockito.verify;
 public class ReactionDialogTests {
 
     @Rule
-    public IntentsTestRule<AsksActivity> asksActivityActivityTestRule =
-            new IntentsTestRule<>(AsksActivity.class, false, false);
+    public IntentsTestRule<AsksFragment> asksActivityActivityTestRule =
+            new IntentsTestRule<>(AsksFragment.class, false, false);
     //need a valid episode id to load.
     // and this episode must has reactions to test reaction dialog in edit mode.
     int episodeId = 5;

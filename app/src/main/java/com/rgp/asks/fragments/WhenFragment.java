@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.rgp.asks.activities.AsksActivity;
 import com.rgp.asks.listeners.EpisodeDateTextWatcher;
 import com.rgp.asks.listeners.EpisodeDescriptionTextWatcher;
 import com.rgp.asks.listeners.EpisodeNameTextWatcher;
@@ -70,13 +69,13 @@ public class WhenFragment extends Fragment {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
         FloatingActionButton saveEpisodeFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
         saveEpisodeFab.setOnClickListener(v -> {
-            ((AsksActivity) getActivity()).hideKeyboard();
+            ((AsksFragment) getParentFragment()).hideKeyboard();
             saveEpisode();
         });
     }
 
     private void initViewModel() {
-        this.model = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(EpisodeViewModel.class);
+        this.model = ViewModelProviders.of(Objects.requireNonNull(getParentFragment())).get(EpisodeViewModel.class);
     }
 
     private void initViews(View rootView) {

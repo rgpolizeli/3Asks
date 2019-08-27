@@ -1,15 +1,14 @@
 package com.rgp.asks.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.rgp.asks.R;
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.destination_episodes);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(toolbar, navController);
+        NavigationUI.setupActionBarWithNavController(this, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             switch (destination.getId()) {
                 default:
@@ -54,13 +53,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, new AppBarConfiguration.Builder().build())
-                || super.onSupportNavigateUp();
     }
 
     private void initViewModel() {
@@ -84,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startEditEpisodeActivity(int episodeId, String episodeName) {
-        Intent intent = new Intent(this, AsksActivity.class);
-        intent.putExtra(Constants.ARG_EPISODE_ID, episodeId);
-        intent.putExtra(Constants.ARG_EPISODE_TITLE, episodeName);
-        startActivity(intent);
+        Bundle argumentsBundle = new Bundle();
+        argumentsBundle.putInt(Constants.ARG_EPISODE_ID, episodeId);
+        argumentsBundle.putString(Constants.ARG_EPISODE_TITLE, episodeName);
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
     }
 
     @Override
@@ -97,8 +89,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        if (item.getItemId() == android.R.id.home) {
+            this.getOnBackPressedDispatcher().onBackPressed();
+        }
         return NavigationUI.onNavDestinationSelected(item, navController)
                 || super.onOptionsItemSelected(item);
     }

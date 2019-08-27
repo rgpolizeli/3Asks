@@ -82,7 +82,7 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
     }
 
     private void initViewModel() {
-        model = ViewModelProviders.of(getActivity()).get(EpisodeViewModel.class);
+        model = ViewModelProviders.of(getParentFragment()).get(EpisodeViewModel.class);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
@@ -101,7 +101,7 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
             if (belief != null) {
                 this.startEditBeliefActivity(belief.getId(), belief.getBelief());
             } else {
-                Toast.makeText(this.getActivity(), "This belief don't exist!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getParentFragment().requireContext(), "This belief don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -119,7 +119,7 @@ public class WhyFragment extends Fragment implements BeliefDialogListener {
     }
 
     private void startEditBeliefActivity(int beliefId, @NonNull String belief) {
-        Intent intent = new Intent(this.getActivity(), AddNewBeliefActivity.class);
+        Intent intent = new Intent(getParentFragment().requireContext(), AddNewBeliefActivity.class);
         intent.putExtra(Constants.ARG_BELIEF_ID, beliefId);
         intent.putExtra(Constants.ARG_BELIEF_TITLE, belief);
         startActivity(intent);

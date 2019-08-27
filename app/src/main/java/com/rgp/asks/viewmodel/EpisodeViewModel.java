@@ -29,7 +29,6 @@ public class EpisodeViewModel extends AndroidViewModel {
         super(application);
         this.repository = new Repository(application);
         this.isEpisodeInFirstLoad = true;
-        this.episodeNameForToolbarTitle = "Episode";
     }
 
     public String getEpisodeNameForToolbarTitle() {

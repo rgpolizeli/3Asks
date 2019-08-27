@@ -63,7 +63,7 @@ public class EpisodesFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.menu_episodes, menu);
         super.onCreateOptionsMenu(menu, menuInflater);
     }
@@ -76,7 +76,7 @@ public class EpisodesFragment extends Fragment {
         );
     }
 
-    private void setupRecyclerView(View rootView) {
+    private void setupRecyclerView(@NonNull View rootView) {
         RecyclerView episodesRecyclerView = rootView.findViewById(R.id.episodesRecyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
@@ -96,6 +96,5 @@ public class EpisodesFragment extends Fragment {
                 Toast.makeText(getActivity(), "This episode don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
-
     }
 }

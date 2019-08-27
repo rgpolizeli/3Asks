@@ -1,109 +1,94 @@
-package com.rgp.asks.activities;
+package com.rgp.asks.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.fragments.WhatFragment;
-import com.rgp.asks.fragments.WhenFragment;
-import com.rgp.asks.fragments.WhyFragment;
 import com.rgp.asks.messages.DeletedEpisodeEvent;
 import com.rgp.asks.messages.SavedEditedEpisodeEvent;
-import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class AsksActivity extends AppCompatActivity {
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
+public class AsksFragment extends Fragment {
 
     private EpisodeViewModel model;
-    private Toolbar toolbar;
-
     private FloatingActionButton saveEpisodeFab;
     private FloatingActionButton reactionsFab;
     private FloatingActionButton beliefsFab;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.rgp.asks.R.layout.activity_asks);
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                openUnsavedDialog();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
-        EventBus.getDefault().register(this);
+        setHasOptionsMenu(true);
+    }
 
-        loadFABs();
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_asks, container, false);
+
+        loadFABs(rootView);
 
         initViewModel();
 
-        configToolbarAsActionBar();
+        this.model.setEpisodeId(getArguments().getInt(Constants.ARG_EPISODE_ID));
 
-        int episodeIdToLoad = getIntent().getIntExtra(Constants.ARG_EPISODE_ID, -1);
-        this.model.setEpisodeId(episodeIdToLoad);
+        initToolbarTitle();
 
-        initTabs();
+        initTabs(rootView);
+
+        return rootView;
     }
 
     private void initViewModel() {
         this.model = ViewModelProviders.of(this).get(EpisodeViewModel.class);
     }
 
-    private void configToolbarAsActionBar() {
-        this.toolbar = findViewById(com.rgp.asks.R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        initToolbarTitle();
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        } else {
-            //todo: err load action bar
-        }
-    }
-
-    private void initToolbarTitle() {
-        String toolbarTitle = this.model.getEpisodeNameForToolbarTitle();
-        if (toolbarTitle.equals("Episode")) {
-            toolbarTitle = getIntent().getStringExtra(Constants.ARG_EPISODE_TITLE);
-        }
-        this.toolbar.setTitle(toolbarTitle);
-    }
-
     public void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        View focusedView = getCurrentFocus();
+        InputMethodManager inputManager = (InputMethodManager) requireActivity().getSystemService(INPUT_METHOD_SERVICE);
+        View focusedView = requireActivity().getCurrentFocus();
         if (focusedView != null) {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        openUnsavedDialog();
-    }
-
     private AlertDialog createUnsavedDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder
                 .setMessage(this.getString(R.string.episode_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
@@ -118,6 +103,10 @@ public class AsksActivity extends AppCompatActivity {
         return builder.create();
     }
 
+    private void finish() {
+        Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigateUp();
+    }
+
     private void openUnsavedDialog() {
         AlertDialog unsavedDialog = createUnsavedDialog();
         if (model.episodeWasChanged()) {
@@ -127,27 +116,36 @@ public class AsksActivity extends AppCompatActivity {
         }
     }
 
-    private void loadFABs() {
-        saveEpisodeFab = findViewById(com.rgp.asks.R.id.saveEpisodeFab);
-        reactionsFab = findViewById(com.rgp.asks.R.id.addReactionFab);
-        beliefsFab = findViewById(com.rgp.asks.R.id.addBeliefFab);
+    private void loadFABs(View fragmentView) {
+        saveEpisodeFab = fragmentView.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
+        reactionsFab = fragmentView.findViewById(com.rgp.asks.R.id.addReactionFab);
+        beliefsFab = fragmentView.findViewById(com.rgp.asks.R.id.addBeliefFab);
     }
 
-    private void setEpisodeNameInToolbar(final Episode e) {
-        if (e != null) {
-            toolbar.setTitle(e.getEpisode());
+    private void initToolbarTitle() {
+        String toolbarTitle = this.model.getEpisodeNameForToolbarTitle();
+        if (toolbarTitle == null) {
+            toolbarTitle = getArguments().getString(Constants.ARG_EPISODE_TITLE);
         }
+        setEpisodeNameInToolbar(toolbarTitle);
     }
 
-    private void initTabs() {
-        findViewById(com.rgp.asks.R.id.indeterminateBar).setVisibility(View.GONE);
-        findViewById(com.rgp.asks.R.id.tabs).setVisibility(View.VISIBLE);
+    private void setEpisodeNameInToolbar(String episodeNameInToolbar) {
+        if (episodeNameInToolbar.isEmpty()) {
+            episodeNameInToolbar = getResources().getString(R.string.destination_asks_unnamed_episode);
+        }
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(episodeNameInToolbar);
+    }
 
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = findViewById(com.rgp.asks.R.id.asksViewPager);
+    private void initTabs(View fragmentView) {
+        fragmentView.findViewById(R.id.indeterminateBar).setVisibility(View.GONE);
+        fragmentView.findViewById(R.id.tabs).setVisibility(View.VISIBLE);
+
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+        ViewPager mViewPager = fragmentView.findViewById(R.id.asksViewPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = findViewById(com.rgp.asks.R.id.tabs);
+        TabLayout tabLayout = fragmentView.findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -192,48 +190,51 @@ public class AsksActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(com.rgp.asks.R.menu.menu_asks, menu);
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_asks, menu);
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_delete_episode:
+                this.model.removeEpisode();
+                break;
+        }
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case com.rgp.asks.R.id.action_delete_episode:
-                this.model.removeEpisode();
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return true;
-        }
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
-        Toast.makeText(this, getString(R.string.toast_message_episode_saved), Toast.LENGTH_SHORT).show();
-        model.setEpisodeNameForToolbarTitle(model.getModifiableEpisodeCopy().getEpisode());
-        setEpisodeNameInToolbar(model.getModifiableEpisodeCopy());
+        Toast.makeText(requireContext(), getString(R.string.toast_message_episode_saved), Toast.LENGTH_SHORT).show();
+        String savedEpisodeName = model.getModifiableEpisodeCopy().getEpisode();
+        model.setEpisodeNameForToolbarTitle(savedEpisodeName);
+        setEpisodeNameInToolbar(savedEpisodeName);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeletedEpisodeEvent(DeletedEpisodeEvent event) {
         if (event.result) {
             if (this.model.getEpisodeId() == event.deletedEpisodeId) {
-                Toast.makeText(this, getString(R.string.toast_deleted_episode), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.toast_deleted_episode), Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         } else {
-            Toast.makeText(this, getString(R.string.toast_error_deleted_episode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.toast_error_deleted_episode), Toast.LENGTH_SHORT).show();
         }
     }
 

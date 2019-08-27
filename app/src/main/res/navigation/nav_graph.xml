@@ -16,6 +16,17 @@
         <action
             android:id="@+id/action_episodesFragment_to_helpInfoFragment"
             app:destination="@id/helpInfoFragment" />
+        <action
+            android:id="@+id/action_episodesFragment_to_asksActivity"
+            app:destination="@id/asksActivity">
+            <argument
+                android:name="EPISODE_ID"
+                android:defaultValue="-1"
+                app:argType="integer" />
+            <argument
+                android:name="ARG_EPISODE_TITLE"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -27,4 +38,9 @@
         android:name="com.rgp.asks.fragments.HelpInfoFragment"
         android:label="@string/destination_help_info"
         tools:layout="@layout/fragment_help_info" />
+    <fragment
+        android:id="@+id/asksActivity"
+        android:name="com.rgp.asks.fragments.AsksFragment"
+        android:label="{ARG_EPISODE_TITLE}"
+        tools:layout="@layout/fragment_asks" />
 </navigation>

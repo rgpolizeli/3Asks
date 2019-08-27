@@ -17,18 +17,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.rgp.asks.activities.AsksActivity"
-            android:label="@string/title_activity_asks_activity"
-            android:parentActivityName="com.rgp.asks.activities.MainActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.rgp.asks.activities.MainActivity" />
-        </activity>
-        <activity
             android:name="com.rgp.asks.activities.AddNewBeliefActivity"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.NoActionBar"></activity>

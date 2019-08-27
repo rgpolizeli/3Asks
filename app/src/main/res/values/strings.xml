@@ -118,5 +118,6 @@
     <string name="destination_episodes">Episodes</string>
     <string name="destination_help_info">Help and Info</string>
     <string name="destination_search">Search</string>
+    <string name="destination_asks_unnamed_episode">Unnamed Episode</string>
 
 </resources>
