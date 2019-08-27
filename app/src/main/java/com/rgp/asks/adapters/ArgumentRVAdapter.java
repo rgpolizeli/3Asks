@@ -59,14 +59,11 @@ public class ArgumentRVAdapter extends RecyclerView.Adapter<ArgumentRVAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView argumentTextView;
 
-        public TextView argumentTextView;
-
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             argumentTextView = v.findViewById(com.rgp.asks.R.id.argumentTextView);
         }
     }
-
-
 }

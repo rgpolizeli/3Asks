@@ -85,21 +85,7 @@ public class WhenFragment extends Fragment {
     }
 
     private void saveEpisode() {
-        String newEpisodeName = this.episodeNameTextInputLayout.getValue().toString();
-        if (!newEpisodeName.isEmpty()) {
-
-            // hide error
-            if (this.episodeNameTextInputLayout.hasFocus()) {
-                this.episodeNameTextInputLayout.goToState(TextInputLayout.STATE_FOCUSED);
-            } else {
-                this.episodeNameTextInputLayout.goToState(TextInputLayout.STATE_NORMAL);
-            }
-
-            this.model.uncheckedSaveEpisode();
-
-        } else {
-            this.episodeNameTextInputLayout.goToState(TextInputLayout.STATE_ERROR); // show error
-        }
+        this.model.uncheckedSaveEpisode();
     }
 
     private void loadFragmentFromViewModel(@NonNull Episode e) {

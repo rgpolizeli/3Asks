@@ -240,15 +240,10 @@ public class BeliefViewModel extends AndroidViewModel {
         List<ThinkingStyle> modifiableSelectedThinkingStylesCopy = this.getModifiableThinkingStylesCopy();
 
         if (currentBelief != null && currentBelief.getId() == modifiedBelief.getId()) {
-            if (!modifiedBelief.getBelief().isEmpty()) {
-                return (
-                        !currentBelief.getBelief().equals(modifiedBelief.getBelief()) ||
-                                isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy)
-                );
-            } else {
-                return isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy);
-            }
-
+            return (
+                    !currentBelief.getBelief().equals(modifiedBelief.getBelief()) ||
+                            isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy)
+            );
         } else {
             //err
             return false;
@@ -273,5 +268,4 @@ public class BeliefViewModel extends AndroidViewModel {
         }
         return !A.containsAll(B) || !B.containsAll(A);
     }
-
 }

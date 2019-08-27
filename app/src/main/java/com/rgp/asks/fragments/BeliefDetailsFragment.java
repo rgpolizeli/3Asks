@@ -155,16 +155,6 @@ public class BeliefDetailsFragment extends Fragment {
     }
 
     private void saveBelief() {
-        String newBeliefName = this.beliefTextInputLayout.getValue().toString();
-        if (!newBeliefName.isEmpty()) {
-            if (this.beliefTextInputLayout.hasFocus()) {
-                this.beliefTextInputLayout.goToState(TextInputLayout.STATE_FOCUSED);
-            } else {
-                this.beliefTextInputLayout.goToState(TextInputLayout.STATE_NORMAL);
-            }
-            model.uncheckedSaveBelief();
-        } else {
-            this.beliefTextInputLayout.goToState(TextInputLayout.STATE_ERROR); // show error
-        }
+        model.uncheckedSaveBelief();
     }
 }

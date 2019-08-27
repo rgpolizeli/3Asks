@@ -115,7 +115,7 @@ public class EpisodesFragment extends Fragment {
         RecyclerView episodesRecyclerView = rootView.findViewById(R.id.episodesRecyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
-        this.episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        this.episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_episode), createOnItemRecyclerViewClickListener());
         episodesRecyclerView.setAdapter(this.episodesRecyclerViewAdapter);
     }
 

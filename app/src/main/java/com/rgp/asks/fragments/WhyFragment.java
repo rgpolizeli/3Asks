@@ -77,7 +77,7 @@ public class WhyFragment extends Fragment {
     private void setupRecyclerView(@NonNull View rootView) {
         RecyclerView beliefsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.beliefsRecyclerView);
         beliefsRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        beliefsRecyclerViewAdapter = new BeliefRVAdapter(createOnItemRecyclerViewClickListener());
+        beliefsRecyclerViewAdapter = new BeliefRVAdapter(getResources().getString(R.string.destination_asks_unnamed_belief), createOnItemRecyclerViewClickListener());
         beliefsRecyclerView.setAdapter(beliefsRecyclerViewAdapter);
     }
 

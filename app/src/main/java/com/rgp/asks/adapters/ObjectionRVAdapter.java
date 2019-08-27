@@ -57,10 +57,9 @@ public class ObjectionRVAdapter extends RecyclerView.Adapter<ObjectionRVAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView objectionTextView;
 
-        public TextView objectionTextView;
-
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             objectionTextView = v.findViewById(com.rgp.asks.R.id.objectionTextView);
         }

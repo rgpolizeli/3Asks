@@ -14,9 +14,11 @@ import java.util.List;
 
 public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHolder> {
     private List<Belief> beliefs;
-    private View.OnClickListener onItemClickListener;
+    private final View.OnClickListener onItemClickListener;
+    private final String emptyThought;
 
-    public BeliefRVAdapter(View.OnClickListener onItemClickListener) {
+    public BeliefRVAdapter(@NonNull String emptyThought, @NonNull View.OnClickListener onItemClickListener) {
+        this.emptyThought = emptyThought;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -44,7 +46,11 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.beliefTextView.setText(beliefs.get(position).getBelief());
+        String thought = beliefs.get(position).getBelief();
+        if (thought.isEmpty()) {
+            thought = this.emptyThought;
+        }
+        holder.beliefTextView.setText(thought);
     }
 
     @Override
@@ -54,9 +60,9 @@ public class BeliefRVAdapter extends RecyclerView.Adapter<BeliefRVAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView beliefTextView;
+        TextView beliefTextView;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             beliefTextView = v.findViewById(com.rgp.asks.R.id.beliefTextView);
         }

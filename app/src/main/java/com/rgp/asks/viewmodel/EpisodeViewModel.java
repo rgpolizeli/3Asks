@@ -130,16 +130,7 @@ public class EpisodeViewModel extends AndroidViewModel {
         Episode modifiedEpisode = getModifiableEpisodeCopy();
 
         if (currentEpisode != null && modifiedEpisode != null && currentEpisode.getId() == modifiedEpisode.getId()) {
-            if (!modifiedEpisode.getEpisode().isEmpty()) {
-                return !currentEpisode.equals(modifiedEpisode);
-            } else {
-                return !(
-                        modifiedEpisode.getDate().equals(currentEpisode.getDate()) &&
-                                modifiedEpisode.getDescription().equals(currentEpisode.getDescription()) &&
-                                modifiedEpisode.getPeriod().equals(currentEpisode.getPeriod())
-                );
-            }
-
+            return !currentEpisode.equals(modifiedEpisode);
         } else {
             //err
             return false;

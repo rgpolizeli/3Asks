@@ -17,11 +17,13 @@ import java.util.List;
 public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.ViewHolder> {
     @NonNull
     private List<Episode> episodes;
-    private View.OnClickListener onItemClickListener;
+    private final View.OnClickListener onItemClickListener;
+    private final String emptyEpisodeName;
 
-    public EpisodesRecyclerViewAdapter(View.OnClickListener onItemClickListener) {
+    public EpisodesRecyclerViewAdapter(@NonNull String emptyEpisodeName, @NonNull View.OnClickListener onItemClickListener) {
         this.episodes = new ArrayList<>();
         this.onItemClickListener = onItemClickListener;
+        this.emptyEpisodeName = emptyEpisodeName;
     }
 
     @NonNull
@@ -40,7 +42,11 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.episodeTextView.setText(this.episodes.get(position).getEpisode());
+        String episodeName = this.episodes.get(position).getEpisode();
+        if (episodeName.isEmpty()) {
+            episodeName = this.emptyEpisodeName;
+        }
+        holder.episodeTextView.setText(episodeName);
         holder.episodeDateTextView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(this.episodes.get(position).getDate()));
         holder.episodePeriodTextView.setText(this.episodes.get(position).getPeriod());
     }
@@ -56,11 +62,11 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView episodeTextView;
-        public TextView episodeDateTextView;
-        public TextView episodePeriodTextView;
+        TextView episodeTextView;
+        TextView episodeDateTextView;
+        TextView episodePeriodTextView;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             episodeTextView = v.findViewById(com.rgp.asks.R.id.episodeNameTextView);
             episodeDateTextView = v.findViewById(com.rgp.asks.R.id.episodeDateTextView);
