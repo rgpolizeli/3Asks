@@ -16,11 +16,13 @@ import java.util.List;
 public class MainViewModel extends AndroidViewModel implements I_EpisodeCreatorController {
 
     private LiveData<List<Episode>> episodes;
+    private String query;
     private Repository repository;
 
     public MainViewModel(Application application) {
         super(application);
         repository = new Repository(application);
+        query = "";
     }
 
     @Override
@@ -33,5 +35,13 @@ public class MainViewModel extends AndroidViewModel implements I_EpisodeCreatorC
             this.episodes = this.repository.getAllEpisodes();
         }
         return this.episodes;
+    }
+
+    public String getQuery() {
+        return this.query;
+    }
+
+    public void setQuery(String newQuery) {
+        this.query = newQuery;
     }
 }

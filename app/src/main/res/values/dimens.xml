@@ -6,4 +6,5 @@
     <dimen name="minHeightItemRecyclerView">50dp</dimen>
     <dimen name="minHeightForInputViews">50dp</dimen>
     <dimen name="paddingLeftCheckBox">20dp</dimen>
+    <dimen name="searchLayoutHeight">50dp</dimen>
 </resources>

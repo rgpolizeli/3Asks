@@ -38,12 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     this.toolbar.removeView(this.toolbar.findViewById(R.id.search));
                     this.toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     this.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-                    this.toolbar.setContentInsetStartWithNavigation(16);
-                    break;
-                case R.id.searchFragment:
-                    getLayoutInflater().inflate(R.layout.view_search, this.toolbar);
-                    this.toolbar.setBackgroundColor(getResources().getColor(R.color.white));
-                    this.toolbar.setContentInsetStartWithNavigation(0);
+                    //this.toolbar.setContentInsetStartWithNavigation(16);
                     break;
             }
         });

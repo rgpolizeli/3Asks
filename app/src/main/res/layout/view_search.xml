@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minWidth="50dp"
-        android:minHeight="50dp"
-        app:defaultQueryHint="Search..."
-        app:iconifiedByDefault="false"
-        app:queryBackground="@android:color/transparent"
-        app:searchIcon="@null" />
-</merge>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="@dimen/searchLayoutHeight"
+            android:layout_height="@dimen/searchLayoutHeight"
+            android:background="@color/white"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/searchLayoutHeight"
+            android:background="@color/white"
+            app:defaultQueryHint="Search..."
+            app:iconifiedByDefault="false"
+            app:queryBackground="@android:color/transparent"
+            app:searchIcon="@null"></androidx.appcompat.widget.SearchView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray" />
+</LinearLayout>
