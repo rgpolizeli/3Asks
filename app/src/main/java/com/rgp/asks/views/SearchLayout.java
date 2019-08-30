@@ -1,6 +1,8 @@
 package com.rgp.asks.views;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageButton;
@@ -17,6 +19,8 @@ public class SearchLayout extends LinearLayout {
     private OnBackButtonClickListener onBackButtonClickListener;
     @Nullable
     private OnQueryListener onQueryListener;
+
+    private String query;
 
     private boolean pausedOnQueryListener;
 
@@ -35,6 +39,7 @@ public class SearchLayout extends LinearLayout {
 
         backButton.setOnClickListener(v -> {
             pausedOnQueryListener = true;
+            setQuery("");
             getSearchView().setQuery("", false);
             if (this.onBackButtonClickListener != null) {
                 this.onBackButtonClickListener.onBackButtonClick();
@@ -46,6 +51,7 @@ public class SearchLayout extends LinearLayout {
             public boolean onQueryTextChange(String query) {
                 if (!pausedOnQueryListener) {
                     if (onQueryListener != null) {
+                        setQuery(query);
                         onQueryListener.onQuery(query);
                     }
                 }
@@ -55,7 +61,8 @@ public class SearchLayout extends LinearLayout {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (!pausedOnQueryListener) {
-                    if (onQueryListener != null && !pausedOnQueryListener) {
+                    if (onQueryListener != null) {
+                        setQuery(query);
                         onQueryListener.onQuery(query);
                     }
                 }
@@ -63,9 +70,18 @@ public class SearchLayout extends LinearLayout {
             }
         });
         pausedOnQueryListener = true;
+        query = "";
     }
 
-    public void openSearchLayout() {
+    public String getQuery() {
+        return this.query;
+    }
+
+    public void setQuery(String newQuery) {
+        this.query = newQuery;
+    }
+
+    public void continueOnQueryListener() {
         pausedOnQueryListener = false;
     }
 
@@ -77,27 +93,48 @@ public class SearchLayout extends LinearLayout {
         this.onQueryListener = onQueryListener;
     }
 
-    private SearchView getSearchView() {
+    public SearchView getSearchView() {
         LinearLayout rootLinearLayout = (LinearLayout) getChildAt(0);
         LinearLayout parentLinearLayout = (LinearLayout) rootLinearLayout.getChildAt(0);
         return (SearchView) parentLinearLayout.getChildAt(1);
     }
 
-    private ImageButton getBackButton() {
+    public ImageButton getBackButton() {
         LinearLayout rootLinearLayout = (LinearLayout) getChildAt(0);
         LinearLayout parentLinearLayout = (LinearLayout) rootLinearLayout.getChildAt(0);
         return (ImageButton) parentLinearLayout.getChildAt(0);
     }
 
 
-    public void restoreQuery(String query) throws NullPointerException {
+    public boolean restoreSearchIfNecessary() throws NullPointerException {
         if (onQueryListener == null || onBackButtonClickListener == null) {
             throw new NullPointerException("onQueryListener or onBackButtonClickListener is null");
         } else {
-            pausedOnQueryListener = false;
-            getSearchView().setQuery(query, false);
+            if (this.query.isEmpty()) {
+                return false;
+            } else {
+                pausedOnQueryListener = false;
+                getSearchView().setQuery(getQuery(), false);
+                return true;
+            }
         }
     }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.query = this.query;
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        this.query = ss.query;
+    }
+
 
     public interface OnBackButtonClickListener {
         void onBackButtonClick();
@@ -105,5 +142,36 @@ public class SearchLayout extends LinearLayout {
 
     public interface OnQueryListener {
         void onQuery(String query);
+    }
+
+    private static class SavedState extends BaseSavedState {
+
+        public final static Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+
+        String query;
+
+        SavedState(Parcel source) {
+            super(source);
+            query = source.readString();
+        }
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeString(query);
+        }
     }
 }

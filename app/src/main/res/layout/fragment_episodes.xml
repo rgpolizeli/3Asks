@@ -8,24 +8,11 @@
     android:background="@color/backgroundColor"
     android:orientation="vertical">
 
-    <!--
-    <include
-        layout="@layout/view_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
--->
-
-    <com.rgp.asks.views.SearchLayout
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/episodesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_recycler_view_episode" />
 
@@ -38,8 +25,14 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_add_white_24dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:backgroundTint="@color/colorPrimary" />
+
+    <com.rgp.asks.views.SearchLayout
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:elevation="1dp"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

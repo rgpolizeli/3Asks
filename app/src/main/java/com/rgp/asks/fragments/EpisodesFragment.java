@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -22,10 +21,10 @@ import com.rgp.asks.R;
 import com.rgp.asks.activities.MainActivity;
 import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
+import com.rgp.asks.auxiliaries.Searcher;
 import com.rgp.asks.messages.CreatedEpisodeEvent;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
-import com.rgp.asks.views.SearchLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +37,7 @@ public class EpisodesFragment extends Fragment {
 
     private EpisodesRecyclerViewAdapter episodesRecyclerViewAdapter;
     private MainViewModel mainViewModel;
+    private Searcher searcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,73 +48,25 @@ public class EpisodesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_episodes, container, false);
-        setupFAB(rootView);
-        setupRecyclerView(rootView);
-        setupSearchLayoutListerners(rootView);
+        return inflater.inflate(R.layout.fragment_episodes, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        setupFAB(fragmentView);
+        setupRecyclerView(fragmentView);
+        this.searcher = new Searcher(
+                ((MainActivity) requireActivity()).getSupportActionBar(),
+                fragmentView.findViewById(R.id.episodesRecyclerView),
+                episodesRecyclerViewAdapter,
+                (int) fragmentView.getResources().getDimension(R.dimen.searchLayoutHeight),
+                fragmentView.findViewById(R.id.search)
+        );
         initViewModel();
         this.mainViewModel.getAllEpisodes().observe(this, episodes -> {
             episodesRecyclerViewAdapter.setEpisodes(episodes);
-            restoreSearch();
+            searcher.restoreSearchIfNecessary();
         });
-        return rootView;
-    }
-
-    private void restoreSearch() {
-        String query = this.mainViewModel.getQuery();
-        if (!query.isEmpty()) {
-            SearchLayout searchLayout = requireView().findViewById(R.id.search);
-            searchLayout.restoreQuery(query);
-            showSearch(
-                    ((MainActivity) requireActivity()).getSupportActionBar(),
-                    requireView().findViewById(R.id.episodesRecyclerView),
-                    (int) requireView().getResources().getDimension(R.dimen.searchLayoutHeight),
-                    searchLayout
-            );
-        }
-    }
-
-    private void setupSearchLayoutListerners(@NonNull View fragmentView) {
-        SearchLayout searchLayout = fragmentView.findViewById(R.id.search);
-        searchLayout.setOnBackButtonClickListener(() -> {
-            this.mainViewModel.setQuery("");
-            hideSearch(
-                    ((MainActivity) requireActivity()).getSupportActionBar(),
-                    fragmentView.findViewById(R.id.episodesRecyclerView),
-                    searchLayout
-            );
-        });
-        searchLayout.setOnQueryListener(this::applyFilter);
-    }
-
-    private void hideSearch(ActionBar actionBar, View recyclerView, SearchLayout searchLayout) {
-        removeAllAppliedFilter();
-        searchLayout.setVisibility(View.GONE);
-        setMargins(recyclerView, 0, 0, 0, 0);
-        actionBar.show();
-    }
-
-    private void showSearch(ActionBar actionBar, View recyclerView, int searchLayoutHeight, SearchLayout searchLayout) {
-        actionBar.hide();
-        setMargins(recyclerView, 0, searchLayoutHeight, 0, 0);
-        searchLayout.setVisibility(View.VISIBLE);
-    }
-
-    private void setMargins(@NonNull View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
-
-    private void applyFilter(@NonNull String filter) {
-        this.mainViewModel.setQuery(filter);
-        episodesRecyclerViewAdapter.getFilter().filter(filter);
-    }
-
-    private void removeAllAppliedFilter() {
-        episodesRecyclerViewAdapter.removeAllAppliedFilter();
     }
 
     @Override
@@ -166,15 +118,7 @@ public class EpisodesFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_search:
-                //searcher.openSearch();
-                SearchLayout searchLayout = getView().findViewById(R.id.search);
-                showSearch(
-                        ((MainActivity) requireActivity()).getSupportActionBar(),
-                        requireView().findViewById(R.id.episodesRecyclerView),
-                        (int) requireView().getResources().getDimension(R.dimen.searchLayoutHeight),
-                        searchLayout
-                );
-                searchLayout.openSearchLayout();
+                searcher.openSearch();
                 break;
         }
         return true;

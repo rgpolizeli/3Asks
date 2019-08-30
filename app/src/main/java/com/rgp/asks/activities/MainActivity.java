@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             switch (destination.getId()) {
                 default:
-                    this.toolbar.removeView(this.toolbar.findViewById(R.id.search));
+                    getSupportActionBar().show();
                     this.toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                     this.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
                     //this.toolbar.setContentInsetStartWithNavigation(16);
