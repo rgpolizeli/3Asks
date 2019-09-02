@@ -95,7 +95,12 @@ public class EpisodesFragment extends Fragment {
         Bundle argumentsBundle = new Bundle();
         argumentsBundle.putInt(Constants.ARG_EPISODE_ID, episodeId);
         argumentsBundle.putString(Constants.ARG_EPISODE_TITLE, episodeName);
-        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
+        navigateDown(R.id.nav_host_fragment, R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
+    }
+
+    private void navigateDown(int navHostId, int navActionId, Bundle arguments) {
+        searcher.closeSearch();
+        Navigation.findNavController(requireActivity(), navHostId).navigate(navActionId, arguments);
     }
 
     private void initViewModel() {

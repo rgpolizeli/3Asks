@@ -14,12 +14,14 @@
             android:layout_width="@dimen/searchLayoutHeight"
             android:layout_height="@dimen/searchLayoutHeight"
             android:background="@color/white"
-            android:src="@drawable/ic_arrow_back_black_24dp" />
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:tag="searchBackButton" />
 
         <androidx.appcompat.widget.SearchView
             android:layout_width="match_parent"
             android:layout_height="@dimen/searchLayoutHeight"
             android:background="@color/white"
+            android:tag="searchView"
             app:defaultQueryHint="Search..."
             app:iconifiedByDefault="false"
             app:queryBackground="@android:color/transparent"

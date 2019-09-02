@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -13,16 +14,16 @@ import androidx.appcompat.widget.SearchView;
 
 import com.rgp.asks.R;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class SearchLayout extends LinearLayout {
 
     @Nullable
     private OnBackButtonClickListener onBackButtonClickListener;
     @Nullable
     private OnQueryListener onQueryListener;
-
+    @Nullable
     private String query;
-
-    private boolean pausedOnQueryListener;
 
     public SearchLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -38,9 +39,8 @@ public class SearchLayout extends LinearLayout {
         searchView.setSaveFromParentEnabled(false);
 
         backButton.setOnClickListener(v -> {
-            pausedOnQueryListener = true;
-            setQuery("");
-            getSearchView().setQuery("", false);
+            setQuery(null);
+            closeSearch();
             if (this.onBackButtonClickListener != null) {
                 this.onBackButtonClickListener.onBackButtonClick();
             }
@@ -49,72 +49,89 @@ public class SearchLayout extends LinearLayout {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String query) {
-                if (!pausedOnQueryListener) {
-                    if (onQueryListener != null) {
-                        setQuery(query);
-                        onQueryListener.onQuery(query);
-                    }
+                if (onQueryListener != null) {
+                    setQuery(query);
+                    onQueryListener.onQuery(query);
                 }
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!pausedOnQueryListener) {
-                    if (onQueryListener != null) {
-                        setQuery(query);
-                        onQueryListener.onQuery(query);
-                    }
+                if (onQueryListener != null) {
+                    setQuery(query);
+                    onQueryListener.onQuery(query);
+                    clearFocus();
                 }
                 return true;
             }
         });
-        pausedOnQueryListener = true;
-        query = "";
     }
 
+    public void openSearch() {
+        setVisibility(VISIBLE);
+        requestFocus();
+    }
+
+    public void closeSearch() {
+        clearFocus();
+        setVisibility(GONE);
+    }
+
+    private void showKeyboard() {
+        ((InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(getSearchView().findFocus(), InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /*
+    private void forceShowKeyboard(){
+        getSearchView().requestFocus();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+    */
+
+    @Nullable
     public String getQuery() {
         return this.query;
     }
 
-    public void setQuery(String newQuery) {
+    public void setQuery(@Nullable String newQuery) {
         this.query = newQuery;
     }
 
-    public void continueOnQueryListener() {
-        pausedOnQueryListener = false;
+    public void initSearch() {
+        openSearch();
+        setQuery("");
+        getSearchView().setQuery("", false);
+        showKeyboard();
     }
 
-    public void setOnBackButtonClickListener(OnBackButtonClickListener onBackButtonClickListener) {
+    public void setOnBackButtonClickListener(@Nullable OnBackButtonClickListener onBackButtonClickListener) {
         this.onBackButtonClickListener = onBackButtonClickListener;
     }
 
-    public void setOnQueryListener(OnQueryListener onQueryListener) {
+    public void setOnQueryListener(@Nullable OnQueryListener onQueryListener) {
         this.onQueryListener = onQueryListener;
     }
 
     public SearchView getSearchView() {
-        LinearLayout rootLinearLayout = (LinearLayout) getChildAt(0);
-        LinearLayout parentLinearLayout = (LinearLayout) rootLinearLayout.getChildAt(0);
-        return (SearchView) parentLinearLayout.getChildAt(1);
+        return (SearchView) findViewWithTag("searchView");
     }
 
     public ImageButton getBackButton() {
-        LinearLayout rootLinearLayout = (LinearLayout) getChildAt(0);
-        LinearLayout parentLinearLayout = (LinearLayout) rootLinearLayout.getChildAt(0);
-        return (ImageButton) parentLinearLayout.getChildAt(0);
+        return (ImageButton) findViewWithTag("searchBackButton");
     }
-
 
     public boolean restoreSearchIfNecessary() throws NullPointerException {
         if (onQueryListener == null || onBackButtonClickListener == null) {
             throw new NullPointerException("onQueryListener or onBackButtonClickListener is null");
         } else {
-            if (this.query.isEmpty()) {
+            if (this.query == null) {
                 return false;
             } else {
-                pausedOnQueryListener = false;
+                openSearch();
                 getSearchView().setQuery(getQuery(), false);
+                showKeyboard();
                 return true;
             }
         }
@@ -133,8 +150,8 @@ public class SearchLayout extends LinearLayout {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         this.query = ss.query;
-    }
 
+    }
 
     public interface OnBackButtonClickListener {
         void onBackButtonClick();
