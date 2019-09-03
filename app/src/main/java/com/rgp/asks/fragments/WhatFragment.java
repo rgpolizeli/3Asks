@@ -2,12 +2,14 @@ package com.rgp.asks.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
-import com.rgp.asks.adapters.ReactionRVAdapter;
+import com.rgp.asks.activities.MainActivity;
+import com.rgp.asks.adapters.ReactionRecyclerViewAdapter;
+import com.rgp.asks.auxiliaries.Searcher;
 import com.rgp.asks.dialogs.ReactionDialog;
 import com.rgp.asks.interfaces.ReactionDialogListener;
 import com.rgp.asks.persistence.entity.Reaction;
@@ -24,35 +28,53 @@ import com.rgp.asks.viewmodel.EpisodeViewModel;
 
 public class WhatFragment extends Fragment implements ReactionDialogListener {
 
-    private ReactionRVAdapter reactionsRecyclerViewAdapter;
+    private ReactionRecyclerViewAdapter reactionsRecyclerViewAdapter;
     private EpisodeViewModel model;
     private ReactionDialog reactionDialog;
+    private Searcher searcher;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_what_ask, container, false);
-        setupFAB(container);
-        setupRecyclerView(rootView);
+        return inflater.inflate(R.layout.fragment_search_recycler_view, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        setupFAB();
+        setupRecyclerView(fragmentView);
+        this.searcher = new Searcher(
+                ((MainActivity) requireActivity()).getSupportActionBar(),
+                requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
+                requireParentFragment().requireView().findViewById(R.id.tabs),
+                reactionsRecyclerViewAdapter,
+                fragmentView.findViewById(R.id.search)
+        );
         initDialogs();
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
-            this.model.getReactionsForEpisode().observe(this, reactions -> reactionsRecyclerViewAdapter.setReactions(reactions));
+            this.model.getReactionsForEpisode().observe(this, reactions -> {
+                reactionsRecyclerViewAdapter.setReactions(reactions);
+                searcher.restoreSearchIfNecessary();
+            });
         } else {
             //todo: err: episode not loaded
         }
-        return rootView;
     }
 
     /**
      * Handle click on addReactionButtonView and open ReactionDialog.
      *
-     * @param container is the viewgroup of this fragment.
      */
-    private void setupFAB(@NonNull ViewGroup container) {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
-        FloatingActionButton reactionFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.addReactionFab);
+    private void setupFAB() {
+        FloatingActionButton reactionFab = requireParentFragment().requireView().findViewById(R.id.addReactionFab);
         reactionFab.setOnClickListener(v -> showReactionDialogInCreateMode());
     }
 
@@ -66,10 +88,10 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
-        RecyclerView reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.reactionsRecyclerView);
+        RecyclerView reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.recyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         reactionsRecyclerView.setLayoutManager(reactionsRecyclerViewLayoutManager);
-        reactionsRecyclerViewAdapter = new ReactionRVAdapter(createOnItemRecyclerViewClickListener());
+        reactionsRecyclerViewAdapter = new ReactionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
         reactionsRecyclerView.setAdapter(reactionsRecyclerViewAdapter);
     }
 
@@ -77,7 +99,7 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
         return v -> {
             RecyclerView recyclerView = (RecyclerView) v.getParent();
             int position = recyclerView.getChildAdapterPosition(v);
-            Reaction reaction = ((ReactionRVAdapter) recyclerView.getAdapter()).getItem(position);
+            Reaction reaction = ((ReactionRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (reaction != null) {
                 this.showReactionDialogInEditMode(reaction.getId(), reaction.getReaction(), reaction.getReactionCategory());
@@ -114,5 +136,22 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
     public void onReactionDialogDeleteButtonClick(int reactionId) {
         Reaction reactionToDelete = new Reaction(reactionId, "", "", model.getEpisodeId());
         model.removeReactionForEpisode(reactionToDelete);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_search, menu);
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_search) {
+            searcher.openSearch();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

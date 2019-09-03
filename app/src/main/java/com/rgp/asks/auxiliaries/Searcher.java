@@ -1,27 +1,28 @@
 package com.rgp.asks.auxiliaries;
 
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 
+import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.interfaces.Filterable;
+import com.rgp.asks.views.DisableSwipeViewPager;
 import com.rgp.asks.views.SearchLayout;
 
 public class Searcher {
 
     private ActionBar actionBar;
-    private View recyclerView;
+    private DisableSwipeViewPager viewPager;
+    private TabLayout tabLayout;
     private Filterable filterableAdapter;
-    private int searchLayoutHeight;
     private SearchLayout searchLayout;
 
-    public Searcher(ActionBar actionBar, View recyclerView, Filterable filterableAdapter, int searchLayoutHeight, SearchLayout searchLayout) {
+    public Searcher(ActionBar actionBar, DisableSwipeViewPager viewPager, TabLayout tabLayout, Filterable filterableAdapter, SearchLayout searchLayout) {
         this.actionBar = actionBar;
-        this.recyclerView = recyclerView;
+        this.viewPager = viewPager;
+        this.tabLayout = tabLayout;
         this.filterableAdapter = filterableAdapter;
-        this.searchLayoutHeight = searchLayoutHeight;
         this.searchLayout = searchLayout;
         setupSearchLayoutListerners();
     }
@@ -44,20 +45,18 @@ public class Searcher {
 
     private void modifyLayoutBecauseClosedSearch() {
         removeAllAppliedFilter();
-        setMargins(recyclerView, 0, 0, 0, 0);
         actionBar.show();
+        if (this.tabLayout != null) {
+            this.viewPager.setSwipeEnabled(true);
+            this.tabLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void modifyLayoutBecauseOpenedSearch() {
         actionBar.hide();
-        setMargins(recyclerView, 0, searchLayoutHeight, 0, 0);
-    }
-
-    private void setMargins(@NonNull View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
+        if (this.tabLayout != null) {
+            this.viewPager.setSwipeEnabled(false);
+            this.tabLayout.setVisibility(View.GONE);
         }
     }
 

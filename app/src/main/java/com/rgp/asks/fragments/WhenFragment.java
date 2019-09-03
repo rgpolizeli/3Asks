@@ -2,15 +2,18 @@ package com.rgp.asks.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.rgp.asks.R;
 import com.rgp.asks.listeners.EpisodeDateTextWatcher;
 import com.rgp.asks.listeners.EpisodeDescriptionTextWatcher;
 import com.rgp.asks.listeners.EpisodeNameTextWatcher;
@@ -33,18 +36,25 @@ public class WhenFragment extends Fragment {
     private EpisodeViewModel model;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(com.rgp.asks.R.layout.fragment_when_ask, container, false);
+        return inflater.inflate(R.layout.fragment_when_ask, container, false);
+    }
 
-        setupFAB(container);
-
+    @Override
+    public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        setupFAB();
         initViewModel();
-
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
             this.model.getEpisodeById().observe(this, episode -> {
-                initViews(rootView);
+                initViews(fragmentView);
                 if (model.isEpisodeInFirstLoad()) {
                     loadFragmentFromViewModel(episode);
                     model.initModifiableEpisodeCopy(episode);
@@ -55,18 +65,14 @@ public class WhenFragment extends Fragment {
         } else {
             //todo: err
         }
-
-        return rootView;
     }
 
     /**
      * Handle click on saveEpisodeFloatingActionButton and call saveEpisode.
      *
-     * @param container is the viewgroup of this fragment.
      */
-    private void setupFAB(@NonNull ViewGroup container) {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
-        FloatingActionButton saveEpisodeFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
+    private void setupFAB() {
+        FloatingActionButton saveEpisodeFab = requireParentFragment().requireView().findViewById(R.id.saveEpisodeFab);
         saveEpisodeFab.setOnClickListener(v -> {
             ((AsksFragment) requireParentFragment()).hideKeyboard();
             saveEpisode();
@@ -100,5 +106,22 @@ public class WhenFragment extends Fragment {
         episodeDescriptionTextInputLayout.addTextChangedListener(new EpisodeDescriptionTextWatcher(model));
         episodeDateInputLayout.addTextChangedListener(new EpisodeDateTextWatcher(model));
         episodePeriodSpinnerInputLayout.setOnItemSelectedListener(new OnItemSelectedListenerEpisodePeriod(model));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_delete, menu);
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_delete_episode) {
+            this.model.removeEpisode();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

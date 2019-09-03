@@ -13,7 +13,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.rgp.asks.R;
-import com.rgp.asks.adapters.ReactionRVAdapter;
+import com.rgp.asks.adapters.ReactionRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.fragments.AsksFragment;
 import com.rgp.asks.fragments.WhatFragment;
@@ -548,7 +548,7 @@ public class ReactionDialogTests {
     private Reaction getReactionAtPositionOnRecyclerView(int position) {
         WhatFragment whatFragment = getWhatFragmentFromAsksActivity();
         RecyclerView reactionsRecyclerView = getReactionsRecyclerViewFromWhatFragment(whatFragment);
-        ReactionRVAdapter reactionRVAdapter = getReactionRVAdapterFromReactionsRecyclerView(reactionsRecyclerView);
+        ReactionRecyclerViewAdapter reactionRVAdapter = getReactionRVAdapterFromReactionsRecyclerView(reactionsRecyclerView);
         return reactionRVAdapter.getItem(position);
     }
 
@@ -556,8 +556,8 @@ public class ReactionDialogTests {
         return whatFragment.getView().findViewById(R.id.reactionsRecyclerView);
     }
 
-    private ReactionRVAdapter getReactionRVAdapterFromReactionsRecyclerView(RecyclerView reactionsRecyclerView) {
-        return (ReactionRVAdapter) reactionsRecyclerView.getAdapter();
+    private ReactionRecyclerViewAdapter getReactionRVAdapterFromReactionsRecyclerView(RecyclerView reactionsRecyclerView) {
+        return (ReactionRecyclerViewAdapter) reactionsRecyclerView.getAdapter();
     }
 
     private void testEmptyStateOfReactionDialogInCreateMode() {

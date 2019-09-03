@@ -46,7 +46,7 @@ public class DateInputLayout extends LinearLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.date_input_layout, this, true);
+        inflater.inflate(R.layout.view_date_input_layout, this, true);
 
         this.labelTextView = getLabelTextView();
         this.labelTextView.setText(label);

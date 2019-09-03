@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -11,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -35,18 +37,25 @@ public class BeliefDetailsFragment extends Fragment {
     private Map<String, CheckBox> thinkingStylesCheckBoxes;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_belief_details, container, false);
+        return inflater.inflate(R.layout.fragment_belief_details, container, false);
+    }
 
-        setupFAB(container);
-
+    @Override
+    public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        setupFAB();
         initViewModel();
-
         int beliefId = this.model.getBeliefId();
         if (beliefId != -1) {
             model.getThinkingStylesLiveData().observe(this, thinkingStyles -> {
-                initThinkingStylesViews(rootView);
+                initThinkingStylesViews(fragmentView);
                 if (this.model.isThinkingStylesFirstLoad()) {
                     loadFragmentThinkingStylesViewsFromViewModel(thinkingStyles);
                     this.model.initModifiableSelectedThinkingStylesCopy(thinkingStyles);
@@ -55,7 +64,7 @@ public class BeliefDetailsFragment extends Fragment {
                 setupThinkingStylesViewsListeners();
             });
             model.getBeliefLiveData().observe(this, belief -> {
-                initBeliefViews(rootView);
+                initBeliefViews(fragmentView);
                 if (this.model.isBeliefFirstLoad()) {
                     loadFragmentBeliefViewsFromViewModel(belief);
                     this.model.initModifiableBeliefCopy(belief);
@@ -66,8 +75,6 @@ public class BeliefDetailsFragment extends Fragment {
         } else {
             //todo: err
         }
-
-        return rootView;
     }
 
     private void initBeliefViews(@NonNull View rootView) {
@@ -145,9 +152,8 @@ public class BeliefDetailsFragment extends Fragment {
         imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    private void setupFAB(ViewGroup container) {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) container.getParent();
-        FloatingActionButton saveBeliefFab = coordinatorLayout.findViewById(com.rgp.asks.R.id.saveBeliefFab);
+    private void setupFAB() {
+        FloatingActionButton saveBeliefFab = requireParentFragment().requireView().findViewById(com.rgp.asks.R.id.saveBeliefFab);
         saveBeliefFab.setOnClickListener(v -> {
             hideKeyboard(v);
             saveBelief();
@@ -156,5 +162,22 @@ public class BeliefDetailsFragment extends Fragment {
 
     private void saveBelief() {
         model.uncheckedSaveBelief();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_belief, menu);
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_delete_belief) {
+            model.removeBelief();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

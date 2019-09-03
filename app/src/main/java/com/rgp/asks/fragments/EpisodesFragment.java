@@ -57,9 +57,9 @@ public class EpisodesFragment extends Fragment {
         setupRecyclerView(fragmentView);
         this.searcher = new Searcher(
                 ((MainActivity) requireActivity()).getSupportActionBar(),
-                fragmentView.findViewById(R.id.episodesRecyclerView),
+                null,
+                null,
                 episodesRecyclerViewAdapter,
-                (int) fragmentView.getResources().getDimension(R.dimen.searchLayoutHeight),
                 fragmentView.findViewById(R.id.search)
         );
         initViewModel();
@@ -121,12 +121,12 @@ public class EpisodesFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_search:
-                searcher.openSearch();
-                break;
+        if (id == R.id.action_search) {
+            searcher.openSearch();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     private void createNewEpisode() {
@@ -138,7 +138,7 @@ public class EpisodesFragment extends Fragment {
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
-        RecyclerView episodesRecyclerView = rootView.findViewById(R.id.episodesRecyclerView);
+        RecyclerView episodesRecyclerView = rootView.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
         this.episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_episode), createOnItemRecyclerViewClickListener());

@@ -2,9 +2,6 @@ package com.rgp.asks.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -19,7 +16,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -28,6 +24,7 @@ import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.messages.DeletedBeliefEvent;
 import com.rgp.asks.messages.SavedEditedBeliefEvent;
 import com.rgp.asks.viewmodel.BeliefViewModel;
+import com.rgp.asks.views.DisableSwipeViewPager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,26 +50,21 @@ public class AddNewBeliefFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-
-        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_add_belief, container, false);
+        return inflater.inflate(R.layout.fragment_add_belief, container, false);
+    }
 
-        loadFABs(rootView);
-
+    @Override
+    public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        loadFABs(fragmentView);
         initViewModel();
-
         this.model.setBeliefId(getArguments().getInt(Constants.ARG_BELIEF_ID));
-
         initToolbarTitle();
-
-        initTabs(rootView);
-
-        return rootView;
+        initTabs(fragmentView);
     }
 
     private void initViewModel() {
@@ -114,13 +106,13 @@ public class AddNewBeliefFragment extends Fragment {
 
     private void initTabs(View fragmentView) {
         fragmentView.findViewById(com.rgp.asks.R.id.indeterminateBar2).setVisibility(View.GONE);
-        fragmentView.findViewById(com.rgp.asks.R.id.beliefTabs).setVisibility(View.VISIBLE);
+        fragmentView.findViewById(com.rgp.asks.R.id.tabs).setVisibility(View.VISIBLE);
 
         BeliefPagerAdapter mBeliefPagerAdapter = new BeliefPagerAdapter(getChildFragmentManager());
-        ViewPager mViewPager = fragmentView.findViewById(com.rgp.asks.R.id.asksViewPager);
+        DisableSwipeViewPager mViewPager = fragmentView.findViewById(com.rgp.asks.R.id.disableSwipeViewPager);
         mViewPager.setAdapter(mBeliefPagerAdapter);
 
-        TabLayout tabLayout = fragmentView.findViewById(com.rgp.asks.R.id.beliefTabs);
+        TabLayout tabLayout = fragmentView.findViewById(com.rgp.asks.R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -162,24 +154,6 @@ public class AddNewBeliefFragment extends Fragment {
                 saveBeliefFab.show();
                 break;
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_belief, menu);
-        super.onCreateOptionsMenu(menu, menuInflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        hideKeyboard();
-        switch (id) {
-            case R.id.action_delete_belief:
-                model.removeBelief();
-                break;
-        }
-        return true;
     }
 
     @Override
