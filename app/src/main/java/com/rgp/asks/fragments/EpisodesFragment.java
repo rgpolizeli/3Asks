@@ -98,6 +98,13 @@ public class EpisodesFragment extends Fragment {
         navigateDown(R.id.nav_host_fragment, R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
     }
 
+    /**
+     * Navigate to a child in NavGraph, applying the necessary layout modifications.
+     *
+     * @param navHostId   the navigation host's id.
+     * @param navActionId the navigation action's id.
+     * @param arguments   the arguments to the new destination.
+     */
     private void navigateDown(int navHostId, int navActionId, Bundle arguments) {
         searcher.closeSearch();
         Navigation.findNavController(requireActivity(), navHostId).navigate(navActionId, arguments);

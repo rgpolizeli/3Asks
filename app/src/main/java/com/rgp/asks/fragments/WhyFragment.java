@@ -130,7 +130,19 @@ public class WhyFragment extends Fragment {
         Bundle argumentsBundle = new Bundle();
         argumentsBundle.putInt(Constants.ARG_BELIEF_ID, beliefId);
         argumentsBundle.putString(Constants.ARG_BELIEF_TITLE, thought);
-        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_asksActivity_to_addNewBeliefFragment, argumentsBundle);
+        navigateDown(R.id.nav_host_fragment, R.id.action_asksActivity_to_addNewBeliefFragment, argumentsBundle);
+    }
+
+    /**
+     * Navigate to a child in NavGraph, applying the necessary layout modifications.
+     *
+     * @param navHostId   the navigation host's id.
+     * @param navActionId the navigation action's id.
+     * @param arguments   the arguments to the new destination.
+     */
+    private void navigateDown(int navHostId, int navActionId, Bundle arguments) {
+        searcher.closeSearch();
+        Navigation.findNavController(requireActivity(), navHostId).navigate(navActionId, arguments);
     }
 
     @Override
