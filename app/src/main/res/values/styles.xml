@@ -1,23 +1,21 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent3</item>
-        <item name="android:colorBackground">?attr/colorBackgroundFloating</item>
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="tabStyle">@style/MyTabLayout</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="AppTheme">
-        <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="MyTabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/primaryColor</item>
+        <item name="tabTextColor">@color/primaryLightColor</item>
+        <item name="tabSelectedTextColor">@color/actionBarTitleColor</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Chip">
         <item name="android:paddingTop">2dp</item>
@@ -34,7 +32,7 @@
 
     <!--Floating label text style-->
     <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColorHint">@color/indigo</item>
+        <item name="android:textColorHint">@color/primaryColor</item>
         <item name="android:textColor">@color/pink</item>
     </style>
 
@@ -45,7 +43,7 @@
     <style name="CustomDialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">false</item>
         <item name="colorControlNormal">@android:color/black</item>
-        <item name="colorControlActivated">@color/colorAccent3</item>
+        <item name="colorControlActivated">@color/secondaryColor</item>
         <item name="colorControlHighlight">@color/gray</item>
     </style>
 

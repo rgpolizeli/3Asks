@@ -113,6 +113,7 @@ public class AddNewBeliefFragment extends Fragment {
         mViewPager.setAdapter(mBeliefPagerAdapter);
 
         TabLayout tabLayout = fragmentView.findViewById(com.rgp.asks.R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -218,6 +219,13 @@ public class AddNewBeliefFragment extends Fragment {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
+        // tab titles
+        private String[] tabTitles = new String[]{
+                getResources().getString(R.string.tab_belief_details),
+                getResources().getString(R.string.tab_arguments),
+                getResources().getString(R.string.tab_objections)
+        };
+
         @NonNull
         @Override
         public Fragment getItem(int position) {
@@ -238,6 +246,11 @@ public class AddNewBeliefFragment extends Fragment {
         @Override
         public int getCount() {
             return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
         }
     }
 }

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -66,6 +67,9 @@ public class SearchLayout extends LinearLayout {
                 return true;
             }
         });
+
+        EditText searchEditText = searchView.findViewById(R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.black));
     }
 
     public void openSearch() {

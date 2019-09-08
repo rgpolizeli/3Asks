@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="colorBackground">#fafafa</color>
+    <color name="primaryColor">#3F51B5</color>
+    <color name="primaryLightColor">#C5CAE9</color>
+    <color name="primaryDarkColor">#303F9F</color>
+    <color name="secondaryColor">#FF4081</color>
+    <color name="secondaryLightColor">#ff79b0</color>
+    <color name="secondaryDarkColor">#c60055</color>
+    <color name="primaryTextColor">#212121</color>
+    <color name="secondaryTextColor">#757575</color>
+    <color name="divisorColor">#BDBDBD</color>
+
+    <color name="actionBarTitleColor">#ffffff</color>
+    <color name="actionBarSubTitleColor">#C5CAE9</color>
+    <color name="actionBarNavUpColor">#ffffff</color>
+
+    <!--
+    <color name="colorBackground">#fafafa</color>
+    <color name="primaryColor">#3f51b5</color>
+    <color name="primaryLightColor">#C5CAE9</color>
+    <color name="primaryDarkColor">#002984</color>
+    <color name="secondaryColor">#ff4081</color>
+    <color name="secondaryLightColor">#ff79b0</color>
+    <color name="secondaryDarkColor">#c60055</color>
+    <color name="primaryTextColor">#ffffff</color> --> <!-- actionbar title-->
+    <!--
+    <color name="secondaryTextColor">#C5CAE9</color> --> <!-- for menu icons and nav up -->
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent1">#009688</color>

@@ -160,7 +160,7 @@ public class TextInputLayout extends LinearLayout {
 
     private void drawStateFocused() {
         this.requestFocus();
-        this.labelTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent3));
+        this.labelTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.secondaryColor));
         this.editText.setBackgroundResource(R.drawable.edit_text_dialog_multiline_focused);
         this.errorMessageTextView.setVisibility(GONE);
     }

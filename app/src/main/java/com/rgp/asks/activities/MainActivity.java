@@ -15,7 +15,6 @@ import com.rgp.asks.R;
 import com.rgp.asks.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        this.toolbar = findViewById(R.id.mainToolbar);
-        setSupportActionBar(this.toolbar);
+        Toolbar toolbar = findViewById(R.id.mainToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.destination_episodes);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -36,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
             switch (destination.getId()) {
                 default:
                     getSupportActionBar().show();
-                    this.toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    this.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-                    //this.toolbar.setContentInsetStartWithNavigation(16);
+                    //this.toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    //this.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
                     break;
             }
         });

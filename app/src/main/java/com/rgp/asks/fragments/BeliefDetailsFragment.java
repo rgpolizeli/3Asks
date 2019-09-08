@@ -48,6 +48,18 @@ public class BeliefDetailsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_belief_details, container, false);
     }
 
+    /*
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        AppBarLayout appBarLayout = ((MainActivity)requireActivity()).findViewById(R.id.appbar);
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)appBarLayout.getLayoutParams();
+        params.setScrollFlags(SCROLL_FLAG_SCROLL);
+        params.setScrollFlags(SCROLL_FLAG_ENTER_ALWAYS);
+    }
+
+     */
+
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
         setupFAB();
