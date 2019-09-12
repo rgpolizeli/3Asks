@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
 import com.rgp.asks.listeners.EpisodeDateTextWatcher;
 import com.rgp.asks.listeners.EpisodeDescriptionTextWatcher;
 import com.rgp.asks.listeners.EpisodeNameTextWatcher;
@@ -26,13 +26,12 @@ import com.rgp.asks.views.TextInputLayout;
 
 import java.text.DateFormat;
 
-public class WhenFragment extends Fragment {
+public class WhenFragment extends Fragment implements OnFloatingActionButtonClickListener {
 
     private TextInputLayout episodeNameTextInputLayout;
     private TextInputLayout episodeDescriptionTextInputLayout;
     private DateInputLayout episodeDateInputLayout;
     private SpinnerInputLayout episodePeriodSpinnerInputLayout;
-
     private EpisodeViewModel model;
 
     @Override
@@ -49,7 +48,6 @@ public class WhenFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        setupFAB();
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
@@ -67,16 +65,12 @@ public class WhenFragment extends Fragment {
         }
     }
 
-    /**
-     * Handle click on saveEpisodeFloatingActionButton and call saveEpisode.
-     *
-     */
-    private void setupFAB() {
-        FloatingActionButton saveEpisodeFab = requireParentFragment().requireView().findViewById(R.id.saveEpisodeFab);
-        saveEpisodeFab.setOnClickListener(v -> {
+    @Override
+    public void onFloatingActionButtonClick() {
+        if (this.model != null) {
             ((AsksFragment) requireParentFragment()).hideKeyboard();
             saveEpisode();
-        });
+        }
     }
 
     private void initViewModel() {
@@ -117,7 +111,7 @@ public class WhenFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_delete_episode) {
+        if (id == R.id.action_delete) {
             this.model.removeEpisode();
             return true;
         } else {

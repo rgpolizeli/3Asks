@@ -22,19 +22,17 @@ import com.rgp.asks.activities.MainActivity;
 import com.rgp.asks.adapters.BeliefRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.auxiliaries.Searcher;
-import com.rgp.asks.messages.CreatedBeliefEvent;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-public class WhyFragment extends Fragment {
+public class WhyFragment extends Fragment implements OnFloatingActionButtonClickListener, OnInsertedEntityListener {
 
     private BeliefRecyclerViewAdapter beliefsRecyclerViewAdapter;
     private EpisodeViewModel model;
     private Searcher searcher;
+    private OnInsertedEntityListener onInsertedEntityListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,12 +48,12 @@ public class WhyFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        setupFAB();
         setupRecyclerView(fragmentView);
         this.searcher = new Searcher(
                 ((MainActivity) requireActivity()).getSupportActionBar(),
                 requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
                 requireParentFragment().requireView().findViewById(R.id.tabs),
+                getFloatingActionButton(),
                 beliefsRecyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
@@ -71,25 +69,27 @@ public class WhyFragment extends Fragment {
         }
     }
 
-    /**
-     * Handle click on addBeliefButtonView and create a new empty Belief.
-     *
-     */
-    private void setupFAB() {
-        FloatingActionButton beliefsFab = requireParentFragment().requireView().findViewById(R.id.addBeliefFab);
-        beliefsFab.setOnClickListener(v -> createNewBelief());
+    @NonNull
+    private FloatingActionButton getFloatingActionButton() {
+        return requireActivity().findViewById(R.id.floatingActionButton);
+    }
+
+    public void onFloatingActionButtonClick() {
+        if (this.model != null) {
+            createNewBelief();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        this.onInsertedEntityListener = this;
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        this.onInsertedEntityListener = null;
     }
 
     private void initViewModel() {
@@ -110,7 +110,7 @@ public class WhyFragment extends Fragment {
             Belief belief = ((BeliefRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (belief != null) {
-                this.startEditBeliefActivity(belief.getId(), belief.getBelief());
+                this.startEditBeliefActivity(belief.getId());
             } else {
                 Toast.makeText(requireContext(), "This belief don't exist!", Toast.LENGTH_SHORT).show();
             }
@@ -118,18 +118,12 @@ public class WhyFragment extends Fragment {
     }
 
     private void createNewBelief() {
-        model.createBeliefForEpisode("");
+        model.createBelief("", this.onInsertedEntityListener);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCreatedBeliefEvent(CreatedBeliefEvent event) {
-        this.startEditBeliefActivity(event.beliefId, event.thought);
-    }
-
-    private void startEditBeliefActivity(int beliefId, @NonNull String thought) {
+    private void startEditBeliefActivity(int beliefId) {
         Bundle argumentsBundle = new Bundle();
-        argumentsBundle.putInt(Constants.ARG_BELIEF_ID, beliefId);
-        argumentsBundle.putString(Constants.ARG_BELIEF_TITLE, thought);
+        argumentsBundle.putInt(Constants.ARG_ID, beliefId);
         navigateDown(R.id.nav_host_fragment, R.id.action_asksActivity_to_addNewBeliefFragment, argumentsBundle);
     }
 
@@ -161,4 +155,10 @@ public class WhyFragment extends Fragment {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onInsertedEntity(int id) {
+        startEditBeliefActivity(id);
+    }
+
 }

@@ -53,7 +53,7 @@ public class ReactionDialogTests {
             new IntentsTestRule<>(AsksFragment.class, false, false);
     //need a valid episode id to load.
     // and this episode must has reactions to test reaction dialog in edit mode.
-    int episodeId = 5;
+    int reactionId = 5;
     //the episode id must have reactions and the viewholder in this position in RecyclerView will be clicked.
     int positionOfReactionInRecyclerView = 0;
 
@@ -324,7 +324,7 @@ public class ReactionDialogTests {
         String reactionClass = selectReactionClassInSpinner(1);
 
         ReactionDialogListener listener = mock(ReactionDialogListener.class);
-        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        ReactionFragment reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
         reactionDialog.setReactionDialogListener(listener);
 
         //when: user clicks on createButton.
@@ -346,7 +346,7 @@ public class ReactionDialogTests {
         String newReactionClass = selectReactionClassInSpinner(1);
 
         ReactionDialogListener listener = mock(ReactionDialogListener.class);
-        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        ReactionFragment reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
         reactionDialog.setReactionDialogListener(listener);
 
         //when: user clicks on saveButton.
@@ -363,14 +363,14 @@ public class ReactionDialogTests {
         openReactionDialogInEditMode();
 
         ReactionDialogListener listener = mock(ReactionDialogListener.class);
-        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        ReactionFragment reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
         reactionDialog.setReactionDialogListener(listener);
 
         //when: user clicks on saveButton.
         clickOnButtonOfDialogWithText(R.string.reaction_dialog_save_button);
 
         //then: the listener is called with correct parameters.
-        verify(listener, times(0)).onReactionDialogSaveButtonClick(reactionToEdit.getId(), reactionToEdit.getReaction(), reactionToEdit.getReactionCategory());
+        verify(listener, times(0)).onReactionDialogSaveButtonClick(reactionToEdit.getId(), reactionToEdit.getReaction(), reactionToEdit.getCategory());
     }
 
     @Test
@@ -380,7 +380,7 @@ public class ReactionDialogTests {
         openReactionDialogInEditMode();
 
         ReactionDialogListener listener = mock(ReactionDialogListener.class);
-        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
+        ReactionFragment reactionDialog = getReactionDialogFragmentFromWhatFragment(getWhatFragmentFromAsksActivity());
         reactionDialog.setReactionDialogListener(listener);
 
         //when: user clicks on deleteButton.
@@ -427,7 +427,7 @@ public class ReactionDialogTests {
 
     private void openAsksActivityWithIntent() {
         Intent intent = new Intent();
-        intent.putExtra(Constants.ARG_EPISODE_ID, this.episodeId);
+        intent.putExtra(Constants.ARG_EPISODE_ID, this.reactionId);
         asksActivityActivityTestRule.launchActivity(intent);
     }
 
@@ -464,14 +464,14 @@ public class ReactionDialogTests {
 
     private String getValueOfReactionClassSpinner() {
         WhatFragment whatFragment = getWhatFragmentFromAsksActivity();
-        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(whatFragment);
+        ReactionFragment reactionDialog = getReactionDialogFragmentFromWhatFragment(whatFragment);
         Spinner reactionClassSpinner = reactionDialog.getView().findViewById(R.id.reactionClassSpinner);
         return reactionClassSpinner.getSelectedItem().toString();
     }
 
     private String getValueOfReactionEditText() {
         WhatFragment whatFragment = getWhatFragmentFromAsksActivity();
-        ReactionDialog reactionDialog = getReactionDialogFragmentFromWhatFragment(whatFragment);
+        ReactionFragment reactionDialog = getReactionDialogFragmentFromWhatFragment(whatFragment);
         //EditText reactionEditText = reactionDialog.getView().findViewById(R.id.reactionEditText);
         //return reactionEditText.getText().toString();
         return "";
@@ -486,8 +486,8 @@ public class ReactionDialogTests {
         return null;
     }
 
-    private ReactionDialog getReactionDialogFragmentFromWhatFragment(WhatFragment whatFragment) {
-        return (ReactionDialog) whatFragment.getChildFragmentManager().findFragmentByTag(ReactionDialog.FRAGMENT_TAG_REACTION_DIALOG);
+    private ReactionFragment getReactionDialogFragmentFromWhatFragment(WhatFragment whatFragment) {
+        return (ReactionFragment) whatFragment.getChildFragmentManager().findFragmentByTag(ReactionFragment.FRAGMENT_TAG_REACTION_DIALOG);
     }
 
     private void testTitleOfDialog(int titleStringId) {
@@ -581,7 +581,7 @@ public class ReactionDialogTests {
         testTextOfButtonOfDialog(R.id.negativeReactionButton, R.string.reaction_dialog_cancel_button);
         Reaction reactionToEdit = getReactionAtPositionOnRecyclerView(this.positionOfReactionInRecyclerView);
         testValueOfReactionEditText(reactionToEdit.getReaction());
-        testValueOfReactionClassSpinner(reactionToEdit.getReactionCategory());
+        testValueOfReactionClassSpinner(reactionToEdit.getCategory());
         testInvalidTypedReactionMessageIsNotDisplayedOnReactionDialog();
     }
 

@@ -24,4 +24,7 @@ public interface ObjectionDao {
 
     @Query("SELECT * FROM Objection WHERE Objection.beliefId=:beliefId ORDER BY id DESC")
     LiveData<List<Objection>> getObjectionsForBelief(final int beliefId);
+
+    @Query("SELECT * FROM Objection WHERE Objection.id=:objectionId")
+    LiveData<Objection> getObjectionById(int objectionId);
 }

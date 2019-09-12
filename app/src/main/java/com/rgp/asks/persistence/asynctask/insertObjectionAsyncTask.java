@@ -2,14 +2,17 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.dao.ObjectionDao;
 import com.rgp.asks.persistence.entity.Objection;
 
 public class insertObjectionAsyncTask extends AsyncTask<Objection, Void, Long> {
-    private ObjectionDao mAsyncTaskDao;
+    private ObjectionDao dao;
+    private OnInsertedEntityListener onInsertedEntityListener;
 
-    public insertObjectionAsyncTask(ObjectionDao dao) {
-        mAsyncTaskDao = dao;
+    public insertObjectionAsyncTask(ObjectionDao dao, OnInsertedEntityListener onInsertedEntityListener) {
+        this.dao = dao;
+        this.onInsertedEntityListener = onInsertedEntityListener;
     }
 
     @Override
@@ -19,12 +22,14 @@ public class insertObjectionAsyncTask extends AsyncTask<Objection, Void, Long> {
 
     @Override
     protected Long doInBackground(final Objection... params) {
-        long id = mAsyncTaskDao.insert(params[0]);
-        return id;
+        return dao.insert(params[0]);
     }
 
     @Override
-    protected void onPostExecute(Long objectionId) {
-        super.onPostExecute(objectionId);
+    protected void onPostExecute(Long id) {
+        super.onPostExecute(id);
+        if (this.onInsertedEntityListener != null) {
+            this.onInsertedEntityListener.onInsertedEntity(id.intValue());
+        }
     }
 }

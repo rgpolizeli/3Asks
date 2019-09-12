@@ -24,4 +24,7 @@ public interface ArgumentDao {
 
     @Query("SELECT * FROM Argument WHERE Argument.beliefId=:beliefId ORDER BY id DESC")
     LiveData<List<Argument>> getArgumentsForBelief(final int beliefId);
+
+    @Query("SELECT * FROM Argument WHERE Argument.id=:argumentId")
+    LiveData<Argument> getArgumentById(int argumentId);
 }

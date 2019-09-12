@@ -31,6 +31,7 @@
     <string name="episode_dialog_title">Create an episode</string>
     <string name="episode_dialog_error_empty_episode_name">Episode name is required!</string>
     <string name="episode_save_dialog_title">Save changes in the details of the episode?</string>
+    <string name="save_dialog_title">Save changes?</string>
     <string name="episode_save_dialog_save_button">Yes</string>
     <string name="episode_save_dialog_discard_button">No</string>
     <string name="belief_save_dialog_title">Save changes in the details of the belief?</string>
@@ -110,7 +111,7 @@
     <string name="help_info_dialog_email_label">3asksapp@gmail.com</string>
 
     <!-- menus' titles-->
-    <string name="menu_delete_episode">Delete episode</string>
+    <string name="menu_delete">Delete</string>
     <string name="menu_delete_belief">Delete belief</string>
     <string name="menu_help_and_info">Help and Info</string>
 
@@ -119,6 +120,10 @@
     <string name="destination_help_info">Help and Info</string>
     <string name="destination_search">Search</string>
     <string name="destination_asks_unnamed_episode">Unnamed Episode</string>
+    <string name="destination_asks_unnamed_reaction">Unnamed Reaction</string>
     <string name="destination_asks_unnamed_belief">Unnamed Belief</string>
-
+    <string name="destination_edit_belief_fragment">Edit belief</string>
+    <string name="destination_edit_reaction_fragment">Edit reaction</string>
+    <string name="destination_edit_argument_fragment">Edit argument</string>
+    <string name="destination_edit_objection_fragment">Edit objection</string>
 </resources>

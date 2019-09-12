@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.persistence.Repository;
 import com.rgp.asks.persistence.entity.Argument;
 import com.rgp.asks.persistence.entity.Belief;
@@ -17,7 +20,6 @@ import java.util.List;
 
 public class BeliefViewModel extends AndroidViewModel {
     private int beliefId;
-    private String beliefNameForToolbarTitle;
     private LiveData<Belief> beliefLiveData;
     private boolean isBeliefFirstLoad;
     private Belief modifiableBeliefCopy;
@@ -33,14 +35,6 @@ public class BeliefViewModel extends AndroidViewModel {
         this.repository = new Repository(application);
         this.isBeliefFirstLoad = true;
         this.isThinkingStylesFirstLoad = true;
-    }
-
-    public String getBeliefNameForToolbarTitle() {
-        return this.beliefNameForToolbarTitle;
-    }
-
-    public void setBeliefNameForToolbarTitle(@NonNull String beliefNameForToolbarTitle) {
-        this.beliefNameForToolbarTitle = beliefNameForToolbarTitle;
     }
 
     public boolean isBeliefFirstLoad() {
@@ -136,62 +130,26 @@ public class BeliefViewModel extends AndroidViewModel {
         this.getModifiableThinkingStylesCopy().remove(unhelpfulThinkingStyle);
     }
 
-    public void createArgument(@NonNull final String newArgument) {
+    public void createArgument(@NonNull final String newArgument, OnInsertedEntityListener onInsertedEntityListener) {
         Belief b = beliefLiveData.getValue();
         if (b != null) {
-            this.repository.createArgumentForBelief(b.getId(), newArgument);
+            this.repository.createArgument(b.getId(), newArgument, onInsertedEntityListener);
         }
     }
 
-    public void editArgument(@NonNull final Argument argument) {
-        Belief b = this.beliefLiveData.getValue();
-        if (b != null && b.getId() == argument.getBeliefId()) {
-            this.repository.editArgumentForBelief(argument);
-        } else {
-            //err
-        }
-    }
-
-    public void removeArgument(@NonNull final Argument argument) {
-        Belief b = this.beliefLiveData.getValue();
-        if (b != null && b.getId() == argument.getBeliefId()) {
-            this.repository.deleteArgumentForBelief(argument);
-        } else {
-            //err
-        }
-    }
-
-    public void createObjection(@NonNull final String newObjection) {
+    public void createObjection(@NonNull final String newObjection, OnInsertedEntityListener onInsertedEntityListener) {
         Belief b = beliefLiveData.getValue();
         if (b != null) {
-            this.repository.createObjectionForBelief(b.getId(), newObjection);
+            this.repository.createObjection(b.getId(), newObjection, onInsertedEntityListener);
         }
     }
 
-    public void editObjection(@NonNull final Objection objection) {
-        Belief b = this.beliefLiveData.getValue();
-        if (b != null && b.getId() == objection.getBeliefId()) {
-            this.repository.editObjectionForBelief(objection);
-        } else {
-            //err
-        }
-    }
-
-    public void removeObjection(@NonNull final Objection objection) {
-        Belief b = this.beliefLiveData.getValue();
-        if (b != null && b.getId() == objection.getBeliefId()) {
-            this.repository.deleteObjectionForBelief(objection);
-        } else {
-            //err
-        }
-    }
-
-    private void saveBelief() {
+    private void saveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
         Belief b = this.beliefLiveData.getValue();
         if (b != null && this.modifiableBeliefCopy.getId() == b.getId()) {
             List<ThinkingStyle> toDelete = this.getToDeleteThinkingStyles();
             List<ThinkingStyle> toInsert = this.getToInsertThinkingStyles();
-            this.repository.saveBelief(this.modifiableBeliefCopy, toDelete, toInsert);
+            this.repository.saveBelief(this.modifiableBeliefCopy, toDelete, toInsert, onUpdatedEntityListener);
         }
     }
 
@@ -223,10 +181,10 @@ public class BeliefViewModel extends AndroidViewModel {
         return toInsert;
     }
 
-    public void removeBelief() {
+    public void removeBelief(OnDeletedEntityListener onDeletedEntityListener) {
         Belief b = this.getBeliefLiveData().getValue();
         if (b != null) {
-            this.repository.deleteBelief(b);
+            this.repository.deleteBelief(b, onDeletedEntityListener);
         } else {
             //err
         }
@@ -250,16 +208,16 @@ public class BeliefViewModel extends AndroidViewModel {
         }
     }
 
-    public void uncheckedSaveBelief() {
+    public void uncheckedSaveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
         if (beliefWasChanged()) {
-            saveBelief();
+            saveBelief(onUpdatedEntityListener);
         } else {
             //err
         }
     }
 
-    public void checkedSaveBelief() {
-        saveBelief();
+    public void checkedSaveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
+        saveBelief(onUpdatedEntityListener);
     }
 
     private boolean isListsEquals(List<?> A, List<?> B) {

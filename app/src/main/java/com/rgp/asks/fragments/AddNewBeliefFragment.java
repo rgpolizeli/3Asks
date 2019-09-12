@@ -1,11 +1,11 @@
 package com.rgp.asks.fragments;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -21,23 +21,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
-import com.rgp.asks.messages.DeletedBeliefEvent;
-import com.rgp.asks.messages.SavedEditedBeliefEvent;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
 import com.rgp.asks.viewmodel.BeliefViewModel;
 import com.rgp.asks.views.DisableSwipeViewPager;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class AddNewBeliefFragment extends Fragment {
 
     private BeliefViewModel model;
-    private FloatingActionButton saveBeliefFab;
-    private FloatingActionButton argumentsFab;
-    private FloatingActionButton objectionsFab;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,10 +53,9 @@ public class AddNewBeliefFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        loadFABs(fragmentView);
+        this.floatingActionButton = getFloatingActionButton();
         initViewModel();
-        this.model.setBeliefId(getArguments().getInt(Constants.ARG_BELIEF_ID));
-        initToolbarTitle();
+        this.model.setBeliefId(getArguments().getInt(Constants.ARG_ID));
         initTabs(fragmentView);
     }
 
@@ -75,26 +67,12 @@ public class AddNewBeliefFragment extends Fragment {
         Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigateUp();
     }
 
-    private void initToolbarTitle() {
-        String toolbarTitle = this.model.getBeliefNameForToolbarTitle();
-        if (toolbarTitle == null) {
-            toolbarTitle = getArguments().getString(Constants.ARG_BELIEF_TITLE);
-        }
-        setBeliefNameInToolbar(toolbarTitle);
-    }
-
     public void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager) requireActivity().getSystemService(INPUT_METHOD_SERVICE);
         View focusedView = requireActivity().getCurrentFocus();
         if (focusedView != null) {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
-    }
-
-    private void loadFABs(View fragmentView) {
-        saveBeliefFab = fragmentView.findViewById(com.rgp.asks.R.id.saveBeliefFab);
-        argumentsFab = fragmentView.findViewById(com.rgp.asks.R.id.addArgumentFab);
-        objectionsFab = fragmentView.findViewById(com.rgp.asks.R.id.addObjectionFab);
     }
 
     private void setBeliefNameInToolbar(String beliefInToolbar) {
@@ -118,7 +96,7 @@ public class AddNewBeliefFragment extends Fragment {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onTabSelected(@NonNull TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 hideKeyboard();
                 showRightFab(tab.getPosition());
@@ -139,54 +117,85 @@ public class AddNewBeliefFragment extends Fragment {
 
     private void showRightFab(int tabPosition) {
         switch (tabPosition) {
+            case 0:
+                setupFloatingActionButton(
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        R.drawable.ic_save_white_24dp,
+                        v -> {
+                            Fragment f = getBeliefDetailsFragmentFromFragmentManager();
+                            if (f != null) {
+                                OnFloatingActionButtonClickListener listener = (OnFloatingActionButtonClickListener) f;
+                                listener.onFloatingActionButtonClick();
+                            }
+                        }
+                );
+                break;
             case 1:
-                saveBeliefFab.hide();
-                objectionsFab.hide();
-                argumentsFab.show();
+                setupFloatingActionButton(
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        R.drawable.ic_add_white_24dp,
+                        v -> {
+                            Fragment f = getBeliefArgumentsFragmentFromFragmentManager();
+                            if (f != null) {
+                                OnFloatingActionButtonClickListener listener = (OnFloatingActionButtonClickListener) f;
+                                listener.onFloatingActionButtonClick();
+                            }
+                        }
+                );
                 break;
             case 2:
-                saveBeliefFab.hide();
-                argumentsFab.hide();
-                objectionsFab.show();
-                break;
-            case 0:
-                objectionsFab.hide();
-                argumentsFab.hide();
-                saveBeliefFab.show();
+                setupFloatingActionButton(
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        R.drawable.ic_add_white_24dp,
+                        v -> {
+                            Fragment f = getBeliefObjectionsFragmentFromFragmentManager();
+                            if (f != null) {
+                                OnFloatingActionButtonClickListener listener = (OnFloatingActionButtonClickListener) f;
+                                listener.onFloatingActionButtonClick();
+                            }
+                        }
+                );
                 break;
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSavedEditedBeliefEvent(SavedEditedBeliefEvent event) {
-        Toast.makeText(requireContext(), getString(R.string.toast_message_belief_saved), Toast.LENGTH_SHORT).show();
-        String savedBelief = model.getModifiableBeliefCopy().getBelief();
-        model.setBeliefNameForToolbarTitle(savedBelief);
-        setBeliefNameInToolbar(savedBelief);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDeletedBeliefEvent(DeletedBeliefEvent event) {
-        if (event.result) {
-            if (this.model.getBeliefId() == event.deletedBeliefId) {
-                Toast.makeText(requireContext(), getString(R.string.toast_deleted_belief), Toast.LENGTH_SHORT).show();
-                this.finish();
+    private BeliefDetailsFragment getBeliefDetailsFragmentFromFragmentManager() {
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof BeliefDetailsFragment) {
+                return (BeliefDetailsFragment) f;
             }
-        } else {
-            Toast.makeText(requireContext(), this.getString(R.string.toast_error_deleted_belief), Toast.LENGTH_SHORT).show();
         }
+        return null;
+    }
+
+    private BeliefArgumentsFragment getBeliefArgumentsFragmentFromFragmentManager() {
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof BeliefArgumentsFragment) {
+                return (BeliefArgumentsFragment) f;
+            }
+        }
+        return null;
+    }
+
+    private BeliefObjectionsFragment getBeliefObjectionsFragmentFromFragmentManager() {
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof BeliefObjectionsFragment) {
+                return (BeliefObjectionsFragment) f;
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    private FloatingActionButton getFloatingActionButton() {
+        return requireActivity().findViewById(R.id.floatingActionButton);
+    }
+
+    private void setupFloatingActionButton(@NonNull ColorStateList backgroundTintList, int imageResourceId, @NonNull View.OnClickListener onClickListener) {
+        floatingActionButton.setBackgroundTintList(backgroundTintList);
+        floatingActionButton.setImageResource(imageResourceId);
+        floatingActionButton.setOnClickListener(onClickListener);
+        floatingActionButton.setVisibility(View.VISIBLE);
     }
 
     private AlertDialog createUnsavedDialog() {
@@ -194,7 +203,7 @@ public class AddNewBeliefFragment extends Fragment {
         builder
                 .setMessage(this.getString(R.string.belief_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), (dialog, id) -> {
-                    model.checkedSaveBelief();
+                    model.checkedSaveBelief(getBeliefDetailsFragmentFromFragmentManager().getOnUpdatedEntityListener());
                     finish();
                 })
                 .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), (dialog, id) -> {

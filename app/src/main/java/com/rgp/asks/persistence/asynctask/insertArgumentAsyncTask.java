@@ -2,14 +2,17 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.dao.ArgumentDao;
 import com.rgp.asks.persistence.entity.Argument;
 
 public class insertArgumentAsyncTask extends AsyncTask<Argument, Void, Long> {
-    private ArgumentDao mAsyncTaskDao;
+    private ArgumentDao dao;
+    private OnInsertedEntityListener onInsertedEntityListener;
 
-    public insertArgumentAsyncTask(ArgumentDao dao) {
-        mAsyncTaskDao = dao;
+    public insertArgumentAsyncTask(ArgumentDao dao, OnInsertedEntityListener onInsertedEntityListener) {
+        this.dao = dao;
+        this.onInsertedEntityListener = onInsertedEntityListener;
     }
 
     @Override
@@ -19,12 +22,14 @@ public class insertArgumentAsyncTask extends AsyncTask<Argument, Void, Long> {
 
     @Override
     protected Long doInBackground(final Argument... params) {
-        long id = mAsyncTaskDao.insert(params[0]);
-        return id;
+        return dao.insert(params[0]);
     }
 
     @Override
-    protected void onPostExecute(Long argumentId) {
-        super.onPostExecute(argumentId);
+    protected void onPostExecute(Long id) {
+        super.onPostExecute(id);
+        if (this.onInsertedEntityListener != null) {
+            this.onInsertedEntityListener.onInsertedEntity(id.intValue());
+        }
     }
 }

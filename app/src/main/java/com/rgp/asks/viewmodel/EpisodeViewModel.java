@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.Repository;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.Episode;
@@ -88,28 +89,12 @@ public class EpisodeViewModel extends AndroidViewModel {
         this.beliefs = this.repository.getBeliefsForEpisode(this.episodeId);
     }
 
-    public void createReaction(@NonNull String newReaction, @NonNull String newReactionClass) {
-        this.repository.createReactionForEpisode(this.episodeId, newReaction, newReactionClass);
+    public void createReaction(@NonNull String newReaction, @NonNull String newReactionClass, @NonNull OnInsertedEntityListener onInsertedEntityListener) {
+        this.repository.createReaction(this.episodeId, newReaction, newReactionClass, onInsertedEntityListener);
     }
 
-    public void editReactionForEpisode(@NonNull final Reaction reaction) {
-        if (reaction.getEpisodeId() == this.episodeId) {
-            this.repository.editReaction(reaction);
-        } else {
-            //err
-        }
-    }
-
-    public void removeReactionForEpisode(@NonNull final Reaction reaction) {
-        if (reaction.getEpisodeId() == this.episodeId) {
-            this.repository.deleteReaction(reaction);
-        } else {
-            //err
-        }
-    }
-
-    public void createBeliefForEpisode(@NonNull final String newBelief) {
-        this.repository.createBeliefForEpisode(episodeId, newBelief);
+    public void createBelief(@NonNull final String newBelief, OnInsertedEntityListener onInsertedEntityListener) {
+        this.repository.createBelief(episodeId, newBelief, onInsertedEntityListener);
     }
 
     public void uncheckedSaveEpisode() {
@@ -125,7 +110,6 @@ public class EpisodeViewModel extends AndroidViewModel {
     }
 
     public boolean episodeWasChanged() {
-
         Episode currentEpisode = getEpisodeFromLiveData();
         Episode modifiedEpisode = getModifiableEpisodeCopy();
 
@@ -144,7 +128,6 @@ public class EpisodeViewModel extends AndroidViewModel {
         } else {
             //todo: err
         }
-
     }
 
     @Nullable

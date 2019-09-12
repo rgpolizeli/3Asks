@@ -1,5 +1,6 @@
 package com.rgp.asks.fragments;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
 import com.rgp.asks.messages.DeletedEpisodeEvent;
 import com.rgp.asks.messages.SavedEditedEpisodeEvent;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
@@ -35,9 +37,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 public class AsksFragment extends Fragment {
 
     private EpisodeViewModel model;
-    private FloatingActionButton saveEpisodeFab;
-    private FloatingActionButton reactionsFab;
-    private FloatingActionButton beliefsFab;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,9 +60,9 @@ public class AsksFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        loadFABs(fragmentView);
+        this.floatingActionButton = getFloatingActionButton();
         initViewModel();
-        this.model.setEpisodeId(getArguments().getInt(Constants.ARG_EPISODE_ID));
+        this.model.setEpisodeId(requireArguments().getInt(Constants.ARG_EPISODE_ID));
         initToolbarTitle();
         initTabs(fragmentView);
     }
@@ -108,12 +108,6 @@ public class AsksFragment extends Fragment {
         }
     }
 
-    private void loadFABs(View fragmentView) {
-        saveEpisodeFab = fragmentView.findViewById(com.rgp.asks.R.id.saveEpisodeFab);
-        reactionsFab = fragmentView.findViewById(com.rgp.asks.R.id.addReactionFab);
-        beliefsFab = fragmentView.findViewById(com.rgp.asks.R.id.addBeliefFab);
-    }
-
     private void initToolbarTitle() {
         String toolbarTitle = this.model.getEpisodeNameForToolbarTitle();
         if (toolbarTitle == null) {
@@ -133,17 +127,17 @@ public class AsksFragment extends Fragment {
         fragmentView.findViewById(R.id.indeterminateBar).setVisibility(View.GONE);
         fragmentView.findViewById(R.id.tabs).setVisibility(View.VISIBLE);
 
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
-        DisableSwipeViewPager mViewPager = fragmentView.findViewById(R.id.disableSwipeViewPager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
+        DisableSwipeViewPager disableSwipeViewPager = fragmentView.findViewById(R.id.disableSwipeViewPager);
+        disableSwipeViewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabLayout = fragmentView.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(disableSwipeViewPager);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+        disableSwipeViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(disableSwipeViewPager) {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onTabSelected(@NonNull TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 hideKeyboard();
                 showRightFab(tab.getPosition());
@@ -159,27 +153,90 @@ public class AsksFragment extends Fragment {
                 super.onTabReselected(tab);
             }
         });
-        showRightFab(mViewPager.getCurrentItem());
+        showRightFab(disableSwipeViewPager.getCurrentItem());
     }
 
     private void showRightFab(int tabPosition) {
         switch (tabPosition) {
             case 0:
-                beliefsFab.hide();
-                reactionsFab.hide();
-                saveEpisodeFab.show();
+                setupFloatingActionButton(
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        R.drawable.ic_save_white_24dp,
+                        v -> {
+                            Fragment f = getWhenFragmentFromFragmentManager();
+                            if (f != null) {
+                                OnFloatingActionButtonClickListener listener = (OnFloatingActionButtonClickListener) f;
+                                listener.onFloatingActionButtonClick();
+                            }
+                        }
+                );
                 break;
             case 1:
-                saveEpisodeFab.hide();
-                beliefsFab.hide();
-                reactionsFab.show();
+                setupFloatingActionButton(
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        R.drawable.ic_add_white_24dp,
+                        v -> {
+                            Fragment f = getWhatFragmentFromFragmentManager();
+                            if (f != null) {
+                                OnFloatingActionButtonClickListener listener = (OnFloatingActionButtonClickListener) f;
+                                listener.onFloatingActionButtonClick();
+                            }
+                        }
+                );
                 break;
             case 2:
-                saveEpisodeFab.hide();
-                reactionsFab.hide();
-                beliefsFab.show();
+                setupFloatingActionButton(
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        R.drawable.ic_add_white_24dp,
+                        v -> {
+                            Fragment f = getWhyFragmentFromFragmentManager();
+                            if (f != null) {
+                                OnFloatingActionButtonClickListener listener = (OnFloatingActionButtonClickListener) f;
+                                listener.onFloatingActionButtonClick();
+                            }
+                        }
+                );
                 break;
         }
+    }
+
+    private WhatFragment getWhatFragmentFromFragmentManager() {
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof WhatFragment) {
+                return (WhatFragment) f;
+            }
+        }
+        return null;
+    }
+
+    private WhenFragment getWhenFragmentFromFragmentManager() {
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof WhenFragment) {
+                return (WhenFragment) f;
+            }
+        }
+        return null;
+    }
+
+    private WhyFragment getWhyFragmentFromFragmentManager() {
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof WhyFragment) {
+                return (WhyFragment) f;
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    private FloatingActionButton getFloatingActionButton() {
+        return requireActivity().findViewById(R.id.floatingActionButton);
+    }
+
+    private void setupFloatingActionButton(@NonNull ColorStateList backgroundTintList, int imageResourceId, @NonNull View.OnClickListener onClickListener) {
+        floatingActionButton.setBackgroundTintList(backgroundTintList);
+        floatingActionButton.setImageResource(imageResourceId);
+        floatingActionButton.setOnClickListener(onClickListener);
+        floatingActionButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -217,7 +274,7 @@ public class AsksFragment extends Fragment {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         // tab titles
-        private String[] tabTitles = new String[]{
+        private String[] titles = new String[]{
                 getResources().getString(R.string.tab_when),
                 getResources().getString(R.string.tab_what),
                 getResources().getString(R.string.tab_why)
@@ -252,7 +309,7 @@ public class AsksFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
+            return titles[position];
         }
     }
 }

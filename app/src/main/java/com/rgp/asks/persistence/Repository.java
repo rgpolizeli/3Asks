@@ -5,6 +5,9 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.persistence.asynctask.deleteArgumentAsyncTask;
 import com.rgp.asks.persistence.asynctask.deleteBeliefAsyncTask;
 import com.rgp.asks.persistence.asynctask.deleteEpisodeAsyncTask;
@@ -80,6 +83,18 @@ public class Repository {
         return this.beliefDao.getBeliefById(beliefId);
     }
 
+    public LiveData<Argument> getArgumentById(int argumentId) {
+        return this.argumentDao.getArgumentById(argumentId);
+    }
+
+    public LiveData<Objection> getObjectionById(int objectionId) {
+        return this.objectionDao.getObjectionById(objectionId);
+    }
+
+    public LiveData<Reaction> getReactionById(int reactionId) {
+        return this.reactionDao.getReactionById(reactionId);
+    }
+
     public LiveData<List<Reaction>> getReactionsForEpisode(int episodeId) {
         return this.reactionDao.getReactionsForEpisode(episodeId);
     }
@@ -124,70 +139,71 @@ public class Repository {
         new insertEpisodeAsyncTask(this.episodeDao).execute(e);
     }
 
-    public void createArgumentForBelief(final int beliefId, @NonNull final String newArgument) {
+    public void createArgument(final int beliefId, @NonNull final String newArgument, OnInsertedEntityListener onInsertedEntityListener) {
         Argument a = new Argument(
                 newArgument,
                 beliefId
         );
-        new insertArgumentAsyncTask(this.argumentDao).execute(a);
+        new insertArgumentAsyncTask(this.argumentDao, onInsertedEntityListener).execute(a);
     }
 
-    public void editArgumentForBelief(@NonNull final Argument argument) {
-        new saveArgumentAsyncTask(this.argumentDao).execute(argument);
+    public void editArgument(@NonNull final Argument argument, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveArgumentAsyncTask(this.argumentDao, onUpdatedEntityListener).execute(argument);
     }
 
-    public void deleteArgumentForBelief(@NonNull final Argument argument) {
-        new deleteArgumentAsyncTask(this.argumentDao).execute(argument);
+    public void deleteArgument(@NonNull final Argument argument, OnDeletedEntityListener onDeletedEntityListener) {
+        new deleteArgumentAsyncTask(this.argumentDao, onDeletedEntityListener).execute(argument);
     }
 
-    public void createObjectionForBelief(final int beliefId, @NonNull final String newObjection) {
+    public void createObjection(final int beliefId, @NonNull final String newObjection, OnInsertedEntityListener onInsertedEntityListener) {
         Objection o = new Objection(
                 newObjection,
                 beliefId
         );
-        new insertObjectionAsyncTask(this.objectionDao).execute(o);
+        new insertObjectionAsyncTask(this.objectionDao, onInsertedEntityListener).execute(o);
     }
 
-    public void editObjectionForBelief(@NonNull final Objection objection) {
-        new saveObjectionAsyncTask(this.objectionDao).execute(objection);
+    public void editObjection(@NonNull final Objection objection, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveObjectionAsyncTask(this.objectionDao, onUpdatedEntityListener).execute(objection);
     }
 
-    public void deleteObjectionForBelief(@NonNull final Objection objection) {
-        new deleteObjectionAsyncTask(this.objectionDao).execute(objection);
+    public void deleteObjection(@NonNull final Objection objection, OnDeletedEntityListener onDeletedEntityListener) {
+        new deleteObjectionAsyncTask(this.objectionDao, onDeletedEntityListener).execute(objection);
     }
 
-    public void createReactionForEpisode(final int episodeId, @NonNull String newReaction, @NonNull String newReactionClass) {
+    public void createReaction(final int episodeId, @NonNull String newReaction, @NonNull String newReactionClass, OnInsertedEntityListener onInsertedEntityListener) {
         Reaction r = new Reaction(
                 newReaction,
                 newReactionClass,
                 episodeId
         );
-        new insertReactionAsyncTask(this.reactionDao).execute(r);
+        new insertReactionAsyncTask(this.reactionDao, onInsertedEntityListener).execute(r);
     }
 
-    public void editReaction(@NonNull final Reaction reaction) {
-        new saveReactionAsyncTask(this.reactionDao).execute(reaction);
+    public void editReaction(@NonNull final Reaction reaction, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveReactionAsyncTask(this.reactionDao, onUpdatedEntityListener).execute(reaction);
     }
 
-    public void deleteReaction(@NonNull final Reaction reaction) {
-        new deleteReactionAsyncTask(this.reactionDao).execute(reaction);
+    public void deleteReaction(@NonNull final Reaction reaction, OnDeletedEntityListener onDeletedEntityListener) {
+        new deleteReactionAsyncTask(this.reactionDao, onDeletedEntityListener).execute(reaction);
     }
 
-    public void createBeliefForEpisode(final int episodeId, @NonNull final String newBelief) {
+    public void createBelief(final int episodeId, @NonNull final String newBelief, OnInsertedEntityListener onInsertedEntityListener) {
         Belief b = new Belief(newBelief, episodeId);
-        new insertBeliefAsyncTask(this.beliefDao).execute(b);
+        new insertBeliefAsyncTask(this.beliefDao, onInsertedEntityListener).execute(b);
     }
 
     public void saveEpisode(@NonNull final Episode newEpisode) {
         new saveEpisodeAsyncTask(this.episodeDao).execute(newEpisode);
     }
 
-    public void saveBelief(@NonNull final Belief newBelief, @NonNull final List<ThinkingStyle> toDeleteSelectedThinkingStyles, @NonNull final List<ThinkingStyle> toInsertSelectedThinkingStyles) {
+    public void saveBelief(@NonNull final Belief newBelief, @NonNull final List<ThinkingStyle> toDeleteSelectedThinkingStyles, @NonNull final List<ThinkingStyle> toInsertSelectedThinkingStyles, OnUpdatedEntityListener onUpdatedEntityListener) {
         new saveBeliefAsyncTask(
                 this.beliefDao,
                 this.beliefThinkingStyleDao,
                 toDeleteSelectedThinkingStyles,
-                toInsertSelectedThinkingStyles
+                toInsertSelectedThinkingStyles,
+                onUpdatedEntityListener
         ).execute(newBelief);
     }
 
@@ -195,7 +211,7 @@ public class Repository {
         new deleteEpisodeAsyncTask(this.episodeDao).execute(episode);
     }
 
-    public void deleteBelief(@NonNull final Belief belief) {
-        new deleteBeliefAsyncTask(this.beliefDao).execute(belief);
+    public void deleteBelief(@NonNull final Belief belief, OnDeletedEntityListener onDeletedEntityListener) {
+        new deleteBeliefAsyncTask(this.beliefDao, onDeletedEntityListener).execute(belief);
     }
 }

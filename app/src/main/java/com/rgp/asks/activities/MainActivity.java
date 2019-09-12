@@ -2,6 +2,7 @@ package com.rgp.asks.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
 import com.rgp.asks.viewmodel.MainViewModel;
 
@@ -35,11 +38,23 @@ public class MainActivity extends AppCompatActivity {
             switch (destination.getId()) {
                 default:
                     getSupportActionBar().show();
-                    //this.toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    //this.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+                    resetAppBarScroll();
+                    resetFloatingActionButton();
                     break;
             }
         });
+    }
+
+    private void resetAppBarScroll() {
+        ((AppBarLayout) findViewById(R.id.appbar)).setExpanded(true, true);
+    }
+
+    private void resetFloatingActionButton() {
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        if (floatingActionButton != null) {
+            floatingActionButton.setVisibility(View.GONE);
+            floatingActionButton.setOnClickListener(null);
+        }
     }
 
     private void initViewModel() {

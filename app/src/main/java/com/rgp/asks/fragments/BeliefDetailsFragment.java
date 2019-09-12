@@ -9,16 +9,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.ThinkingStyle;
 import com.rgp.asks.viewmodel.BeliefViewModel;
@@ -28,13 +31,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
-public class BeliefDetailsFragment extends Fragment {
+public class BeliefDetailsFragment extends Fragment implements OnFloatingActionButtonClickListener, OnUpdatedEntityListener, OnDeletedEntityListener {
 
     private BeliefViewModel model;
     private TextInputLayout beliefTextInputLayout;
     private Map<String, CheckBox> thinkingStylesCheckBoxes;
+    private OnUpdatedEntityListener onUpdatedEntityListener;
+    private OnDeletedEntityListener onDeletedEntityListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,21 +51,8 @@ public class BeliefDetailsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_belief_details, container, false);
     }
 
-    /*
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        AppBarLayout appBarLayout = ((MainActivity)requireActivity()).findViewById(R.id.appbar);
-        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)appBarLayout.getLayoutParams();
-        params.setScrollFlags(SCROLL_FLAG_SCROLL);
-        params.setScrollFlags(SCROLL_FLAG_ENTER_ALWAYS);
-    }
-
-     */
-
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        setupFAB();
         initViewModel();
         int beliefId = this.model.getBeliefId();
         if (beliefId != -1) {
@@ -87,6 +77,20 @@ public class BeliefDetailsFragment extends Fragment {
         } else {
             //todo: err
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.onUpdatedEntityListener = this;
+        this.onDeletedEntityListener = this;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.onUpdatedEntityListener = null;
+        this.onDeletedEntityListener = null;
     }
 
     private void initBeliefViews(@NonNull View rootView) {
@@ -155,25 +159,22 @@ public class BeliefDetailsFragment extends Fragment {
         }
     }
 
+    private void finish() {
+        Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigateUp();
+    }
+
     private void initViewModel() {
         this.model = ViewModelProviders.of(requireParentFragment()).get(BeliefViewModel.class);
     }
 
-    private void hideKeyboard(View v) {
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-    private void setupFAB() {
-        FloatingActionButton saveBeliefFab = requireParentFragment().requireView().findViewById(com.rgp.asks.R.id.saveBeliefFab);
-        saveBeliefFab.setOnClickListener(v -> {
-            hideKeyboard(v);
-            saveBelief();
-        });
+    @Override
+    public void onFloatingActionButtonClick() {
+        ((AddNewBeliefFragment) requireParentFragment()).hideKeyboard();
+        saveBelief();
     }
 
     private void saveBelief() {
-        model.uncheckedSaveBelief();
+        model.uncheckedSaveBelief(this.onUpdatedEntityListener);
     }
 
     @Override
@@ -186,10 +187,29 @@ public class BeliefDetailsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete_belief) {
-            model.removeBelief();
+            model.removeBelief(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDeletedEntity(int id) {
+        Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void onUpdatedEntity(int numberOfUpdatedRows) {
+        if (numberOfUpdatedRows > 0) {
+            Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireActivity(), "Error in save!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public OnUpdatedEntityListener getOnUpdatedEntityListener() {
+        return this.onUpdatedEntityListener;
     }
 }

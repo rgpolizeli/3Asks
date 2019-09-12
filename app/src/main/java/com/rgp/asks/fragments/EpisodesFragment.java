@@ -1,5 +1,6 @@
 package com.rgp.asks.fragments;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,12 +54,14 @@ public class EpisodesFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        setupFAB(fragmentView);
+        FloatingActionButton floatingActionButton = getFloatingActionButton();
+        setupFloatingActionButton(floatingActionButton);
         setupRecyclerView(fragmentView);
         this.searcher = new Searcher(
                 ((MainActivity) requireActivity()).getSupportActionBar(),
                 null,
                 null,
+                floatingActionButton,
                 episodesRecyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
@@ -114,9 +117,16 @@ public class EpisodesFragment extends Fragment {
         this.mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
     }
 
-    private void setupFAB(@NonNull View rootView) {
-        FloatingActionButton episodesFab = rootView.findViewById(com.rgp.asks.R.id.newEpisodeFloatingActionButton);
-        episodesFab.setOnClickListener(v -> createNewEpisode());
+    @NonNull
+    private FloatingActionButton getFloatingActionButton() {
+        return requireActivity().findViewById(R.id.floatingActionButton);
+    }
+
+    private void setupFloatingActionButton(@NonNull FloatingActionButton createEpisodeFab) {
+        createEpisodeFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)));
+        createEpisodeFab.setImageResource(R.drawable.ic_add_white_24dp);
+        createEpisodeFab.setOnClickListener(v -> createNewEpisode());
+        createEpisodeFab.setVisibility(View.VISIBLE);
     }
 
     @Override

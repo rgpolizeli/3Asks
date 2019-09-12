@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,18 +20,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
 import com.rgp.asks.activities.MainActivity;
 import com.rgp.asks.adapters.ArgumentRecyclerViewAdapter;
+import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.auxiliaries.Searcher;
-import com.rgp.asks.dialogs.ArgumentDialog;
-import com.rgp.asks.interfaces.ArgumentDialogListener;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Argument;
 import com.rgp.asks.viewmodel.BeliefViewModel;
 
-public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogListener {
+public class BeliefArgumentsFragment extends Fragment implements OnFloatingActionButtonClickListener, OnInsertedEntityListener {
 
     private ArgumentRecyclerViewAdapter argumentsRecyclerViewAdapter;
     private BeliefViewModel model;
-    private ArgumentDialog argumentDialog;
     private Searcher searcher;
+    private OnInsertedEntityListener onInsertedEntityListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,21 +48,43 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        setupFAB();
         setupRecyclerView(fragmentView);
         this.searcher = new Searcher(
                 ((MainActivity) requireActivity()).getSupportActionBar(),
                 requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
                 requireParentFragment().requireView().findViewById(R.id.tabs),
+                getFloatingActionButton(),
                 argumentsRecyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
-        initDialogs();
         initViewModel();
         this.model.getArgumentsLiveData().observe(this, arguments -> {
             argumentsRecyclerViewAdapter.setArguments(arguments);
             searcher.restoreSearchIfNecessary();
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.onInsertedEntityListener = this;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.onInsertedEntityListener = null;
+    }
+
+    private void startEditFragment(int id) {
+        Bundle argumentsBundle = new Bundle();
+        argumentsBundle.putInt(Constants.ARG_ID, id);
+        navigateDown(R.id.nav_host_fragment, R.id.action_addNewBeliefFragment_to_argumentFragment, argumentsBundle);
+    }
+
+    @NonNull
+    private FloatingActionButton getFloatingActionButton() {
+        return requireActivity().findViewById(R.id.floatingActionButton);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {
@@ -79,54 +102,41 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
             Argument argument = ((ArgumentRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (argument != null) {
-                this.showArgumentDialogInEditMode(argument.getId(), argument.getArgument());
+                startEditFragment(argument.getId());
             } else {
                 Toast.makeText(requireContext(), "This argument don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
 
-    private ArgumentDialog createArgumentDialog() {
-        return new ArgumentDialog();
+    /**
+     * Navigate to a child in NavGraph, applying the necessary layout modifications.
+     *
+     * @param navHostId   the navigation host's id.
+     * @param navActionId the navigation action's id.
+     * @param arguments   the arguments to the new destination.
+     */
+    private void navigateDown(int navHostId, int navActionId, Bundle arguments) {
+        searcher.closeSearch();
+        Navigation.findNavController(requireActivity(), navHostId).navigate(navActionId, arguments);
     }
 
-    private void showArgumentDialogInCreateMode() {
-        this.argumentDialog.showInCreateMode(getChildFragmentManager());
+    @Override
+    public void onFloatingActionButtonClick() {
+        if (this.model != null) {
+            createArgument();
+        }
     }
 
-    private void showArgumentDialogInEditMode(int argumentId, @NonNull String argument) {
-        this.argumentDialog.showInEditMode(getChildFragmentManager(), argumentId, argument);
-    }
-
-    private void setupFAB() {
-        FloatingActionButton argumentsFab = requireParentFragment().requireView().findViewById(com.rgp.asks.R.id.addArgumentFab);
-        argumentsFab.setOnClickListener(v -> showArgumentDialogInCreateMode());
+    private void createArgument() {
+        this.model.createArgument(
+                "",
+                this.onInsertedEntityListener
+        );
     }
 
     private void initViewModel() {
         model = ViewModelProviders.of(requireParentFragment()).get(BeliefViewModel.class);
-    }
-
-    private void initDialogs() {
-        this.argumentDialog = createArgumentDialog();
-        this.argumentDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
-    }
-
-    @Override
-    public void onArgumentDialogCreateButtonClick(@NonNull String newArgument) {
-        model.createArgument(newArgument);
-    }
-
-    @Override
-    public void onArgumentDialogSaveButtonClick(int argumentId, @NonNull String newArgument) {
-        Argument argument = new Argument(argumentId, newArgument, this.model.getBeliefId());
-        model.editArgument(argument);
-    }
-
-    @Override
-    public void onArgumentDialogDeleteButtonClick(int argumentId) {
-        Argument argumentToDelete = new Argument(argumentId, "", this.model.getBeliefId());
-        model.removeArgument(argumentToDelete);
     }
 
     @Override
@@ -144,5 +154,10 @@ public class BeliefArgumentsFragment extends Fragment implements ArgumentDialogL
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onInsertedEntity(int id) {
+        startEditFragment(id);
     }
 }

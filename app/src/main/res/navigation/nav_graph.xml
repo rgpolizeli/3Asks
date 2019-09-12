@@ -37,19 +37,36 @@
         tools:layout="@layout/fragment_asks">
         <action
             android:id="@+id/action_asksActivity_to_addNewBeliefFragment"
-            app:destination="@id/addNewBeliefFragment">
-            <argument
-                android:name="BELIEF_ID"
-                android:defaultValue="-1"
-                app:argType="integer" />
-            <argument
-                android:name="ARG_BELIEF_TITLE"
-                app:argType="string" />
-        </action>
+            app:destination="@id/addNewBeliefFragment" />
+        <action
+            android:id="@+id/action_asksActivity_to_reactionFragment"
+            app:destination="@id/reactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNewBeliefFragment"
         android:name="com.rgp.asks.fragments.AddNewBeliefFragment"
-        android:label="{ARG_BELIEF_TITLE}"
-        tools:layout="@layout/fragment_add_belief" />
+        android:label="@string/destination_edit_belief_fragment"
+        tools:layout="@layout/fragment_add_belief">
+        <action
+            android:id="@+id/action_addNewBeliefFragment_to_argumentFragment"
+            app:destination="@id/argumentFragment" />
+        <action
+            android:id="@+id/action_addNewBeliefFragment_to_objectionFragment"
+            app:destination="@id/objectionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reactionFragment"
+        android:name="com.rgp.asks.fragments.ReactionFragment"
+        android:label="@string/destination_edit_reaction_fragment"
+        tools:layout="@layout/fragment_edit_reaction" />
+    <fragment
+        android:id="@+id/argumentFragment"
+        android:name="com.rgp.asks.fragments.ArgumentFragment"
+        android:label="@string/destination_edit_argument_fragment"
+        tools:layout="@layout/fragment_edit_argument" />
+    <fragment
+        android:id="@+id/objectionFragment"
+        android:name="com.rgp.asks.fragments.ObjectionFragment"
+        android:label="@string/destination_edit_objection_fragment"
+        tools:layout="@layout/fragment_edit_objection" />
 </navigation>

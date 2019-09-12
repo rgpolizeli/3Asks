@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.interfaces.Filterable;
 import com.rgp.asks.views.DisableSwipeViewPager;
@@ -15,13 +16,15 @@ public class Searcher {
     private ActionBar actionBar;
     private DisableSwipeViewPager viewPager;
     private TabLayout tabLayout;
+    private FloatingActionButton floatingActionButton;
     private Filterable filterableAdapter;
     private SearchLayout searchLayout;
 
-    public Searcher(ActionBar actionBar, DisableSwipeViewPager viewPager, TabLayout tabLayout, Filterable filterableAdapter, SearchLayout searchLayout) {
+    public Searcher(ActionBar actionBar, DisableSwipeViewPager viewPager, TabLayout tabLayout, FloatingActionButton floatingActionButton, Filterable filterableAdapter, SearchLayout searchLayout) {
         this.actionBar = actionBar;
         this.viewPager = viewPager;
         this.tabLayout = tabLayout;
+        this.floatingActionButton = floatingActionButton;
         this.filterableAdapter = filterableAdapter;
         this.searchLayout = searchLayout;
         setupSearchLayoutListerners();
@@ -50,6 +53,9 @@ public class Searcher {
             this.viewPager.setSwipeEnabled(true);
             this.tabLayout.setVisibility(View.VISIBLE);
         }
+        if (this.floatingActionButton != null) {
+            this.floatingActionButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void modifyLayoutBecauseOpenedSearch() {
@@ -57,6 +63,9 @@ public class Searcher {
         if (this.tabLayout != null) {
             this.viewPager.setSwipeEnabled(false);
             this.tabLayout.setVisibility(View.GONE);
+        }
+        if (this.floatingActionButton != null) {
+            this.floatingActionButton.setVisibility(View.GONE);
         }
     }
 

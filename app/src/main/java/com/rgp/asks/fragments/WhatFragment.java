@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,18 +20,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
 import com.rgp.asks.activities.MainActivity;
 import com.rgp.asks.adapters.ReactionRecyclerViewAdapter;
+import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.auxiliaries.Searcher;
-import com.rgp.asks.dialogs.ReactionDialog;
-import com.rgp.asks.interfaces.ReactionDialogListener;
+import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Reaction;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
-public class WhatFragment extends Fragment implements ReactionDialogListener {
+public class WhatFragment extends Fragment implements OnFloatingActionButtonClickListener, OnInsertedEntityListener {
 
     private ReactionRecyclerViewAdapter reactionsRecyclerViewAdapter;
     private EpisodeViewModel model;
-    private ReactionDialog reactionDialog;
     private Searcher searcher;
+    private OnInsertedEntityListener onInsertedEntityListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,16 +48,15 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
-        setupFAB();
         setupRecyclerView(fragmentView);
         this.searcher = new Searcher(
                 ((MainActivity) requireActivity()).getSupportActionBar(),
                 requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
                 requireParentFragment().requireView().findViewById(R.id.tabs),
+                getFloatingActionButton(),
                 reactionsRecyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
-        initDialogs();
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
@@ -69,18 +69,42 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
         }
     }
 
-    /**
-     * Handle click on addReactionButtonView and open ReactionDialog.
-     *
-     */
-    private void setupFAB() {
-        FloatingActionButton reactionFab = requireParentFragment().requireView().findViewById(R.id.addReactionFab);
-        reactionFab.setOnClickListener(v -> showReactionDialogInCreateMode());
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.onInsertedEntityListener = this;
     }
 
-    private void initDialogs() {
-        reactionDialog = createReactionDialog();
-        reactionDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.onInsertedEntityListener = null;
+    }
+
+    private void startEditFragment(int id) {
+        Bundle argumentsBundle = new Bundle();
+        argumentsBundle.putInt(Constants.ARG_ID, id);
+        navigateDown(R.id.nav_host_fragment, R.id.action_asksActivity_to_reactionFragment, argumentsBundle);
+    }
+
+    @Override
+    public void onFloatingActionButtonClick() {
+        if (this.model != null) {
+            createNewReaction();
+        }
+    }
+
+    private void createNewReaction() {
+        this.model.createReaction(
+                "",
+                getResources().getStringArray(R.array.reaction_categories_array)[0],
+                this.onInsertedEntityListener
+        );
+    }
+
+    @NonNull
+    private FloatingActionButton getFloatingActionButton() {
+        return requireActivity().findViewById(R.id.floatingActionButton);
     }
 
     private void initViewModel() {
@@ -100,42 +124,24 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
             RecyclerView recyclerView = (RecyclerView) v.getParent();
             int position = recyclerView.getChildAdapterPosition(v);
             Reaction reaction = ((ReactionRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
-
             if (reaction != null) {
-                this.showReactionDialogInEditMode(reaction.getId(), reaction.getReaction(), reaction.getReactionCategory());
+                startEditFragment(reaction.getId());
             } else {
                 Toast.makeText(requireParentFragment().requireContext(), "This reaction don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
     }
 
-    private ReactionDialog createReactionDialog() {
-        return new ReactionDialog();
-    }
-
-    private void showReactionDialogInCreateMode() {
-        this.reactionDialog.showInCreateMode(getChildFragmentManager());
-    }
-
-    private void showReactionDialogInEditMode(int reactionId, @NonNull String reaction, @NonNull String reactionClass) {
-        this.reactionDialog.showInEditMode(getChildFragmentManager(), reactionId, reaction, reactionClass);
-    }
-
-    @Override
-    public void onReactionDialogCreateButtonClick(@NonNull String newReaction, @NonNull String newReactionClass) {
-        this.model.createReaction(newReaction, newReactionClass);
-    }
-
-    @Override
-    public void onReactionDialogSaveButtonClick(int reactionId, @NonNull String newReaction, @NonNull String newReactionClass) {
-        Reaction reactionToEdit = new Reaction(reactionId, newReaction, newReactionClass, model.getEpisodeId());
-        model.editReactionForEpisode(reactionToEdit);
-    }
-
-    @Override
-    public void onReactionDialogDeleteButtonClick(int reactionId) {
-        Reaction reactionToDelete = new Reaction(reactionId, "", "", model.getEpisodeId());
-        model.removeReactionForEpisode(reactionToDelete);
+    /**
+     * Navigate to a child in NavGraph, applying the necessary layout modifications.
+     *
+     * @param navHostId   the navigation host's id.
+     * @param navActionId the navigation action's id.
+     * @param arguments   the arguments to the new destination.
+     */
+    private void navigateDown(int navHostId, int navActionId, Bundle arguments) {
+        searcher.closeSearch();
+        Navigation.findNavController(requireActivity(), navHostId).navigate(navActionId, arguments);
     }
 
     @Override
@@ -153,5 +159,10 @@ public class WhatFragment extends Fragment implements ReactionDialogListener {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onInsertedEntity(int id) {
+        startEditFragment(id);
     }
 }

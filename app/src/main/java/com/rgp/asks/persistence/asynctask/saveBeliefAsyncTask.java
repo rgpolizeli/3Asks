@@ -2,28 +2,28 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
-import com.rgp.asks.messages.SavedEditedBeliefEvent;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.persistence.dao.BeliefDao;
 import com.rgp.asks.persistence.dao.BeliefThinkingStyleDao;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.BeliefThinkingStyle;
 import com.rgp.asks.persistence.entity.ThinkingStyle;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
 public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
-    private BeliefDao beliefDao;
+    private BeliefDao dao;
     private BeliefThinkingStyleDao beliefThinkingStyleDao;
     private List<ThinkingStyle> toDeleteThinkingStyles;
     private List<ThinkingStyle> toInsertThinkingStyles;
+    private OnUpdatedEntityListener onUpdatedEntityListener;
 
-    public saveBeliefAsyncTask(BeliefDao beliefDao, BeliefThinkingStyleDao beliefThinkingStyleDao, List<ThinkingStyle> toDeleteThinkingStyles, List<ThinkingStyle> toInsertThinkingStyles) {
-        this.beliefDao = beliefDao;
+    public saveBeliefAsyncTask(BeliefDao dao, BeliefThinkingStyleDao beliefThinkingStyleDao, List<ThinkingStyle> toDeleteThinkingStyles, List<ThinkingStyle> toInsertThinkingStyles, OnUpdatedEntityListener onUpdatedEntityListener) {
+        this.dao = dao;
         this.beliefThinkingStyleDao = beliefThinkingStyleDao;
         this.toDeleteThinkingStyles = toDeleteThinkingStyles;
         this.toInsertThinkingStyles = toInsertThinkingStyles;
+        this.onUpdatedEntityListener = onUpdatedEntityListener;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
 
         boolean deleteThinkingStylesResult = this.deleteThinkingStyles(b.getId());
         this.insertThinkingStyles(b.getId());
-        int updateThoughtResult = beliefDao.update(params[0]);
+        int updateThoughtResult = dao.update(params[0]);
 
         return deleteThinkingStylesResult && updateThoughtResult == 1;
     }
@@ -50,18 +50,20 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
     }
 
     private void insertThinkingStyles(final int beliefId) {
-
         for (ThinkingStyle th : toInsertThinkingStyles) {
             beliefThinkingStyleDao.insert(new BeliefThinkingStyle(beliefId, th.getThinkingStyle()));
         }
-
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        if (result) {
-            EventBus.getDefault().post(new SavedEditedBeliefEvent(""));
+        if (this.onUpdatedEntityListener != null) {
+            if (result) {
+                onUpdatedEntityListener.onUpdatedEntity(1);
+            } else {
+                onUpdatedEntityListener.onUpdatedEntity(0);
+            }
         }
     }
 }

@@ -15,8 +15,7 @@
     <com.rgp.asks.views.DisableSwipeViewPager
         android:id="@+id/disableSwipeViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
@@ -43,35 +42,5 @@
                 android:text="@string/tab_why" />
         </com.google.android.material.tabs.TabLayout>
     </com.rgp.asks.views.DisableSwipeViewPager>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addReactionFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_white_24dp"
-        android:visibility="gone"
-        app:backgroundTint="@android:color/holo_purple" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addBeliefFab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_white_24dp"
-        android:visibility="gone"
-        app:backgroundTint="@color/colorAccent3" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/saveEpisodeFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_save_white_24dp"
-        android:visibility="gone"
-        app:backgroundTint="@color/colorAccent1" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

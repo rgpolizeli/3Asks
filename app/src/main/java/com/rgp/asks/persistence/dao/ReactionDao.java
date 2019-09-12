@@ -24,4 +24,7 @@ public interface ReactionDao {
 
     @Query("SELECT * FROM Reaction WHERE Reaction.episodeId=:episodeId ORDER BY id DESC")
     LiveData<List<Reaction>> getReactionsForEpisode(int episodeId);
+
+    @Query("SELECT * FROM Reaction WHERE Reaction.id=:reactionId")
+    LiveData<Reaction> getReactionById(int reactionId);
 }
