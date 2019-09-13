@@ -39,7 +39,7 @@ public class ReactionRecyclerViewAdapter extends RecyclerView.Adapter<ReactionRe
         return new ViewHolder(v);
     }
 
-    public void setReactions(@NonNull final List<Reaction> reactions) {
+    public void setData(@NonNull final List<Reaction> reactions) {
         this.reactions.clear();
         this.backupReactions.clear();
         this.reactions.addAll(reactions);
@@ -91,6 +91,10 @@ public class ReactionRecyclerViewAdapter extends RecyclerView.Adapter<ReactionRe
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 List<Reaction> filteredList = (List<Reaction>) filterResults.values;
+                //this if is necessary because when the filtered results is empty, the filtered results received is null, even the filtered list maked in performFiltering is not null, only empty. See the issue #35.
+                if (filteredList == null) {
+                    filteredList = new ArrayList<>();
+                }
                 reactions.clear();
                 reactions.addAll(filteredList);
                 notifyDataSetChanged();

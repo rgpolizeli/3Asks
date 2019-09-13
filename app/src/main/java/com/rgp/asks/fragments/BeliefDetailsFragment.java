@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -33,6 +34,8 @@ import java.util.Map;
 
 public class BeliefDetailsFragment extends Fragment implements OnFloatingActionButtonClickListener, OnUpdatedEntityListener, OnDeletedEntityListener {
 
+    private Observer<Belief> observerBelief;
+    private Observer<List<ThinkingStyle>> observerThinkingStyles;
     private BeliefViewModel model;
     private TextInputLayout beliefTextInputLayout;
     private Map<String, CheckBox> thinkingStylesCheckBoxes;
@@ -42,6 +45,8 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createObserverBelief();
+        createObserverThinkingStyles();
         setHasOptionsMenu(true);
     }
 
@@ -56,24 +61,15 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
         initViewModel();
         int beliefId = this.model.getBeliefId();
         if (beliefId != -1) {
-            model.getThinkingStylesLiveData().observe(this, thinkingStyles -> {
-                initThinkingStylesViews(fragmentView);
-                if (this.model.isThinkingStylesFirstLoad()) {
-                    loadFragmentThinkingStylesViewsFromViewModel(thinkingStyles);
-                    this.model.initModifiableSelectedThinkingStylesCopy(thinkingStyles);
-                    this.model.setIsThinkingStylesFirstLoad(false);
-                }
-                setupThinkingStylesViewsListeners();
-            });
-            model.getBeliefLiveData().observe(this, belief -> {
-                initBeliefViews(fragmentView);
-                if (this.model.isBeliefFirstLoad()) {
-                    loadFragmentBeliefViewsFromViewModel(belief);
-                    this.model.initModifiableBeliefCopy(belief);
-                    this.model.setIsBeliefFirstLoad(false);
-                }
-                setupBeliefViewsListeners();
-            });
+
+            initThinkingStylesViews(fragmentView);
+            model.getThinkingStylesLiveData().removeObservers(this);
+            model.getThinkingStylesLiveData().observe(this, this.observerThinkingStyles);
+
+            initBeliefViews(fragmentView);
+            model.getBeliefLiveData().removeObservers(this);
+            model.getBeliefLiveData().observe(this, this.observerBelief);
+
         } else {
             //todo: err
         }
@@ -91,6 +87,28 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
         super.onStop();
         this.onUpdatedEntityListener = null;
         this.onDeletedEntityListener = null;
+    }
+
+    private void createObserverBelief() {
+        this.observerBelief = result -> {
+            if (this.model.isBeliefFirstLoad()) {
+                loadFragmentBeliefViewsFromViewModel(result);
+                this.model.initModifiableBeliefCopy(result);
+                this.model.setIsBeliefFirstLoad(false);
+            }
+            setupBeliefViewsListeners();
+        };
+    }
+
+    private void createObserverThinkingStyles() {
+        this.observerThinkingStyles = result -> {
+            if (this.model.isThinkingStylesFirstLoad()) {
+                loadFragmentThinkingStylesViewsFromViewModel(result);
+                this.model.initModifiableSelectedThinkingStylesCopy(result);
+                this.model.setIsThinkingStylesFirstLoad(false);
+            }
+            setupThinkingStylesViewsListeners();
+        };
     }
 
     private void initBeliefViews(@NonNull View rootView) {

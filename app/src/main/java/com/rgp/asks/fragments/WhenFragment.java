@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.rgp.asks.R;
@@ -28,6 +29,7 @@ import java.text.DateFormat;
 
 public class WhenFragment extends Fragment implements OnFloatingActionButtonClickListener {
 
+    private Observer<Episode> observer;
     private TextInputLayout episodeNameTextInputLayout;
     private TextInputLayout episodeDescriptionTextInputLayout;
     private DateInputLayout episodeDateInputLayout;
@@ -37,6 +39,7 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createObserver();
         setHasOptionsMenu(true);
     }
 
@@ -51,18 +54,23 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
-            this.model.getEpisodeById().observe(this, episode -> {
-                initViews(fragmentView);
-                if (model.isEpisodeInFirstLoad()) {
-                    loadFragmentFromViewModel(episode);
-                    model.initModifiableEpisodeCopy(episode);
-                    model.setIsEpisodeInFirstLoad(false);
-                }
-                setupViewListeners();
-            });
+            initViews(fragmentView);
+            model.getEpisodeById().removeObservers(this);
+            model.getEpisodeById().observe(this, this.observer);
         } else {
             //todo: err
         }
+    }
+
+    private void createObserver() {
+        this.observer = episode -> {
+            if (model.isEpisodeInFirstLoad()) {
+                loadFragmentFromViewModel(episode);
+                model.initModifiableEpisodeCopy(episode);
+                model.setIsEpisodeInFirstLoad(false);
+            }
+            setupViewListeners();
+        };
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,9 +28,12 @@ import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Objection;
 import com.rgp.asks.viewmodel.BeliefViewModel;
 
+import java.util.List;
+
 public class BeliefObjectionsFragment extends Fragment implements OnFloatingActionButtonClickListener, OnInsertedEntityListener {
 
-    private ObjectionRecyclerViewAdapter objectionsRecyclerViewAdapter;
+    private Observer<List<Objection>> observer;
+    private ObjectionRecyclerViewAdapter recyclerViewAdapter;
     private BeliefViewModel model;
     private Searcher searcher;
     private OnInsertedEntityListener onInsertedEntityListener;
@@ -37,6 +41,7 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createObserver();
         setHasOptionsMenu(true);
     }
 
@@ -54,14 +59,12 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
                 requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
                 requireParentFragment().requireView().findViewById(R.id.tabs),
                 getFloatingActionButton(),
-                objectionsRecyclerViewAdapter,
+                recyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
         initViewModel();
-        this.model.getObjectionsLiveData().observe(this, objections -> {
-            objectionsRecyclerViewAdapter.setObjections(objections);
-            searcher.restoreSearchIfNecessary();
-        });
+        model.getObjectionsLiveData().removeObservers(this);
+        model.getObjectionsLiveData().observe(this, this.observer);
     }
 
     @Override
@@ -74,6 +77,13 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
     public void onStop() {
         super.onStop();
         this.onInsertedEntityListener = null;
+    }
+
+    private void createObserver() {
+        this.observer = observed -> {
+            recyclerViewAdapter.setData(observed);
+            searcher.restoreSearchIfNecessary();
+        };
     }
 
     private void startEditFragment(int id) {
@@ -91,8 +101,8 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
         RecyclerView objectionsRecyclerView = rootView.findViewById(R.id.recyclerView);
         LinearLayoutManager objectionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         objectionsRecyclerView.setLayoutManager(objectionsRecyclerViewLayoutManager);
-        objectionsRecyclerViewAdapter = new ObjectionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
-        objectionsRecyclerView.setAdapter(objectionsRecyclerViewAdapter);
+        recyclerViewAdapter = new ObjectionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        objectionsRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
     private View.OnClickListener createOnItemRecyclerViewClickListener() {

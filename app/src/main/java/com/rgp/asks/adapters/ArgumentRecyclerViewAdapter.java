@@ -39,7 +39,7 @@ public class ArgumentRecyclerViewAdapter extends RecyclerView.Adapter<ArgumentRe
         return new ViewHolder(v);
     }
 
-    public void setArguments(final List<Argument> arguments) {
+    public void setData(final List<Argument> arguments) {
         this.arguments.clear();
         this.backupArguments.clear();
         this.arguments.addAll(arguments);
@@ -88,6 +88,10 @@ public class ArgumentRecyclerViewAdapter extends RecyclerView.Adapter<ArgumentRe
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 List<Argument> filteredList = (List<Argument>) filterResults.values;
+                //this if is necessary because when the filtered results is empty, the filtered results received is null, even the filtered list maked in performFiltering is not null, only empty. See the issue #35.
+                if (filteredList == null) {
+                    filteredList = new ArrayList<>();
+                }
                 arguments.clear();
                 arguments.addAll(filteredList);
                 notifyDataSetChanged();

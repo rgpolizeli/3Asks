@@ -86,14 +86,6 @@ public class SearchLayout extends LinearLayout {
         ((InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(getSearchView().findFocus(), InputMethodManager.SHOW_IMPLICIT);
     }
 
-    /*
-    private void forceShowKeyboard(){
-        getSearchView().requestFocus();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
-    */
-
     @Nullable
     public String getQuery() {
         return this.query;
@@ -134,7 +126,9 @@ public class SearchLayout extends LinearLayout {
                 return false;
             } else {
                 openSearch();
-                getSearchView().setQuery(getQuery(), false);
+                getSearchView().setQuery(getQuery(), true);
+                setQuery(query);
+                onQueryListener.onQuery(query);
                 showKeyboard();
                 return true;
             }

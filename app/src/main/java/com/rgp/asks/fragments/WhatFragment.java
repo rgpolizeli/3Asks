@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,9 +28,12 @@ import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Reaction;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
+import java.util.List;
+
 public class WhatFragment extends Fragment implements OnFloatingActionButtonClickListener, OnInsertedEntityListener {
 
-    private ReactionRecyclerViewAdapter reactionsRecyclerViewAdapter;
+    private Observer<List<Reaction>> observer;
+    private ReactionRecyclerViewAdapter recyclerViewAdapter;
     private EpisodeViewModel model;
     private Searcher searcher;
     private OnInsertedEntityListener onInsertedEntityListener;
@@ -37,6 +41,7 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createObserver();
         setHasOptionsMenu(true);
     }
 
@@ -54,16 +59,14 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
                 requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
                 requireParentFragment().requireView().findViewById(R.id.tabs),
                 getFloatingActionButton(),
-                reactionsRecyclerViewAdapter,
+                recyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
-            this.model.getReactionsForEpisode().observe(this, reactions -> {
-                reactionsRecyclerViewAdapter.setReactions(reactions);
-                searcher.restoreSearchIfNecessary();
-            });
+            this.model.getReactionsForEpisode().removeObservers(this);
+            this.model.getReactionsForEpisode().observe(this, this.observer);
         } else {
             //todo: err: episode not loaded
         }
@@ -79,6 +82,13 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
     public void onStop() {
         super.onStop();
         this.onInsertedEntityListener = null;
+    }
+
+    private void createObserver() {
+        this.observer = observed -> {
+            recyclerViewAdapter.setData(observed);
+            searcher.restoreSearchIfNecessary();
+        };
     }
 
     private void startEditFragment(int id) {
@@ -115,8 +125,8 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
         RecyclerView reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.recyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         reactionsRecyclerView.setLayoutManager(reactionsRecyclerViewLayoutManager);
-        reactionsRecyclerViewAdapter = new ReactionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
-        reactionsRecyclerView.setAdapter(reactionsRecyclerViewAdapter);
+        recyclerViewAdapter = new ReactionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        reactionsRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
     private View.OnClickListener createOnItemRecyclerViewClickListener() {

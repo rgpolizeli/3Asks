@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,9 +28,12 @@ import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 
+import java.util.List;
+
 public class WhyFragment extends Fragment implements OnFloatingActionButtonClickListener, OnInsertedEntityListener {
 
-    private BeliefRecyclerViewAdapter beliefsRecyclerViewAdapter;
+    private Observer<List<Belief>> observer;
+    private BeliefRecyclerViewAdapter recyclerViewAdapter;
     private EpisodeViewModel model;
     private Searcher searcher;
     private OnInsertedEntityListener onInsertedEntityListener;
@@ -37,6 +41,7 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createObserver();
         setHasOptionsMenu(true);
     }
 
@@ -54,16 +59,14 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
                 requireParentFragment().requireView().findViewById(R.id.disableSwipeViewPager),
                 requireParentFragment().requireView().findViewById(R.id.tabs),
                 getFloatingActionButton(),
-                beliefsRecyclerViewAdapter,
+                recyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
-            model.getBeliefsForEpisode().observe(this, beliefs -> {
-                beliefsRecyclerViewAdapter.setBeliefs(beliefs);
-                searcher.restoreSearchIfNecessary();
-            });
+            model.getBeliefsForEpisode().removeObservers(this);
+            model.getBeliefsForEpisode().observe(this, this.observer);
         } else {
             //todo:err
         }
@@ -92,6 +95,13 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
         this.onInsertedEntityListener = null;
     }
 
+    private void createObserver() {
+        this.observer = observed -> {
+            recyclerViewAdapter.setData(observed);
+            searcher.restoreSearchIfNecessary();
+        };
+    }
+
     private void initViewModel() {
         model = ViewModelProviders.of(requireParentFragment()).get(EpisodeViewModel.class);
     }
@@ -99,8 +109,8 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
     private void setupRecyclerView(@NonNull View rootView) {
         RecyclerView beliefsRecyclerView = rootView.findViewById(R.id.recyclerView);
         beliefsRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        beliefsRecyclerViewAdapter = new BeliefRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_belief), createOnItemRecyclerViewClickListener());
-        beliefsRecyclerView.setAdapter(beliefsRecyclerViewAdapter);
+        recyclerViewAdapter = new BeliefRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_belief), createOnItemRecyclerViewClickListener());
+        beliefsRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
     private View.OnClickListener createOnItemRecyclerViewClickListener() {

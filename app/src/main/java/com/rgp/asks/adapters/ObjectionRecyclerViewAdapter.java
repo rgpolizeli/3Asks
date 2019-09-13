@@ -37,7 +37,7 @@ public class ObjectionRecyclerViewAdapter extends RecyclerView.Adapter<Objection
         return new ViewHolder(v);
     }
 
-    public void setObjections(final List<Objection> objections) {
+    public void setData(final List<Objection> objections) {
         this.objections.clear();
         this.backupObjections.clear();
         this.objections.addAll(objections);
@@ -86,6 +86,10 @@ public class ObjectionRecyclerViewAdapter extends RecyclerView.Adapter<Objection
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 List<Objection> filteredList = (List<Objection>) filterResults.values;
+                //this if is necessary because when the filtered results is empty, the filtered results received is null, even the filtered list maked in performFiltering is not null, only empty. See the issue #35.
+                if (filteredList == null) {
+                    filteredList = new ArrayList<>();
+                }
                 objections.clear();
                 objections.addAll(filteredList);
                 notifyDataSetChanged();

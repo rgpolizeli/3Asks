@@ -40,7 +40,7 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         return new ViewHolder(v);
     }
 
-    public void setEpisodes(@NonNull final List<Episode> episodes) {
+    public void setData(@NonNull final List<Episode> episodes) {
         this.episodes.clear();
         this.backupEpisodes.clear();
         this.episodes.addAll(episodes);
@@ -100,6 +100,10 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 List<Episode> filteredEpisodes = (List<Episode>) filterResults.values;
+                //this if is necessary because when the filtered results is empty, the filtered results received is null, even the filtered list maked in performFiltering is not null, only empty. See the issue #35.
+                if (filteredEpisodes == null) {
+                    filteredEpisodes = new ArrayList<>();
+                }
                 episodes.clear();
                 episodes.addAll(filteredEpisodes);
                 notifyDataSetChanged();

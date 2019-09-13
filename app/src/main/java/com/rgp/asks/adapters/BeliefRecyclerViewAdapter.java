@@ -39,7 +39,7 @@ public class BeliefRecyclerViewAdapter extends RecyclerView.Adapter<BeliefRecycl
         return new ViewHolder(v);
     }
 
-    public void setBeliefs(final List<Belief> beliefs) {
+    public void setData(final List<Belief> beliefs) {
         this.beliefs.clear();
         this.backupBeliefs.clear();
         this.beliefs.addAll(beliefs);
@@ -91,6 +91,10 @@ public class BeliefRecyclerViewAdapter extends RecyclerView.Adapter<BeliefRecycl
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 List<Belief> filteredList = (List<Belief>) filterResults.values;
+                //this if is necessary because when the filtered results is empty, the filtered results received is null, even the filtered list maked in performFiltering is not null, only empty. See the issue #35.
+                if (filteredList == null) {
+                    filteredList = new ArrayList<>();
+                }
                 beliefs.clear();
                 beliefs.addAll(filteredList);
                 notifyDataSetChanged();

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,16 +34,19 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class EpisodesFragment extends Fragment {
 
-    private EpisodesRecyclerViewAdapter episodesRecyclerViewAdapter;
-    private MainViewModel mainViewModel;
+    private Observer<List<Episode>> observer;
+    private EpisodesRecyclerViewAdapter recyclerViewAdapter;
+    private MainViewModel model;
     private Searcher searcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createObserver();
         setHasOptionsMenu(true);
     }
 
@@ -62,14 +66,12 @@ public class EpisodesFragment extends Fragment {
                 null,
                 null,
                 floatingActionButton,
-                episodesRecyclerViewAdapter,
+                recyclerViewAdapter,
                 fragmentView.findViewById(R.id.search)
         );
         initViewModel();
-        this.mainViewModel.getAllEpisodes().observe(this, episodes -> {
-            episodesRecyclerViewAdapter.setEpisodes(episodes);
-            searcher.restoreSearchIfNecessary();
-        });
+        model.getAllEpisodes().removeObservers(this);
+        model.getAllEpisodes().observe(this, this.observer);
     }
 
     @Override
@@ -82,6 +84,13 @@ public class EpisodesFragment extends Fragment {
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    private void createObserver() {
+        this.observer = observed -> {
+            recyclerViewAdapter.setData(observed);
+            searcher.restoreSearchIfNecessary();
+        };
     }
 
     /**
@@ -114,7 +123,7 @@ public class EpisodesFragment extends Fragment {
     }
 
     private void initViewModel() {
-        this.mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+        this.model = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
     }
 
     @NonNull
@@ -147,7 +156,7 @@ public class EpisodesFragment extends Fragment {
     }
 
     private void createNewEpisode() {
-        mainViewModel.createEpisode(
+        model.createEpisode(
                 "",
                 DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().getTime()),
                 getResources().getStringArray(R.array.episode_period_array)[0]
@@ -158,8 +167,8 @@ public class EpisodesFragment extends Fragment {
         RecyclerView episodesRecyclerView = rootView.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
-        this.episodesRecyclerViewAdapter = new EpisodesRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_episode), createOnItemRecyclerViewClickListener());
-        episodesRecyclerView.setAdapter(this.episodesRecyclerViewAdapter);
+        this.recyclerViewAdapter = new EpisodesRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_episode), createOnItemRecyclerViewClickListener());
+        episodesRecyclerView.setAdapter(this.recyclerViewAdapter);
     }
 
     private View.OnClickListener createOnItemRecyclerViewClickListener() {
