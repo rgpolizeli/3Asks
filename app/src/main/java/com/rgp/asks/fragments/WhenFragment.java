@@ -7,14 +7,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import com.rgp.asks.R;
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
 import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.listeners.EpisodeDateTextWatcher;
 import com.rgp.asks.listeners.EpisodeDescriptionTextWatcher;
 import com.rgp.asks.listeners.EpisodeNameTextWatcher;
@@ -27,7 +31,7 @@ import com.rgp.asks.views.TextInputLayout;
 
 import java.text.DateFormat;
 
-public class WhenFragment extends Fragment implements OnFloatingActionButtonClickListener {
+public class WhenFragment extends Fragment implements OnFloatingActionButtonClickListener, OnUpdatedEntityListener, OnDeletedEntityListener {
 
     private Observer<Episode> observer;
     private TextInputLayout episodeNameTextInputLayout;
@@ -35,6 +39,8 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     private DateInputLayout episodeDateInputLayout;
     private SpinnerInputLayout episodePeriodSpinnerInputLayout;
     private EpisodeViewModel model;
+    private OnUpdatedEntityListener onUpdatedEntityListener;
+    private OnDeletedEntityListener onDeletedEntityListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,20 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.onUpdatedEntityListener = this;
+        this.onDeletedEntityListener = this;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.onUpdatedEntityListener = null;
+        this.onDeletedEntityListener = null;
+    }
+
     private void createObserver() {
         this.observer = episode -> {
             if (model.isEpisodeInFirstLoad()) {
@@ -81,6 +101,10 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
         }
     }
 
+    private void finish() {
+        Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment)).navigateUp();
+    }
+
     private void initViewModel() {
         this.model = ViewModelProviders.of(requireParentFragment()).get(EpisodeViewModel.class);
     }
@@ -93,7 +117,7 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     }
 
     private void saveEpisode() {
-        this.model.uncheckedSaveEpisode();
+        this.model.uncheckedSaveEpisode(this.onUpdatedEntityListener);
     }
 
     private void loadFragmentFromViewModel(@NonNull Episode e) {
@@ -120,10 +144,34 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            this.model.removeEpisode();
+            this.model.removeEpisode(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDeletedEntity(int numberOfDeletedRows) {
+        if (numberOfDeletedRows == 1) {
+            Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireActivity(), "Error in delete!", Toast.LENGTH_SHORT).show();
+        }
+
+        finish();
+    }
+
+    @Override
+    public void onUpdatedEntity(int numberOfUpdatedRows) {
+        if (numberOfUpdatedRows > 0) {
+            Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireActivity(), "Error in save!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public OnUpdatedEntityListener getOnUpdatedEntityListener() {
+        return this.onUpdatedEntityListener;
     }
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -22,14 +21,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.R;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
-import com.rgp.asks.messages.DeletedEpisodeEvent;
-import com.rgp.asks.messages.SavedEditedEpisodeEvent;
 import com.rgp.asks.viewmodel.EpisodeViewModel;
 import com.rgp.asks.views.DisableSwipeViewPager;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -82,7 +75,7 @@ public class AsksFragment extends Fragment {
         builder
                 .setMessage(this.getString(R.string.episode_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    this.model.checkedSaveEpisode();
+                    this.model.checkedSaveEpisode(getWhenFragmentFromFragmentManager().getOnUpdatedEntityListener());
                     finish();
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
@@ -220,35 +213,6 @@ public class AsksFragment extends Fragment {
         floatingActionButton.setImageResource(imageResourceId);
         floatingActionButton.setOnClickListener(onClickListener);
         floatingActionButton.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
-        Toast.makeText(requireContext(), getString(R.string.toast_message_episode_saved), Toast.LENGTH_SHORT).show();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDeletedEpisodeEvent(DeletedEpisodeEvent event) {
-        if (event.result) {
-            if (this.model.getEpisodeId() == event.deletedEpisodeId) {
-                Toast.makeText(requireContext(), getString(R.string.toast_deleted_episode), Toast.LENGTH_SHORT).show();
-                this.finish();
-            }
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.toast_error_deleted_episode), Toast.LENGTH_SHORT).show();
-        }
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

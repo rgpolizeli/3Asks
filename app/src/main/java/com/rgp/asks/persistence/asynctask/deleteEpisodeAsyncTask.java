@@ -2,18 +2,17 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
-import com.rgp.asks.messages.DeletedEpisodeEvent;
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
 import com.rgp.asks.persistence.dao.EpisodeDao;
 import com.rgp.asks.persistence.entity.Episode;
 
-import org.greenrobot.eventbus.EventBus;
-
 public class deleteEpisodeAsyncTask extends AsyncTask<Episode, Void, Integer> {
-    private EpisodeDao mAsyncTaskDao;
-    private int deletedEpisodeId;
+    private EpisodeDao dao;
+    private OnDeletedEntityListener onDeletedEntityListener;
 
-    public deleteEpisodeAsyncTask(EpisodeDao dao) {
-        mAsyncTaskDao = dao;
+    public deleteEpisodeAsyncTask(EpisodeDao dao, OnDeletedEntityListener onDeletedEntityListener) {
+        this.dao = dao;
+        this.onDeletedEntityListener = onDeletedEntityListener;
     }
 
     @Override
@@ -23,14 +22,15 @@ public class deleteEpisodeAsyncTask extends AsyncTask<Episode, Void, Integer> {
 
     @Override
     protected Integer doInBackground(final Episode... params) {
-        deletedEpisodeId = params[0].getId();
-        return mAsyncTaskDao.delete(params[0]);
+        return dao.delete(params[0]);
     }
 
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        EventBus.getDefault().post(new DeletedEpisodeEvent(result == 1, deletedEpisodeId));
+        if (this.onDeletedEntityListener != null) {
+            this.onDeletedEntityListener.onDeletedEntity(result);
+        }
     }
 }
 

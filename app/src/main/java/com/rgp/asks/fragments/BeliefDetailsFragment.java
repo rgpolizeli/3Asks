@@ -213,8 +213,12 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
     }
 
     @Override
-    public void onDeletedEntity(int id) {
-        Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+    public void onDeletedEntity(int numberOfDeletedRows) {
+        if (numberOfDeletedRows == 1) {
+            Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireActivity(), "Error in delete!", Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 

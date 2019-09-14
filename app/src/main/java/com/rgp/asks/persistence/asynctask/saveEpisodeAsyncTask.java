@@ -2,30 +2,29 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
-import com.rgp.asks.messages.SavedEditedEpisodeEvent;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.persistence.dao.EpisodeDao;
 import com.rgp.asks.persistence.entity.Episode;
 
-import org.greenrobot.eventbus.EventBus;
-
 public class saveEpisodeAsyncTask extends AsyncTask<Episode, Void, Integer> {
-    private EpisodeDao mAsyncTaskDao;
+    private EpisodeDao dao;
+    private OnUpdatedEntityListener onUpdatedEntityListener;
 
-    public saveEpisodeAsyncTask(EpisodeDao dao) {
-        mAsyncTaskDao = dao;
+    public saveEpisodeAsyncTask(EpisodeDao dao, OnUpdatedEntityListener onUpdatedEntityListener) {
+        this.dao = dao;
+        this.onUpdatedEntityListener = onUpdatedEntityListener;
     }
 
     @Override
     protected Integer doInBackground(final Episode... params) {
-        int result = mAsyncTaskDao.update(params[0]);
-        return result;
+        return dao.update(params[0]);
     }
 
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        if (result == 1) {
-            EventBus.getDefault().post(new SavedEditedEpisodeEvent(""));
+        if (this.onUpdatedEntityListener != null) {
+            this.onUpdatedEntityListener.onUpdatedEntity(result);
         }
     }
 }

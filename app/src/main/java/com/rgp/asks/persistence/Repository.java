@@ -119,7 +119,7 @@ public class Repository {
     // CREATE OPERATIONS //
     ///////////////
 
-    public void createEpisode(@NonNull String newEpisodeName, @NonNull String newEpisodeDate, @NonNull String newEpisodePeriod) {
+    public void createEpisode(@NonNull String newEpisodeName, @NonNull String newEpisodeDate, @NonNull String newEpisodePeriod, OnInsertedEntityListener onInsertedEntityListener) {
 
         Date episodeDate;
 
@@ -136,7 +136,7 @@ public class Repository {
                 newEpisodePeriod
         );
 
-        new insertEpisodeAsyncTask(this.episodeDao).execute(e);
+        new insertEpisodeAsyncTask(this.episodeDao, onInsertedEntityListener).execute(e);
     }
 
     public void createArgument(final int beliefId, @NonNull final String newArgument, OnInsertedEntityListener onInsertedEntityListener) {
@@ -193,8 +193,8 @@ public class Repository {
         new insertBeliefAsyncTask(this.beliefDao, onInsertedEntityListener).execute(b);
     }
 
-    public void saveEpisode(@NonNull final Episode newEpisode) {
-        new saveEpisodeAsyncTask(this.episodeDao).execute(newEpisode);
+    public void saveEpisode(@NonNull final Episode newEpisode, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveEpisodeAsyncTask(this.episodeDao, onUpdatedEntityListener).execute(newEpisode);
     }
 
     public void saveBelief(@NonNull final Belief newBelief, @NonNull final List<ThinkingStyle> toDeleteSelectedThinkingStyles, @NonNull final List<ThinkingStyle> toInsertSelectedThinkingStyles, OnUpdatedEntityListener onUpdatedEntityListener) {
@@ -207,8 +207,8 @@ public class Repository {
         ).execute(newBelief);
     }
 
-    public void deleteEpisode(@NonNull final Episode episode) {
-        new deleteEpisodeAsyncTask(this.episodeDao).execute(episode);
+    public void deleteEpisode(@NonNull final Episode episode, OnDeletedEntityListener onDeletedEntityListener) {
+        new deleteEpisodeAsyncTask(this.episodeDao, onDeletedEntityListener).execute(episode);
     }
 
     public void deleteBelief(@NonNull final Belief belief, OnDeletedEntityListener onDeletedEntityListener) {

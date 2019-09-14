@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -73,13 +72,6 @@ public class AddNewBeliefFragment extends Fragment {
         if (focusedView != null) {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
-    }
-
-    private void setBeliefNameInToolbar(String beliefInToolbar) {
-        if (beliefInToolbar.isEmpty()) {
-            beliefInToolbar = getResources().getString(R.string.destination_asks_unnamed_belief);
-        }
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(beliefInToolbar);
     }
 
     private void initTabs(View fragmentView) {

@@ -7,7 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
 import com.rgp.asks.interfaces.OnInsertedEntityListener;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
 import com.rgp.asks.persistence.Repository;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.Episode;
@@ -88,16 +90,23 @@ public class EpisodeViewModel extends AndroidViewModel {
         this.repository.createBelief(episodeId, newBelief, onInsertedEntityListener);
     }
 
-    public void uncheckedSaveEpisode() {
+    public void uncheckedSaveEpisode(OnUpdatedEntityListener onUpdatedEntityListener) {
         if (episodeWasChanged()) {
-            this.repository.saveEpisode(getModifiableEpisodeCopy());
+            saveEpisode(onUpdatedEntityListener);
         } else {
             //err
         }
     }
 
-    public void checkedSaveEpisode() {
-        this.repository.saveEpisode(getModifiableEpisodeCopy());
+    public void checkedSaveEpisode(OnUpdatedEntityListener onUpdatedEntityListener) {
+        saveEpisode(onUpdatedEntityListener);
+    }
+
+    private void saveEpisode(OnUpdatedEntityListener onUpdatedEntityListener) {
+        Episode newEpisode = getModifiableEpisodeCopy();
+        if (newEpisode != null) {
+            this.repository.saveEpisode(newEpisode, onUpdatedEntityListener);
+        }
     }
 
     public boolean episodeWasChanged() {
@@ -112,10 +121,10 @@ public class EpisodeViewModel extends AndroidViewModel {
         }
     }
 
-    public void removeEpisode() {
+    public void removeEpisode(OnDeletedEntityListener onDeletedEntityListener) {
         Episode episode = getEpisodeFromLiveData();
         if (episode != null) {
-            this.repository.deleteEpisode(episode);
+            this.repository.deleteEpisode(episode, onDeletedEntityListener);
         } else {
             //todo: err
         }

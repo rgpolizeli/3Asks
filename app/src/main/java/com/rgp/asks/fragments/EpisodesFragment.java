@@ -24,24 +24,21 @@ import com.rgp.asks.activities.MainActivity;
 import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.auxiliaries.Searcher;
-import com.rgp.asks.messages.CreatedEpisodeEvent;
+import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class EpisodesFragment extends Fragment {
+public class EpisodesFragment extends Fragment implements OnInsertedEntityListener {
 
     private Observer<List<Episode>> observer;
     private EpisodesRecyclerViewAdapter recyclerViewAdapter;
     private MainViewModel model;
     private Searcher searcher;
+    private OnInsertedEntityListener onInsertedEntityListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,13 +74,13 @@ public class EpisodesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        this.onInsertedEntityListener = this;
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        this.onInsertedEntityListener = null;
     }
 
     private void createObserver() {
@@ -91,16 +88,6 @@ public class EpisodesFragment extends Fragment {
             recyclerViewAdapter.setData(observed);
             searcher.restoreSearchIfNecessary();
         };
-    }
-
-    /**
-     * Invoked after the creation of a new Episode.
-     *
-     * @param event contains information about the created episode.
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCreatedEpisodeEvent(CreatedEpisodeEvent event) {
-        startEditEpisodeActivity(event.episodeId);
     }
 
     private void startEditEpisodeActivity(int episodeId) {
@@ -158,7 +145,8 @@ public class EpisodesFragment extends Fragment {
         model.createEpisode(
                 "",
                 DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().getTime()),
-                getResources().getStringArray(R.array.episode_period_array)[0]
+                getResources().getStringArray(R.array.episode_period_array)[0],
+                this.onInsertedEntityListener
         );
     }
 
@@ -182,5 +170,15 @@ public class EpisodesFragment extends Fragment {
                 Toast.makeText(getActivity(), "This episode don't exist!", Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    /**
+     * Invoked after the creation of a new Episode.
+     *
+     * @param id of the created episode.
+     */
+    @Override
+    public void onInsertedEntity(int id) {
+        startEditEpisodeActivity(id);
     }
 }
