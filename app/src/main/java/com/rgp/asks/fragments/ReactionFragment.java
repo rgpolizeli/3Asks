@@ -18,6 +18,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -35,6 +36,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class ReactionFragment extends Fragment implements OnUpdatedEntityListener, OnDeletedEntityListener {
 
+    private Observer<Reaction> observer;
     private TextInputLayout reactionTextInputLayout;
     private SpinnerInputLayout reactionClassSpinnerInputLayout;
 
@@ -55,7 +57,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-
+        createObserver();
         setHasOptionsMenu(true);
     }
 
@@ -80,15 +82,9 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
         int id = requireArguments().getInt(Constants.ARG_ID);
         this.model.setId(id);
         if (id != -1) {
-            this.model.getLiveData().observe(this, reaction -> {
-                initViews(fragmentView);
-                if (model.isInFirstLoad()) {
-                    loadFragmentFromViewModel(reaction);
-                    model.initModifiableCopy(reaction);
-                    model.setIsInFirstLoad(false);
-                }
-                setupViewListeners();
-            });
+            initViews(fragmentView);
+            this.model.getLiveData().removeObservers(this);
+            this.model.getLiveData().observe(this, this.observer);
         } else {
             //todo: err
         }
@@ -106,6 +102,17 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
         super.onStop();
         this.onUpdatedEntityListener = null;
         this.onDeletedEntityListener = null;
+    }
+
+    private void createObserver() {
+        this.observer = observed -> {
+            if (model.isInFirstLoad()) {
+                loadFragmentFromViewModel(observed);
+                model.initModifiableCopy(observed);
+                model.setIsInFirstLoad(false);
+            }
+            setupViewListeners();
+        };
     }
 
     private void initViewModel() {
