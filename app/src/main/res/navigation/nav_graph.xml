@@ -15,15 +15,7 @@
             app:destination="@id/helpInfoFragment" />
         <action
             android:id="@+id/action_episodesFragment_to_asksActivity"
-            app:destination="@id/asksActivity">
-            <argument
-                android:name="EPISODE_ID"
-                android:defaultValue="-1"
-                app:argType="integer" />
-            <argument
-                android:name="ARG_EPISODE_TITLE"
-                app:argType="string" />
-        </action>
+            app:destination="@id/asksActivity" />
     </fragment>
     <fragment
         android:id="@+id/helpInfoFragment"
@@ -33,7 +25,7 @@
     <fragment
         android:id="@+id/asksActivity"
         android:name="com.rgp.asks.fragments.AsksFragment"
-        android:label="{ARG_EPISODE_TITLE}"
+        android:label="@string/destination_edit_episode_fragment"
         tools:layout="@layout/fragment_asks">
         <action
             android:id="@+id/action_asksActivity_to_addNewBeliefFragment"

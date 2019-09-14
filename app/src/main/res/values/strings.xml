@@ -122,6 +122,7 @@
     <string name="destination_asks_unnamed_episode">Unnamed Episode</string>
     <string name="destination_asks_unnamed_reaction">Unnamed Reaction</string>
     <string name="destination_asks_unnamed_belief">Unnamed Belief</string>
+    <string name="destination_edit_episode_fragment">Edit episode</string>
     <string name="destination_edit_belief_fragment">Edit belief</string>
     <string name="destination_edit_reaction_fragment">Edit reaction</string>
     <string name="destination_edit_argument_fragment">Edit argument</string>

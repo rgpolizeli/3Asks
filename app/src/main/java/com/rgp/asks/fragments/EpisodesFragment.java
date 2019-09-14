@@ -100,13 +100,12 @@ public class EpisodesFragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCreatedEpisodeEvent(CreatedEpisodeEvent event) {
-        startEditEpisodeActivity(event.episodeId, event.episodeName);
+        startEditEpisodeActivity(event.episodeId);
     }
 
-    private void startEditEpisodeActivity(int episodeId, String episodeName) {
+    private void startEditEpisodeActivity(int episodeId) {
         Bundle argumentsBundle = new Bundle();
-        argumentsBundle.putInt(Constants.ARG_EPISODE_ID, episodeId);
-        argumentsBundle.putString(Constants.ARG_EPISODE_TITLE, episodeName);
+        argumentsBundle.putInt(Constants.ARG_ID, episodeId);
         navigateDown(R.id.nav_host_fragment, R.id.action_episodesFragment_to_asksActivity, argumentsBundle);
     }
 
@@ -178,7 +177,7 @@ public class EpisodesFragment extends Fragment {
             Episode episode = ((EpisodesRecyclerViewAdapter) recyclerView.getAdapter()).getItem(position);
 
             if (episode != null) {
-                startEditEpisodeActivity(episode.getId(), episode.getEpisode());
+                startEditEpisodeActivity(episode.getId());
             } else {
                 Toast.makeText(getActivity(), "This episode don't exist!", Toast.LENGTH_SHORT).show();
             }

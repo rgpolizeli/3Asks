@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -62,8 +61,7 @@ public class AsksFragment extends Fragment {
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
         this.floatingActionButton = getFloatingActionButton();
         initViewModel();
-        this.model.setEpisodeId(requireArguments().getInt(Constants.ARG_EPISODE_ID));
-        initToolbarTitle();
+        this.model.setEpisodeId(requireArguments().getInt(Constants.ARG_ID));
         initTabs(fragmentView);
     }
 
@@ -106,21 +104,6 @@ public class AsksFragment extends Fragment {
         } else {
             finish();
         }
-    }
-
-    private void initToolbarTitle() {
-        String toolbarTitle = this.model.getEpisodeNameForToolbarTitle();
-        if (toolbarTitle == null) {
-            toolbarTitle = getArguments().getString(Constants.ARG_EPISODE_TITLE);
-        }
-        setEpisodeNameInToolbar(toolbarTitle);
-    }
-
-    private void setEpisodeNameInToolbar(String episodeNameInToolbar) {
-        if (episodeNameInToolbar.isEmpty()) {
-            episodeNameInToolbar = getResources().getString(R.string.destination_asks_unnamed_episode);
-        }
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(episodeNameInToolbar);
     }
 
     private void initTabs(View fragmentView) {
@@ -254,9 +237,6 @@ public class AsksFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSavedEditedEpisodeEvent(SavedEditedEpisodeEvent event) {
         Toast.makeText(requireContext(), getString(R.string.toast_message_episode_saved), Toast.LENGTH_SHORT).show();
-        String savedEpisodeName = model.getModifiableEpisodeCopy().getEpisode();
-        model.setEpisodeNameForToolbarTitle(savedEpisodeName);
-        setEpisodeNameInToolbar(savedEpisodeName);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
