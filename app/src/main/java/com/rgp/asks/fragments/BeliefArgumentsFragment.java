@@ -101,7 +101,7 @@ public class BeliefArgumentsFragment extends Fragment implements OnFloatingActio
         RecyclerView argumentsRecyclerView = rootView.findViewById(R.id.recyclerView);
         LinearLayoutManager argumentsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         argumentsRecyclerView.setLayoutManager(argumentsRecyclerViewLayoutManager);
-        recyclerViewAdapter = new ArgumentRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        recyclerViewAdapter = new ArgumentRecyclerViewAdapter(getString(R.string.destination_asks_unnamed_argument), createOnItemRecyclerViewClickListener());
         argumentsRecyclerView.setAdapter(recyclerViewAdapter);
     }
 

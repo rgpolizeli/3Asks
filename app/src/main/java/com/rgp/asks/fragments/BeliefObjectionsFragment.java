@@ -101,7 +101,7 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
         RecyclerView objectionsRecyclerView = rootView.findViewById(R.id.recyclerView);
         LinearLayoutManager objectionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         objectionsRecyclerView.setLayoutManager(objectionsRecyclerViewLayoutManager);
-        recyclerViewAdapter = new ObjectionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        recyclerViewAdapter = new ObjectionRecyclerViewAdapter(getString(R.string.destination_asks_unnamed_objection), createOnItemRecyclerViewClickListener());
         objectionsRecyclerView.setAdapter(recyclerViewAdapter);
     }
 

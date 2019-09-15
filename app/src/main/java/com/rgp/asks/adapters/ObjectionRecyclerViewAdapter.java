@@ -17,15 +17,17 @@ import java.util.List;
 
 public class ObjectionRecyclerViewAdapter extends RecyclerView.Adapter<ObjectionRecyclerViewAdapter.ViewHolder> implements Filterable {
     @NonNull
-    private final List<Objection> objections;
+    private final List<Objection> dataList;
     @NonNull
     private final List<Objection> backupObjections;
     private View.OnClickListener onItemClickListener;
+    private String emptyName;
 
-    public ObjectionRecyclerViewAdapter(View.OnClickListener onItemClickListener) {
-        this.objections = new ArrayList<>();
+    public ObjectionRecyclerViewAdapter(String emptyName, View.OnClickListener onItemClickListener) {
+        this.dataList = new ArrayList<>();
         this.backupObjections = new ArrayList<>();
         this.onItemClickListener = onItemClickListener;
+        this.emptyName = emptyName;
     }
 
     @NonNull
@@ -38,26 +40,33 @@ public class ObjectionRecyclerViewAdapter extends RecyclerView.Adapter<Objection
     }
 
     public void setData(final List<Objection> objections) {
-        this.objections.clear();
+        this.dataList.clear();
         this.backupObjections.clear();
-        this.objections.addAll(objections);
+        this.dataList.addAll(objections);
         this.backupObjections.addAll(objections);
         notifyDataSetChanged();
     }
 
+    private String getNameToDisplay(int position) {
+        String name = this.dataList.get(position).getObjection();
+        if (name.isEmpty()) {
+            name = this.emptyName;
+        }
+        return name;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ObjectionRecyclerViewAdapter.ViewHolder holder, int position) {
-        Objection objection = this.objections.get(position);
-        holder.objectionTextView.setText(objection.getObjection());
+        holder.objectionTextView.setText(getNameToDisplay(position));
     }
 
     public Objection getItem(int position) {
-        return objections.get(position);
+        return dataList.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return objections.size();
+        return dataList.size();
     }
 
     @Override
@@ -90,8 +99,8 @@ public class ObjectionRecyclerViewAdapter extends RecyclerView.Adapter<Objection
                 if (filteredList == null) {
                     filteredList = new ArrayList<>();
                 }
-                objections.clear();
-                objections.addAll(filteredList);
+                dataList.clear();
+                dataList.addAll(filteredList);
                 notifyDataSetChanged();
             }
         };
@@ -99,8 +108,8 @@ public class ObjectionRecyclerViewAdapter extends RecyclerView.Adapter<Objection
 
     @Override
     public void removeAllAppliedFilter() {
-        objections.clear();
-        objections.addAll(backupObjections);
+        dataList.clear();
+        dataList.addAll(backupObjections);
         notifyDataSetChanged();
     }
 

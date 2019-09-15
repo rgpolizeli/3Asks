@@ -19,15 +19,17 @@ import java.util.List;
 public class ArgumentRecyclerViewAdapter extends RecyclerView.Adapter<ArgumentRecyclerViewAdapter.ViewHolder> implements Filterable {
 
     @NonNull
-    private final List<Argument> arguments;
+    private final List<Argument> dataList;
     @NonNull
     private final List<Argument> backupArguments;
     private View.OnClickListener onItemClickListener;
+    private String emptyName;
 
-    public ArgumentRecyclerViewAdapter(View.OnClickListener onItemClickListener) {
-        this.arguments = new ArrayList<>();
+    public ArgumentRecyclerViewAdapter(String emptyName, View.OnClickListener onItemClickListener) {
+        this.dataList = new ArrayList<>();
         this.backupArguments = new ArrayList<>();
         this.onItemClickListener = onItemClickListener;
+        this.emptyName = emptyName;
     }
 
     @NonNull
@@ -40,26 +42,33 @@ public class ArgumentRecyclerViewAdapter extends RecyclerView.Adapter<ArgumentRe
     }
 
     public void setData(final List<Argument> arguments) {
-        this.arguments.clear();
+        this.dataList.clear();
         this.backupArguments.clear();
-        this.arguments.addAll(arguments);
+        this.dataList.addAll(arguments);
         this.backupArguments.addAll(arguments);
         notifyDataSetChanged();
     }
 
+    private String getNameToDisplay(int position) {
+        String name = this.dataList.get(position).getArgument();
+        if (name.isEmpty()) {
+            name = this.emptyName;
+        }
+        return name;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Argument argument = this.arguments.get(position);
-        holder.argumentTextView.setText(argument.getArgument());
+        holder.argumentTextView.setText(getNameToDisplay(position));
     }
 
     @Override
     public int getItemCount() {
-        return arguments.size();
+        return dataList.size();
     }
 
     public Argument getItem(int position) {
-        return arguments.get(position);
+        return dataList.get(position);
     }
 
     @Override
@@ -92,8 +101,8 @@ public class ArgumentRecyclerViewAdapter extends RecyclerView.Adapter<ArgumentRe
                 if (filteredList == null) {
                     filteredList = new ArrayList<>();
                 }
-                arguments.clear();
-                arguments.addAll(filteredList);
+                dataList.clear();
+                dataList.addAll(filteredList);
                 notifyDataSetChanged();
             }
         };
@@ -101,8 +110,8 @@ public class ArgumentRecyclerViewAdapter extends RecyclerView.Adapter<ArgumentRe
 
     @Override
     public void removeAllAppliedFilter() {
-        arguments.clear();
-        arguments.addAll(backupArguments);
+        dataList.clear();
+        dataList.addAll(backupArguments);
         notifyDataSetChanged();
     }
 

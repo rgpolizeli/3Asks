@@ -18,17 +18,17 @@ import java.util.List;
 
 public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.ViewHolder> implements Filterable {
     @NonNull
-    private final List<Episode> episodes;
+    private final List<Episode> dataList;
     @NonNull
     private final List<Episode> backupEpisodes;
     private final View.OnClickListener onItemClickListener;
-    private final String emptyEpisodeName;
+    private final String emptyName;
 
-    public EpisodesRecyclerViewAdapter(@NonNull String emptyEpisodeName, @NonNull View.OnClickListener onItemClickListener) {
-        this.episodes = new ArrayList<>();
+    public EpisodesRecyclerViewAdapter(@NonNull String emptyName, @NonNull View.OnClickListener onItemClickListener) {
+        this.dataList = new ArrayList<>();
         this.backupEpisodes = new ArrayList<>();
         this.onItemClickListener = onItemClickListener;
-        this.emptyEpisodeName = emptyEpisodeName;
+        this.emptyName = emptyName;
     }
 
     @NonNull
@@ -41,31 +41,35 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
     }
 
     public void setData(@NonNull final List<Episode> episodes) {
-        this.episodes.clear();
+        this.dataList.clear();
         this.backupEpisodes.clear();
-        this.episodes.addAll(episodes);
+        this.dataList.addAll(episodes);
         this.backupEpisodes.addAll(episodes);
         notifyDataSetChanged();
     }
 
+    private String getNameToDisplay(int position) {
+        String name = this.dataList.get(position).getEpisode();
+        if (name.isEmpty()) {
+            name = this.emptyName;
+        }
+        return name;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String episodeName = this.episodes.get(position).getEpisode();
-        if (episodeName.isEmpty()) {
-            episodeName = this.emptyEpisodeName;
-        }
-        holder.episodeTextView.setText(episodeName);
-        holder.episodeDateTextView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(this.episodes.get(position).getDate()));
-        holder.episodePeriodTextView.setText(this.episodes.get(position).getPeriod());
+        holder.episodeTextView.setText(getNameToDisplay(position));
+        holder.episodeDateTextView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(this.dataList.get(position).getDate()));
+        holder.episodePeriodTextView.setText(this.dataList.get(position).getPeriod());
     }
 
     @Override
     public int getItemCount() {
-        return episodes.size();
+        return dataList.size();
     }
 
     public Episode getItem(int position) {
-        return episodes.get(position);
+        return dataList.get(position);
     }
 
     @Override
@@ -104,8 +108,8 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
                 if (filteredEpisodes == null) {
                     filteredEpisodes = new ArrayList<>();
                 }
-                episodes.clear();
-                episodes.addAll(filteredEpisodes);
+                dataList.clear();
+                dataList.addAll(filteredEpisodes);
                 notifyDataSetChanged();
             }
         };
@@ -113,8 +117,8 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
 
     @Override
     public void removeAllAppliedFilter() {
-        episodes.clear();
-        episodes.addAll(backupEpisodes);
+        dataList.clear();
+        dataList.addAll(backupEpisodes);
         notifyDataSetChanged();
     }
 

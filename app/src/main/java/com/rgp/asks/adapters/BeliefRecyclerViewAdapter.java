@@ -17,16 +17,16 @@ import java.util.List;
 
 public class BeliefRecyclerViewAdapter extends RecyclerView.Adapter<BeliefRecyclerViewAdapter.ViewHolder> implements Filterable {
     @NonNull
-    private final List<Belief> beliefs;
+    private final List<Belief> dataList;
     @NonNull
     private final List<Belief> backupBeliefs;
     private final View.OnClickListener onItemClickListener;
-    private final String emptyThought;
+    private final String emptyName;
 
-    public BeliefRecyclerViewAdapter(@NonNull String emptyThought, @NonNull View.OnClickListener onItemClickListener) {
-        this.beliefs = new ArrayList<>();
+    public BeliefRecyclerViewAdapter(@NonNull String emptyName, @NonNull View.OnClickListener onItemClickListener) {
+        this.dataList = new ArrayList<>();
         this.backupBeliefs = new ArrayList<>();
-        this.emptyThought = emptyThought;
+        this.emptyName = emptyName;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -40,29 +40,33 @@ public class BeliefRecyclerViewAdapter extends RecyclerView.Adapter<BeliefRecycl
     }
 
     public void setData(final List<Belief> beliefs) {
-        this.beliefs.clear();
+        this.dataList.clear();
         this.backupBeliefs.clear();
-        this.beliefs.addAll(beliefs);
+        this.dataList.addAll(beliefs);
         this.backupBeliefs.addAll(beliefs);
         notifyDataSetChanged();
     }
 
     public Belief getItem(int position) {
-        return beliefs.get(position);
+        return dataList.get(position);
+    }
+
+    private String getNameToDisplay(int position) {
+        String name = this.dataList.get(position).getBelief();
+        if (name.isEmpty()) {
+            name = this.emptyName;
+        }
+        return name;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String thought = beliefs.get(position).getBelief();
-        if (thought.isEmpty()) {
-            thought = this.emptyThought;
-        }
-        holder.beliefTextView.setText(thought);
+        holder.beliefTextView.setText(getNameToDisplay(position));
     }
 
     @Override
     public int getItemCount() {
-        return this.beliefs.size();
+        return this.dataList.size();
     }
 
     @Override
@@ -95,8 +99,8 @@ public class BeliefRecyclerViewAdapter extends RecyclerView.Adapter<BeliefRecycl
                 if (filteredList == null) {
                     filteredList = new ArrayList<>();
                 }
-                beliefs.clear();
-                beliefs.addAll(filteredList);
+                dataList.clear();
+                dataList.addAll(filteredList);
                 notifyDataSetChanged();
             }
         };
@@ -104,8 +108,8 @@ public class BeliefRecyclerViewAdapter extends RecyclerView.Adapter<BeliefRecycl
 
     @Override
     public void removeAllAppliedFilter() {
-        beliefs.clear();
-        beliefs.addAll(backupBeliefs);
+        dataList.clear();
+        dataList.addAll(backupBeliefs);
         notifyDataSetChanged();
     }
 

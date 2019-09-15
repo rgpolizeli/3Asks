@@ -125,7 +125,7 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
         RecyclerView reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.recyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         reactionsRecyclerView.setLayoutManager(reactionsRecyclerViewLayoutManager);
-        recyclerViewAdapter = new ReactionRecyclerViewAdapter(createOnItemRecyclerViewClickListener());
+        recyclerViewAdapter = new ReactionRecyclerViewAdapter(getString(R.string.destination_asks_unnamed_reaction), createOnItemRecyclerViewClickListener());
         reactionsRecyclerView.setAdapter(recyclerViewAdapter);
     }
 

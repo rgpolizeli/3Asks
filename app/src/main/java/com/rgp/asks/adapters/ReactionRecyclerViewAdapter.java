@@ -21,11 +21,13 @@ public class ReactionRecyclerViewAdapter extends RecyclerView.Adapter<ReactionRe
     @NonNull
     private final List<Reaction> backupReactions;
     private View.OnClickListener onItemClickListener;
+    private final String emptyName;
 
-    public ReactionRecyclerViewAdapter(View.OnClickListener onItemClickListener) {
+    public ReactionRecyclerViewAdapter(@NonNull String emptyName, View.OnClickListener onItemClickListener) {
         this.reactions = new ArrayList<>();
         this.backupReactions = new ArrayList<>();
         this.onItemClickListener = onItemClickListener;
+        this.emptyName = emptyName;
     }
 
     @NonNull
@@ -47,11 +49,18 @@ public class ReactionRecyclerViewAdapter extends RecyclerView.Adapter<ReactionRe
         notifyDataSetChanged();
     }
 
+    private String getNameToDisplay(int position) {
+        String name = this.reactions.get(position).getReaction();
+        if (name.isEmpty()) {
+            name = this.emptyName;
+        }
+        return name;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Reaction reaction = this.reactions.get(position);
-        holder.reactionTextView.setText(reaction.getReaction());
-        holder.reactionClassTextView.setText(reaction.getReactionCategory());
+        holder.reactionTextView.setText(getNameToDisplay(position));
+        holder.reactionClassTextView.setText(this.reactions.get(position).getReactionCategory());
     }
 
     @Override
