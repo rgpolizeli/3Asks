@@ -16,17 +16,8 @@
     <color name="actionBarSubTitleColor">#C5CAE9</color>
     <color name="actionBarNavUpColor">#ffffff</color>
 
-    <!--
-    <color name="colorBackground">#fafafa</color>
-    <color name="primaryColor">#3f51b5</color>
-    <color name="primaryLightColor">#C5CAE9</color>
-    <color name="primaryDarkColor">#002984</color>
-    <color name="secondaryColor">#ff4081</color>
-    <color name="secondaryLightColor">#ff79b0</color>
-    <color name="secondaryDarkColor">#c60055</color>
-    <color name="primaryTextColor">#ffffff</color> --> <!-- actionbar title-->
-    <!--
-    <color name="secondaryTextColor">#C5CAE9</color> --> <!-- for menu icons and nav up -->
+    <color name="secondFloatingActionButtonColor">#FF8579</color>
+    <color name="thirdFloatingActionButtonColor">#FFC879</color>
 
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

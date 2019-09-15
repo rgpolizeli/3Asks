@@ -147,7 +147,7 @@ public class AsksFragment extends Fragment {
                 break;
             case 1:
                 setupFloatingActionButton(
-                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        ColorStateList.valueOf(getResources().getColor(R.color.secondFloatingActionButtonColor)),
                         R.drawable.ic_add_white_24dp,
                         v -> {
                             Fragment f = getWhatFragmentFromFragmentManager();
@@ -160,7 +160,7 @@ public class AsksFragment extends Fragment {
                 break;
             case 2:
                 setupFloatingActionButton(
-                        ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)),
+                        ColorStateList.valueOf(getResources().getColor(R.color.thirdFloatingActionButtonColor)),
                         R.drawable.ic_add_white_24dp,
                         v -> {
                             Fragment f = getWhyFragmentFromFragmentManager();

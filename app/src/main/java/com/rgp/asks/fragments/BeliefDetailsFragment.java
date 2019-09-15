@@ -197,14 +197,14 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_belief, menu);
+        menuInflater.inflate(R.menu.menu_delete, menu);
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_delete_belief) {
+        if (id == R.id.action_delete) {
             model.removeBelief(this.onDeletedEntityListener);
             return true;
         } else {
