@@ -61,8 +61,8 @@ public class ReactionViewModel extends AndroidViewModel {
         }
     }
 
-    public void update(OnUpdatedEntityListener onUpdatedEntityListener) {
-        this.repository.editReaction(getModifiableCopy(), onUpdatedEntityListener);
+    public void update(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        this.repository.editReaction(getModifiableCopy(), finishSignal, onUpdatedEntityListener);
     }
 
     public boolean wasChanged() {

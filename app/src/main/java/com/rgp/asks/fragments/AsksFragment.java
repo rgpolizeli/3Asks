@@ -76,7 +76,7 @@ public class AsksFragment extends Fragment {
                 .setMessage(this.getString(R.string.episode_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
                     this.model.checkedSaveEpisode(getWhenFragmentFromFragmentManager().getOnUpdatedEntityListener());
-                    finish();
+                    //finish();
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
                     //nothing

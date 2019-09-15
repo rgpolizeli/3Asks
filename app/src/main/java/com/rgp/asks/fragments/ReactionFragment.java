@@ -124,8 +124,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
         builder
                 .setMessage(this.getString(R.string.save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    this.model.update(this.onUpdatedEntityListener);
-                    finish();
+                    this.model.update(true, this.onUpdatedEntityListener);
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
                     finish();
@@ -139,8 +138,8 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
     }
 
     private void openUnsavedDialog() {
-        AlertDialog unsavedDialog = createUnsavedDialog();
         if (model.wasChanged()) {
+            AlertDialog unsavedDialog = createUnsavedDialog();
             unsavedDialog.show();
         } else {
             finish();
@@ -172,9 +171,9 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
 
     private void save() {
         if (this.model.wasChanged()) {
-            this.model.update(this.onUpdatedEntityListener);
+            this.model.update(false, this.onUpdatedEntityListener);
         } else {
-            this.onUpdatedEntityListener.onUpdatedEntity(1);
+            this.onUpdatedEntityListener.onUpdatedEntity(false, 1);
         }
     }
 
@@ -241,11 +240,14 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
     }
 
     @Override
-    public void onUpdatedEntity(int numberOfUpdatedRows) {
+    public void onUpdatedEntity(boolean finishSignal, int numberOfUpdatedRows) {
         if (numberOfUpdatedRows > 0) {
             Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireActivity(), "Error in save!", Toast.LENGTH_SHORT).show();
+        }
+        if (finishSignal) {
+            finish();
         }
     }
 }

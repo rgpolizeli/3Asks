@@ -61,8 +61,8 @@ public class ObjectionViewModel extends AndroidViewModel {
         }
     }
 
-    public void update(OnUpdatedEntityListener onUpdatedEntityListener) {
-        this.repository.editObjection(getModifiableCopy(), onUpdatedEntityListener);
+    public void update(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        this.repository.editObjection(getModifiableCopy(), finishSignal, onUpdatedEntityListener);
     }
 
     public boolean wasChanged() {

@@ -16,13 +16,15 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
     private BeliefThinkingStyleDao beliefThinkingStyleDao;
     private List<ThinkingStyle> toDeleteThinkingStyles;
     private List<ThinkingStyle> toInsertThinkingStyles;
+    private boolean finishSignal;
     private OnUpdatedEntityListener onUpdatedEntityListener;
 
-    public saveBeliefAsyncTask(BeliefDao dao, BeliefThinkingStyleDao beliefThinkingStyleDao, List<ThinkingStyle> toDeleteThinkingStyles, List<ThinkingStyle> toInsertThinkingStyles, OnUpdatedEntityListener onUpdatedEntityListener) {
+    public saveBeliefAsyncTask(BeliefDao dao, BeliefThinkingStyleDao beliefThinkingStyleDao, List<ThinkingStyle> toDeleteThinkingStyles, List<ThinkingStyle> toInsertThinkingStyles, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         this.dao = dao;
         this.beliefThinkingStyleDao = beliefThinkingStyleDao;
         this.toDeleteThinkingStyles = toDeleteThinkingStyles;
         this.toInsertThinkingStyles = toInsertThinkingStyles;
+        this.finishSignal = finishSignal;
         this.onUpdatedEntityListener = onUpdatedEntityListener;
     }
 
@@ -60,9 +62,9 @@ public class saveBeliefAsyncTask extends AsyncTask<Belief, Void, Boolean> {
         super.onPostExecute(result);
         if (this.onUpdatedEntityListener != null) {
             if (result) {
-                onUpdatedEntityListener.onUpdatedEntity(1);
+                onUpdatedEntityListener.onUpdatedEntity(this.finishSignal, 1);
             } else {
-                onUpdatedEntityListener.onUpdatedEntity(0);
+                onUpdatedEntityListener.onUpdatedEntity(this.finishSignal, 0);
             }
         }
     }

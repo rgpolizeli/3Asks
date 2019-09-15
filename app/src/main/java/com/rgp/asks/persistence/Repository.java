@@ -147,8 +147,8 @@ public class Repository {
         new insertArgumentAsyncTask(this.argumentDao, onInsertedEntityListener).execute(a);
     }
 
-    public void editArgument(@NonNull final Argument argument, OnUpdatedEntityListener onUpdatedEntityListener) {
-        new saveArgumentAsyncTask(this.argumentDao, onUpdatedEntityListener).execute(argument);
+    public void editArgument(@NonNull final Argument argument, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveArgumentAsyncTask(this.argumentDao, finishSignal, onUpdatedEntityListener).execute(argument);
     }
 
     public void deleteArgument(@NonNull final Argument argument, OnDeletedEntityListener onDeletedEntityListener) {
@@ -163,8 +163,8 @@ public class Repository {
         new insertObjectionAsyncTask(this.objectionDao, onInsertedEntityListener).execute(o);
     }
 
-    public void editObjection(@NonNull final Objection objection, OnUpdatedEntityListener onUpdatedEntityListener) {
-        new saveObjectionAsyncTask(this.objectionDao, onUpdatedEntityListener).execute(objection);
+    public void editObjection(@NonNull final Objection objection, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveObjectionAsyncTask(this.objectionDao, finishSignal, onUpdatedEntityListener).execute(objection);
     }
 
     public void deleteObjection(@NonNull final Objection objection, OnDeletedEntityListener onDeletedEntityListener) {
@@ -180,8 +180,8 @@ public class Repository {
         new insertReactionAsyncTask(this.reactionDao, onInsertedEntityListener).execute(r);
     }
 
-    public void editReaction(@NonNull final Reaction reaction, OnUpdatedEntityListener onUpdatedEntityListener) {
-        new saveReactionAsyncTask(this.reactionDao, onUpdatedEntityListener).execute(reaction);
+    public void editReaction(@NonNull final Reaction reaction, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveReactionAsyncTask(this.reactionDao, finishSignal, onUpdatedEntityListener).execute(reaction);
     }
 
     public void deleteReaction(@NonNull final Reaction reaction, OnDeletedEntityListener onDeletedEntityListener) {
@@ -193,16 +193,17 @@ public class Repository {
         new insertBeliefAsyncTask(this.beliefDao, onInsertedEntityListener).execute(b);
     }
 
-    public void saveEpisode(@NonNull final Episode newEpisode, OnUpdatedEntityListener onUpdatedEntityListener) {
-        new saveEpisodeAsyncTask(this.episodeDao, onUpdatedEntityListener).execute(newEpisode);
+    public void saveEpisode(@NonNull final Episode newEpisode, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        new saveEpisodeAsyncTask(this.episodeDao, finishSignal, onUpdatedEntityListener).execute(newEpisode);
     }
 
-    public void saveBelief(@NonNull final Belief newBelief, @NonNull final List<ThinkingStyle> toDeleteSelectedThinkingStyles, @NonNull final List<ThinkingStyle> toInsertSelectedThinkingStyles, OnUpdatedEntityListener onUpdatedEntityListener) {
+    public void saveBelief(@NonNull final Belief newBelief, @NonNull final List<ThinkingStyle> toDeleteSelectedThinkingStyles, @NonNull final List<ThinkingStyle> toInsertSelectedThinkingStyles, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         new saveBeliefAsyncTask(
                 this.beliefDao,
                 this.beliefThinkingStyleDao,
                 toDeleteSelectedThinkingStyles,
                 toInsertSelectedThinkingStyles,
+                finishSignal,
                 onUpdatedEntityListener
         ).execute(newBelief);
     }

@@ -61,8 +61,8 @@ public class ArgumentViewModel extends AndroidViewModel {
         }
     }
 
-    public void update(OnUpdatedEntityListener onUpdatedEntityListener) {
-        this.repository.editArgument(getModifiableCopy(), onUpdatedEntityListener);
+    public void update(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        this.repository.editArgument(getModifiableCopy(), finishSignal, onUpdatedEntityListener);
     }
 
     public boolean wasChanged() {

@@ -196,7 +196,7 @@ public class AddNewBeliefFragment extends Fragment {
                 .setMessage(this.getString(R.string.belief_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), (dialog, id) -> {
                     model.checkedSaveBelief(getBeliefDetailsFragmentFromFragmentManager().getOnUpdatedEntityListener());
-                    finish();
+                    //finish();
                 })
                 .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), (dialog, id) -> {
                     //nothing

@@ -92,20 +92,22 @@ public class EpisodeViewModel extends AndroidViewModel {
 
     public void uncheckedSaveEpisode(OnUpdatedEntityListener onUpdatedEntityListener) {
         if (episodeWasChanged()) {
-            saveEpisode(onUpdatedEntityListener);
+            saveEpisode(false, onUpdatedEntityListener);
         } else {
-            //err
+            //todo: err
         }
     }
 
     public void checkedSaveEpisode(OnUpdatedEntityListener onUpdatedEntityListener) {
-        saveEpisode(onUpdatedEntityListener);
+        saveEpisode(true, onUpdatedEntityListener);
     }
 
-    private void saveEpisode(OnUpdatedEntityListener onUpdatedEntityListener) {
+    private void saveEpisode(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         Episode newEpisode = getModifiableEpisodeCopy();
         if (newEpisode != null) {
-            this.repository.saveEpisode(newEpisode, onUpdatedEntityListener);
+            this.repository.saveEpisode(newEpisode, finishSignal, onUpdatedEntityListener);
+        } else {
+            //todo: err
         }
     }
 

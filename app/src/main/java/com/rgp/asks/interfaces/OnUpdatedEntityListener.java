@@ -1,5 +1,5 @@
 package com.rgp.asks.interfaces;
 
 public interface OnUpdatedEntityListener {
-    void onUpdatedEntity(int numberOfUpdatedRows);
+    void onUpdatedEntity(boolean finishSignal, int numberOfUpdatedRows);
 }

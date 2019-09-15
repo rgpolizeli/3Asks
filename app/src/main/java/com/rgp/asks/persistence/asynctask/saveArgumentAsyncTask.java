@@ -8,10 +8,12 @@ import com.rgp.asks.persistence.entity.Argument;
 
 public class saveArgumentAsyncTask extends AsyncTask<Argument, Void, Integer> {
     private ArgumentDao dao;
+    private boolean finishSignal;
     private OnUpdatedEntityListener onUpdatedEntityListener;
 
-    public saveArgumentAsyncTask(ArgumentDao dao, OnUpdatedEntityListener onUpdatedEntityListener) {
+    public saveArgumentAsyncTask(ArgumentDao dao, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         this.dao = dao;
+        this.finishSignal = finishSignal;
         this.onUpdatedEntityListener = onUpdatedEntityListener;
     }
 
@@ -30,7 +32,7 @@ public class saveArgumentAsyncTask extends AsyncTask<Argument, Void, Integer> {
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
         if (this.onUpdatedEntityListener != null) {
-            this.onUpdatedEntityListener.onUpdatedEntity(result);
+            this.onUpdatedEntityListener.onUpdatedEntity(this.finishSignal, result);
         }
     }
 }

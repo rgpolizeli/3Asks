@@ -223,11 +223,14 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
     }
 
     @Override
-    public void onUpdatedEntity(int numberOfUpdatedRows) {
+    public void onUpdatedEntity(boolean finishSignal, int numberOfUpdatedRows) {
         if (numberOfUpdatedRows > 0) {
             Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireActivity(), "Error in save!", Toast.LENGTH_SHORT).show();
+        }
+        if (finishSignal) {
+            finish();
         }
     }
 

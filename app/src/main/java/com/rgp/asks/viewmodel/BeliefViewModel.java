@@ -144,12 +144,14 @@ public class BeliefViewModel extends AndroidViewModel {
         }
     }
 
-    private void saveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
+    private void saveBelief(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         Belief b = this.beliefLiveData.getValue();
         if (b != null && this.modifiableBeliefCopy.getId() == b.getId()) {
             List<ThinkingStyle> toDelete = this.getToDeleteThinkingStyles();
             List<ThinkingStyle> toInsert = this.getToInsertThinkingStyles();
-            this.repository.saveBelief(this.modifiableBeliefCopy, toDelete, toInsert, onUpdatedEntityListener);
+            this.repository.saveBelief(this.modifiableBeliefCopy, toDelete, toInsert, finishSignal, onUpdatedEntityListener);
+        } else {
+            //todo:err
         }
     }
 
@@ -210,14 +212,14 @@ public class BeliefViewModel extends AndroidViewModel {
 
     public void uncheckedSaveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
         if (beliefWasChanged()) {
-            saveBelief(onUpdatedEntityListener);
+            saveBelief(false, onUpdatedEntityListener);
         } else {
             //err
         }
     }
 
     public void checkedSaveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
-        saveBelief(onUpdatedEntityListener);
+        saveBelief(true, onUpdatedEntityListener);
     }
 
     private boolean isListsEquals(List<?> A, List<?> B) {

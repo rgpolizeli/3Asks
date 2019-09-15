@@ -8,10 +8,12 @@ import com.rgp.asks.persistence.entity.Reaction;
 
 public class saveReactionAsyncTask extends AsyncTask<Reaction, Void, Integer> {
     private ReactionDao dao;
+    private boolean finishSignal;
     private OnUpdatedEntityListener onUpdatedEntityListener;
 
-    public saveReactionAsyncTask(ReactionDao dao, OnUpdatedEntityListener onUpdatedEntityListener) {
+    public saveReactionAsyncTask(ReactionDao dao, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         this.dao = dao;
+        this.finishSignal = finishSignal;
         this.onUpdatedEntityListener = onUpdatedEntityListener;
     }
 
@@ -29,7 +31,7 @@ public class saveReactionAsyncTask extends AsyncTask<Reaction, Void, Integer> {
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
         if (this.onUpdatedEntityListener != null) {
-            this.onUpdatedEntityListener.onUpdatedEntity(result);
+            this.onUpdatedEntityListener.onUpdatedEntity(this.finishSignal, result);
         }
     }
 }
