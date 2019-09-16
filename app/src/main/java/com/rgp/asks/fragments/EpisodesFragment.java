@@ -50,7 +50,7 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_episodes, container, false);
+        return inflater.inflate(R.layout.fragment_search_recycler_view, container, false);
     }
 
     @Override
@@ -64,8 +64,10 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
                 null,
                 floatingActionButton,
                 recyclerViewAdapter,
-                fragmentView.findViewById(R.id.search)
+                fragmentView.findViewById(R.id.search),
+                fragmentView.findViewById(R.id.searchHeaderTextView)
         );
+        this.searcher.setSearchHeader(getString(R.string.search_header_episodes));
         initViewModel();
         model.getAllEpisodes().removeObservers(this);
         model.getAllEpisodes().observe(this, this.observer);

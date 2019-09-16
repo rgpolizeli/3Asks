@@ -129,4 +129,11 @@
     <string name="destination_edit_reaction_fragment">Edit reaction</string>
     <string name="destination_edit_argument_fragment">Edit argument</string>
     <string name="destination_edit_objection_fragment">Edit objection</string>
+
+    <!-- search headers-->
+    <string name="search_header_episodes">Episodes</string>
+    <string name="search_header_reactions">Reactions</string>
+    <string name="search_header_beliefs">Beliefs</string>
+    <string name="search_header_arguments">Arguments</string>
+    <string name="search_header_objections">Objections</string>
 </resources>

@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <com.rgp.asks.views.SearchLayout
-        android:id="@+id/search"
+
+    <TextView
+        android:id="@+id/searchHeaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
+        android:background="#EEEEEE"
+        android:gravity="start"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text=""
+        android:textAllCaps="false"
+        android:textColor="@color/dark_gray"
         android:visibility="gone"
-        app:elevation="1dp" />
+        android:textSize="14sp"
+        app:fontFamily="@font/roboto"
+        tools:text="TextView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical" />
+
+    <com.rgp.asks.views.SearchLayout
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"></com.rgp.asks.views.SearchLayout>
+
 </LinearLayout>

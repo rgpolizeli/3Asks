@@ -60,8 +60,10 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
                 requireParentFragment().requireView().findViewById(R.id.tabs),
                 getFloatingActionButton(),
                 recyclerViewAdapter,
-                fragmentView.findViewById(R.id.search)
+                fragmentView.findViewById(R.id.search),
+                fragmentView.findViewById(R.id.searchHeaderTextView)
         );
+        this.searcher.setSearchHeader(getString(R.string.search_header_objections));
         initViewModel();
         model.getObjectionsLiveData().removeObservers(this);
         model.getObjectionsLiveData().observe(this, this.observer);

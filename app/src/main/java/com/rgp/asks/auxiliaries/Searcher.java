@@ -1,6 +1,7 @@
 package com.rgp.asks.auxiliaries;
 
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -19,15 +20,23 @@ public class Searcher {
     private FloatingActionButton floatingActionButton;
     private Filterable filterableAdapter;
     private SearchLayout searchLayout;
+    private TextView searchHeaderTextView;
 
-    public Searcher(ActionBar actionBar, DisableSwipeViewPager viewPager, TabLayout tabLayout, FloatingActionButton floatingActionButton, Filterable filterableAdapter, SearchLayout searchLayout) {
+    public Searcher(ActionBar actionBar, DisableSwipeViewPager viewPager, TabLayout tabLayout, FloatingActionButton floatingActionButton, Filterable filterableAdapter, SearchLayout searchLayout, TextView searchHeaderTextView) {
         this.actionBar = actionBar;
         this.viewPager = viewPager;
         this.tabLayout = tabLayout;
         this.floatingActionButton = floatingActionButton;
         this.filterableAdapter = filterableAdapter;
         this.searchLayout = searchLayout;
+        this.searchHeaderTextView = searchHeaderTextView;
         setupSearchLayoutListerners();
+    }
+
+    public void setSearchHeader(String searchHeader) {
+        if (this.searchHeaderTextView != null) {
+            this.searchHeaderTextView.setText(searchHeader);
+        }
     }
 
     public void openSearch() {
@@ -56,6 +65,9 @@ public class Searcher {
         if (this.floatingActionButton != null) {
             this.floatingActionButton.setVisibility(View.VISIBLE);
         }
+        if (this.searchHeaderTextView != null) {
+            this.searchHeaderTextView.setVisibility(View.GONE);
+        }
     }
 
     private void modifyLayoutBecauseOpenedSearch() {
@@ -66,6 +78,9 @@ public class Searcher {
         }
         if (this.floatingActionButton != null) {
             this.floatingActionButton.setVisibility(View.GONE);
+        }
+        if (this.searchHeaderTextView != null) {
+            this.searchHeaderTextView.setVisibility(View.VISIBLE);
         }
     }
 

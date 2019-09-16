@@ -60,8 +60,10 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
                 requireParentFragment().requireView().findViewById(R.id.tabs),
                 getFloatingActionButton(),
                 recyclerViewAdapter,
-                fragmentView.findViewById(R.id.search)
+                fragmentView.findViewById(R.id.search),
+                fragmentView.findViewById(R.id.searchHeaderTextView)
         );
+        this.searcher.setSearchHeader(getString(R.string.search_header_beliefs));
         initViewModel();
         int episodeIdToLoad = model.getEpisodeId();
         if (episodeIdToLoad != -1) {
