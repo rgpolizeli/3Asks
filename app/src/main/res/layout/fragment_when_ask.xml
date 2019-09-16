@@ -8,24 +8,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="24dp">
-
-        <com.rgp.asks.views.TextInputLayout
-            android:id="@+id/episodeNameTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorMessage="@string/episode_dialog_error_empty_episode_name"
-            app:label="@string/hint_episode_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:numberOfLines="1" />
+        android:layout_margin="@dimen/marginToForms">
 
         <com.rgp.asks.views.DateInputLayout
             android:id="@+id/episodeDateInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/textInputLayoutSpace"
+            android:layout_marginTop="@dimen/spaceBetweenTwoInputLayouts"
             app:dateLabel="@string/hint_episode_date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/episodeNameTextInputLayout" />
@@ -44,10 +33,21 @@
             app:spinnerLabel="@string/hint_episode_period" />
 
         <com.rgp.asks.views.TextInputLayout
+            android:id="@+id/episodeNameTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorMessage="@string/episode_dialog_error_empty_episode_name"
+            app:label="@string/hint_episode_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:numberOfLines="1" />
+
+        <com.rgp.asks.views.TextInputLayout
             android:id="@+id/episodeDescriptionTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/textInputLayoutSpace"
+            android:layout_marginTop="@dimen/spaceBetweenTwoInputLayouts"
             app:fontFamily="@font/roboto"
             app:label="@string/hint_episode_description"
             app:layout_constraintStart_toStartOf="parent"

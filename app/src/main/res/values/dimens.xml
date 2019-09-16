@@ -2,9 +2,16 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="textInputLayoutSpace">20dp</dimen>
-    <dimen name="minHeightItemRecyclerView">50dp</dimen>
+    <dimen name="minHeightSingleLineItemRecyclerView">50dp</dimen>
+    <dimen name="minHeightTwoLineItemRecyclerView">72dp</dimen>
     <dimen name="minHeightForInputViews">40dp</dimen>
     <dimen name="paddingLeftCheckBox">20dp</dimen>
     <dimen name="searchLayoutHeight">50dp</dimen>
+
+    <!-- space between two views of type InputLayout -->
+    <dimen name="spaceBetweenTwoInputLayouts">20dp</dimen>
+
+    <!-- form margin -->
+    <dimen name="marginToForms">20dp</dimen>
+
 </resources>

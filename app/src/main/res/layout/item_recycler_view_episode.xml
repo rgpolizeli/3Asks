@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/episodeConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:minHeight="@dimen/minHeightItemRecyclerView">
+    android:layout_height="@dimen/minHeightTwoLineItemRecyclerView">
 
     <LinearLayout
         android:id="@+id/linearLayout"

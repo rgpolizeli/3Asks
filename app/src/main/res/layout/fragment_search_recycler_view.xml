@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.rgp.asks.views.SearchLayout
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/searchHeaderTextView"
         android:layout_width="match_parent"
@@ -23,13 +30,6 @@
         android:textSize="14sp"
         app:fontFamily="@font/roboto"
         tools:text="TextView" />
-
-    <com.rgp.asks.views.SearchLayout
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

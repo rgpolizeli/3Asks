@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/reactionConstraintLayout"
     android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-    android:padding="24dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/marginToForms">
 
     <com.rgp.asks.views.SpinnerInputLayout
         android:id="@+id/reactionClassSpinnerInputLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/spaceBetweenTwoInputLayouts"
         app:entries="@array/reaction_categories_array"
         app:fontFamily="@font/roboto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reactionTextInputLayout"
-        app:spinnerLabel="@string/hint_reaction_category"></com.rgp.asks.views.SpinnerInputLayout>
+        app:spinnerLabel="@string/hint_reaction_category" />
 
     <com.rgp.asks.views.TextInputLayout
         android:id="@+id/reactionTextInputLayout"

@@ -50,7 +50,7 @@
     <style name="thinkingStyleCheckBoxStyle">
         <item name="android:paddingLeft">@dimen/paddingLeftCheckBox</item>
         <item name="android:paddingStart">@dimen/paddingLeftCheckBox</item>
-        <item name="android:minHeight">@dimen/minHeightItemRecyclerView</item>
+        <item name="android:minHeight">@dimen/minHeightSingleLineItemRecyclerView</item>
     </style>
 
 </resources>
