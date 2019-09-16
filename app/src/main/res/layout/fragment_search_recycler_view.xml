@@ -13,7 +13,7 @@
         android:background="#EEEEEE"
         android:gravity="start"
         android:paddingStart="16dp"
-        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text=""
@@ -24,16 +24,17 @@
         app:fontFamily="@font/roboto"
         tools:text="TextView" />
 
+    <com.rgp.asks.views.SearchLayout
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical" />
-
-    <com.rgp.asks.views.SearchLayout
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"></com.rgp.asks.views.SearchLayout>
 
 </LinearLayout>

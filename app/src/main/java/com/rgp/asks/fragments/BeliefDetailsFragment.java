@@ -102,8 +102,9 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
 
     private void createObserverThinkingStyles() {
         this.observerThinkingStyles = result -> {
+            //it is necessary to ever reload checkboxes when this fragment is showed. See issue #
+            loadFragmentThinkingStylesViewsFromViewModel(result);
             if (this.model.isThinkingStylesFirstLoad()) {
-                loadFragmentThinkingStylesViewsFromViewModel(result);
                 this.model.initModifiableSelectedThinkingStylesCopy(result);
                 this.model.setIsThinkingStylesFirstLoad(false);
             }
@@ -136,10 +137,9 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
 
     private void loadFragmentThinkingStylesViewsFromViewModel(@NonNull List<ThinkingStyle> thinkingStyles) {
         for (ThinkingStyle thinkingStyle : thinkingStyles) {
-            this.thinkingStylesCheckBoxes
-                    .get(thinkingStyle.getThinkingStyle())
-                    .setChecked(true);
-            ;
+            CheckBox checkBox = this.thinkingStylesCheckBoxes.get(thinkingStyle.getThinkingStyle());
+            checkBox.setChecked(true);
+            checkBox.jumpDrawablesToCurrentState();
         }
     }
 
