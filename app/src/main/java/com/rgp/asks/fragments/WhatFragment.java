@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -127,6 +128,8 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
         RecyclerView reactionsRecyclerView = rootView.findViewById(com.rgp.asks.R.id.recyclerView);
         LinearLayoutManager reactionsRecyclerViewLayoutManager = new LinearLayoutManager(rootView.getContext());
         reactionsRecyclerView.setLayoutManager(reactionsRecyclerViewLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(reactionsRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        reactionsRecyclerView.addItemDecoration(dividerItemDecoration);
         recyclerViewAdapter = new ReactionRecyclerViewAdapter(getString(R.string.destination_asks_unnamed_reaction), createOnItemRecyclerViewClickListener());
         reactionsRecyclerView.setAdapter(recyclerViewAdapter);
     }

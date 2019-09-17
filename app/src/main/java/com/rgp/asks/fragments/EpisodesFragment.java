@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -156,6 +157,8 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
         RecyclerView episodesRecyclerView = rootView.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager episodesRecyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         episodesRecyclerView.setLayoutManager(episodesRecyclerViewLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(episodesRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        episodesRecyclerView.addItemDecoration(dividerItemDecoration);
         this.recyclerViewAdapter = new EpisodesRecyclerViewAdapter(getResources().getString(R.string.destination_asks_unnamed_episode), createOnItemRecyclerViewClickListener());
         episodesRecyclerView.setAdapter(this.recyclerViewAdapter);
     }

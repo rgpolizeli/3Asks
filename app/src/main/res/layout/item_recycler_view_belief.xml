@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/beliefConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginRight="8dp"
     android:background="@color/white"
-    android:minHeight="@dimen/minHeightSingleLineItemRecyclerView"
-    android:padding="16dp">
+    android:minHeight="@dimen/minHeightSingleLineItemRecyclerView">
 
     <TextView
         android:id="@+id/beliefTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginHorizontalItemRecyclerView"
+        android:layout_marginLeft="@dimen/marginHorizontalItemRecyclerView"
+        android:layout_marginTop="@dimen/marginVerticalItemRecyclerView"
+        android:layout_marginEnd="@dimen/marginHorizontalItemRecyclerView"
+        android:layout_marginRight="@dimen/marginHorizontalItemRecyclerView"
+        android:layout_marginBottom="@dimen/marginVerticalItemRecyclerView"
         android:ellipsize="end"
         android:maxLines="4"
-        android:text="Belief"
         android:textColor="#000000"
         android:textSize="16sp"
         app:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Belief" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
