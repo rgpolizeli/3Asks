@@ -16,7 +16,7 @@ public class OnItemSelectedListenerEpisodePeriod implements AdapterView.OnItemSe
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String period = parent.getItemAtPosition(position).toString();
-        Episode e = model.getModifiableEpisodeCopy();
+        Episode e = model.getModifiableEntityCopy();
         e.setPeriod(period);
     }
 

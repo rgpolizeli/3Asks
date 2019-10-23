@@ -3,6 +3,7 @@ package com.rgp.asks.persistence.entity;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -21,6 +22,13 @@ public class Belief {
     private int episodeId;
 
     public Belief(@NonNull String belief, int episodeId) {
+        this.belief = belief;
+        this.episodeId = episodeId;
+    }
+
+    @Ignore
+    public Belief(int id, @NonNull String belief, int episodeId) {
+        this.id = id;
         this.belief = belief;
         this.episodeId = episodeId;
     }
@@ -68,5 +76,13 @@ public class Belief {
         result = 31 * result + getBelief().hashCode();
         result = 31 * result + getEpisodeId();
         return result;
+    }
+
+    public Belief copy() {
+        return new Belief(
+                getId(),
+                getBelief(),
+                getEpisodeId()
+        );
     }
 }

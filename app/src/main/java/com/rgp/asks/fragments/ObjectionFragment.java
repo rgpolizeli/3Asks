@@ -71,16 +71,16 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
                 R.drawable.ic_save_white_24dp,
                 v -> {
                     hideKeyboard(v);
-                    save();
+                    updateObjection();
                 }
         );
         initViewModel();
         int id = requireArguments().getInt(Constants.ARG_ID);
-        this.model.setId(id);
+        this.model.setEntityId(id);
         if (id != -1) {
             initViews(fragmentView);
-            this.model.getEntityLiveData().removeObservers(this);
-            this.model.getEntityLiveData().observe(this, this.observer);
+            this.model.getObjection().removeObservers(this);
+            this.model.getObjection().observe(this, this.observer);
         } else {
             //todo: err
         }
@@ -102,10 +102,10 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
 
     private void createObserver() {
         this.observer = observed -> {
-            if (model.isInFirstLoad()) {
+            if (model.isEntityInFirstLoad()) {
                 loadFragmentFromViewModel(observed);
-                model.initModifiableCopy(observed);
-                model.setIsInFirstLoad(false);
+                model.setModifiableEntityCopy(observed.copy());
+                model.setIsEntityInFirstLoad(false);
             }
             setupViewListeners();
         };
@@ -120,7 +120,7 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
         builder
                 .setMessage(this.getString(R.string.save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    this.model.update(true, this.onUpdatedEntityListener);
+                    this.model.updateObjection(true, this.onUpdatedEntityListener);
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
                     finish();
@@ -134,7 +134,7 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
     }
 
     private void openUnsavedDialog() {
-        if (model.wasChanged()) {
+        if (model.entityWasChanged()) {
             AlertDialog unsavedDialog = createUnsavedDialog();
             unsavedDialog.show();
         } else {
@@ -164,9 +164,9 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
         this.objectionTextInputLayout = rootView.findViewById(R.id.objectionTextInputLayout);
     }
 
-    private void save() {
-        if (this.model.wasChanged()) {
-            this.model.update(false, this.onUpdatedEntityListener);
+    private void updateObjection() {
+        if (this.model.entityWasChanged()) {
+            this.model.updateObjection(false, this.onUpdatedEntityListener);
         } else {
             this.onUpdatedEntityListener.onUpdatedEntity(false, 1);
         }
@@ -188,7 +188,7 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                Objection objection = model.getModifiableCopy();
+                Objection objection = model.getModifiableEntityCopy();
                 objection.setObjection(s.toString());
             }
         });
@@ -204,7 +204,7 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            this.model.delete(this.onDeletedEntityListener);
+            this.model.deleteObjection(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -226,7 +226,7 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
         if (numberOfUpdatedRows > 0) {
             Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(requireActivity(), "Error in save!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Error in updateObjection!", Toast.LENGTH_SHORT).show();
         }
         if (finishSignal) {
             finish();

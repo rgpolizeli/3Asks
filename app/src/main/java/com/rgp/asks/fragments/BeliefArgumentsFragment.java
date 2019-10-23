@@ -139,13 +139,14 @@ public class BeliefArgumentsFragment extends Fragment implements OnFloatingActio
     @Override
     public void onFloatingActionButtonClick() {
         if (this.model != null) {
-            createArgument();
+            insertNewArgument();
         }
     }
 
-    private void createArgument() {
-        this.model.createArgument(
-                "",
+    private void insertNewArgument() {
+        Argument newArgument = new Argument("", this.model.getEntityId());
+        this.model.insertArgument(
+                newArgument,
                 this.onInsertedEntityListener
         );
     }

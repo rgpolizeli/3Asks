@@ -71,16 +71,16 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
                 R.drawable.ic_save_white_24dp,
                 v -> {
                     hideKeyboard(v);
-                    save();
+                    updateArgument();
                 }
         );
         initViewModel();
         int id = requireArguments().getInt(Constants.ARG_ID);
-        this.model.setId(id);
+        this.model.setEntityId(id);
         if (id != -1) {
             initViews(fragmentView);
-            this.model.getEntityLiveData().removeObservers(this);
-            this.model.getEntityLiveData().observe(this, this.observer);
+            this.model.getArgument().removeObservers(this);
+            this.model.getArgument().observe(this, this.observer);
         } else {
             //todo: err
         }
@@ -102,10 +102,10 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
 
     private void createObserver() {
         this.observer = observed -> {
-            if (model.isInFirstLoad()) {
+            if (model.isEntityInFirstLoad()) {
                 loadFragmentFromViewModel(observed);
-                model.initModifiableCopy(observed);
-                model.setIsInFirstLoad(false);
+                model.setModifiableEntityCopy(observed.copy());
+                model.setIsEntityInFirstLoad(false);
             }
             setupViewListeners();
         };
@@ -120,7 +120,7 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
         builder
                 .setMessage(this.getString(R.string.save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    this.model.update(true, this.onUpdatedEntityListener);
+                    this.model.updateArgument(true, this.onUpdatedEntityListener);
                     //finish();
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
@@ -135,7 +135,7 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
     }
 
     private void openUnsavedDialog() {
-        if (model.wasChanged()) {
+        if (model.entityWasChanged()) {
             AlertDialog unsavedDialog = createUnsavedDialog();
             unsavedDialog.show();
         } else {
@@ -165,9 +165,9 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
         this.argumentTextInputLayout = rootView.findViewById(R.id.argumentTextInputLayout);
     }
 
-    private void save() {
-        if (this.model.wasChanged()) {
-            this.model.update(false, this.onUpdatedEntityListener);
+    private void updateArgument() {
+        if (this.model.entityWasChanged()) {
+            this.model.updateArgument(false, this.onUpdatedEntityListener);
         } else {
             this.onUpdatedEntityListener.onUpdatedEntity(false, 1);
         }
@@ -189,7 +189,7 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                Argument argument = model.getModifiableCopy();
+                Argument argument = model.getModifiableEntityCopy();
                 argument.setArgument(s.toString());
             }
         });
@@ -205,7 +205,7 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            this.model.delete(this.onDeletedEntityListener);
+            this.model.deleteArgument(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -227,7 +227,7 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
         if (numberOfUpdatedRows > 0) {
             Toast.makeText(requireActivity(), "Saved", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(requireActivity(), "Error in save!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Error in updateArgument!", Toast.LENGTH_SHORT).show();
         }
         if (finishSignal) {
             finish();

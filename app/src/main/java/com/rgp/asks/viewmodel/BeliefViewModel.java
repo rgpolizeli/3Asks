@@ -3,46 +3,41 @@ package com.rgp.asks.viewmodel;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.rgp.asks.interfaces.OnDeletedEntityListener;
 import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.interfaces.OnUpdatedEntityListener;
-import com.rgp.asks.persistence.Repository;
 import com.rgp.asks.persistence.entity.Argument;
 import com.rgp.asks.persistence.entity.Belief;
 import com.rgp.asks.persistence.entity.Objection;
 import com.rgp.asks.persistence.entity.ThinkingStyle;
+import com.rgp.asks.persistence.repositories.ArgumentRepository;
+import com.rgp.asks.persistence.repositories.BeliefRepository;
+import com.rgp.asks.persistence.repositories.BeliefThinkingStyleRepository;
+import com.rgp.asks.persistence.repositories.ObjectionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BeliefViewModel extends AndroidViewModel {
-    private int beliefId;
-    private LiveData<Belief> beliefLiveData;
-    private boolean isBeliefFirstLoad;
-    private Belief modifiableBeliefCopy;
+public class BeliefViewModel extends EntityViewModel<Belief> {
     private LiveData<List<ThinkingStyle>> thinkingStylesLiveData;
     private boolean isThinkingStylesFirstLoad;
     private List<ThinkingStyle> modifiableThinkingStylesCopy;
     private LiveData<List<Argument>> argumentsLiveData;
     private LiveData<List<Objection>> objectionsLiveData;
-    private Repository repository;
+    private BeliefRepository beliefRepository;
+    private BeliefThinkingStyleRepository beliefThinkingStyleRepository;
+    private ArgumentRepository argumentRepository;
+    private ObjectionRepository objectionRepository;
 
     public BeliefViewModel(@NonNull Application application) {
         super(application);
-        this.repository = new Repository(application);
-        this.isBeliefFirstLoad = true;
+        this.beliefRepository = new BeliefRepository(application);
+        this.beliefThinkingStyleRepository = new BeliefThinkingStyleRepository(application);
+        this.argumentRepository = new ArgumentRepository(application);
+        this.objectionRepository = new ObjectionRepository(application);
         this.isThinkingStylesFirstLoad = true;
-    }
-
-    public boolean isBeliefFirstLoad() {
-        return this.isBeliefFirstLoad;
-    }
-
-    public void setIsBeliefFirstLoad(boolean is) {
-        this.isBeliefFirstLoad = is;
     }
 
     public boolean isThinkingStylesFirstLoad() {
@@ -53,23 +48,8 @@ public class BeliefViewModel extends AndroidViewModel {
         this.isThinkingStylesFirstLoad = is;
     }
 
-    public int getBeliefId() {
-        return this.beliefId;
-    }
-
-    public void setBeliefId(int beliefId) {
-        this.beliefId = beliefId;
-    }
-
-    public LiveData<Belief> getBeliefLiveData() {
-        if (this.beliefLiveData == null) {
-            loadBelief();
-        }
-        return this.beliefLiveData;
-    }
-
-    private void loadBelief() {
-        this.beliefLiveData = this.repository.getBeliefById(beliefId);
+    public LiveData<Belief> getBelief() {
+        return super.getEntityById(this.beliefRepository);
     }
 
     public LiveData<List<ThinkingStyle>> getThinkingStylesLiveData() {
@@ -80,40 +60,28 @@ public class BeliefViewModel extends AndroidViewModel {
     }
 
     private void loadThinkingStyles() {
-        this.thinkingStylesLiveData = this.repository.getThinkingStylesForBelief(beliefId);
+        this.thinkingStylesLiveData = this.beliefThinkingStyleRepository.getThinkingStylesForBelief(super.getEntityId());
     }
 
     public LiveData<List<Argument>> getArgumentsLiveData() {
         if (this.argumentsLiveData == null) {
-            loadArguments();
+            this.argumentsLiveData = this.argumentRepository.getArgumentsForBelief(super.getEntityId());
         }
         return argumentsLiveData;
     }
 
-    private void loadArguments() {
-        this.argumentsLiveData = this.repository.getArgumentsForBelief(this.beliefId);
-    }
-
     public LiveData<List<Objection>> getObjectionsLiveData() {
         if (this.objectionsLiveData == null) {
-            loadObjections();
+            this.objectionsLiveData = this.objectionRepository.getObjectionsForBelief(super.getEntityId());
         }
         return objectionsLiveData;
     }
 
-    private void loadObjections() {
-        this.objectionsLiveData = this.repository.getObjectionsForBelief(this.beliefId);
-    }
-
-    public void initModifiableBeliefCopy(@NonNull Belief belief) {
-        this.modifiableBeliefCopy = new Belief(belief.getBelief(), belief.getEpisodeId());
-        this.modifiableBeliefCopy.setId(belief.getId());
-    }
-
-    public Belief getModifiableBeliefCopy() {
-        return modifiableBeliefCopy;
-    }
-
+    /**
+     * Creates a new list with the thinking styles received.
+     *
+     * @param thinkingStyles of the belief.
+     */
     public void initModifiableSelectedThinkingStylesCopy(@NonNull List<ThinkingStyle> thinkingStyles) {
         this.modifiableThinkingStylesCopy = new ArrayList<>(thinkingStyles);
     }
@@ -130,29 +98,22 @@ public class BeliefViewModel extends AndroidViewModel {
         this.getModifiableThinkingStylesCopy().remove(unhelpfulThinkingStyle);
     }
 
-    public void createArgument(@NonNull final String newArgument, OnInsertedEntityListener onInsertedEntityListener) {
-        Belief b = beliefLiveData.getValue();
-        if (b != null) {
-            this.repository.createArgument(b.getId(), newArgument, onInsertedEntityListener);
-        }
+    public void insertArgument(@NonNull final Argument newArgument, OnInsertedEntityListener onInsertedEntityListener) {
+        this.argumentRepository.insertEntity(newArgument, onInsertedEntityListener);
     }
 
-    public void createObjection(@NonNull final String newObjection, OnInsertedEntityListener onInsertedEntityListener) {
-        Belief b = beliefLiveData.getValue();
-        if (b != null) {
-            this.repository.createObjection(b.getId(), newObjection, onInsertedEntityListener);
-        }
+    public void insertObjection(@NonNull final Objection newObjection, OnInsertedEntityListener onInsertedEntityListener) {
+        this.objectionRepository.insertEntity(newObjection, onInsertedEntityListener);
     }
 
-    private void saveBelief(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
-        Belief b = this.beliefLiveData.getValue();
-        if (b != null && this.modifiableBeliefCopy.getId() == b.getId()) {
-            List<ThinkingStyle> toDelete = this.getToDeleteThinkingStyles();
-            List<ThinkingStyle> toInsert = this.getToInsertThinkingStyles();
-            this.repository.saveBelief(this.modifiableBeliefCopy, toDelete, toInsert, finishSignal, onUpdatedEntityListener);
-        } else {
-            //todo:err
-        }
+    public void updateBelief(boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+        List<ThinkingStyle> toDelete = this.getToDeleteThinkingStyles();
+        List<ThinkingStyle> toInsert = this.getToInsertThinkingStyles();
+        this.beliefRepository.updateBelief(super.getModifiableEntityCopy(), toDelete, toInsert, finishSignal, onUpdatedEntityListener);
+    }
+
+    public void deleteBelief(OnDeletedEntityListener onDeletedEntityListener) {
+        super.deleteEntity(this.beliefRepository, onDeletedEntityListener);
     }
 
     private List<ThinkingStyle> getToDeleteThinkingStyles() {
@@ -183,43 +144,13 @@ public class BeliefViewModel extends AndroidViewModel {
         return toInsert;
     }
 
-    public void removeBelief(OnDeletedEntityListener onDeletedEntityListener) {
-        Belief b = this.getBeliefLiveData().getValue();
-        if (b != null) {
-            this.repository.deleteBelief(b, onDeletedEntityListener);
-        } else {
-            //err
-        }
-    }
-
     public boolean beliefWasChanged() {
-        Belief currentBelief = this.getBeliefLiveData().getValue();
-        Belief modifiedBelief = this.getModifiableBeliefCopy();
-
         List<ThinkingStyle> selectedThinkingStyles = this.getThinkingStylesLiveData().getValue();
         List<ThinkingStyle> modifiableSelectedThinkingStylesCopy = this.getModifiableThinkingStylesCopy();
-
-        if (currentBelief != null && currentBelief.getId() == modifiedBelief.getId()) {
-            return (
-                    !currentBelief.getBelief().equals(modifiedBelief.getBelief()) ||
-                            isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy)
-            );
-        } else {
-            //err
-            return false;
-        }
-    }
-
-    public void uncheckedSaveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
-        if (beliefWasChanged()) {
-            saveBelief(false, onUpdatedEntityListener);
-        } else {
-            //err
-        }
-    }
-
-    public void checkedSaveBelief(OnUpdatedEntityListener onUpdatedEntityListener) {
-        saveBelief(true, onUpdatedEntityListener);
+        return (
+                super.entityWasChanged() ||
+                        isListsEquals(selectedThinkingStyles, modifiableSelectedThinkingStylesCopy)
+        );
     }
 
     private boolean isListsEquals(List<?> A, List<?> B) {

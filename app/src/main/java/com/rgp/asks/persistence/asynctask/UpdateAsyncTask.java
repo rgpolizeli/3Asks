@@ -2,29 +2,25 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
-import com.rgp.asks.interfaces.OnUpdatedEntityListener;
-import com.rgp.asks.persistence.dao.ArgumentDao;
-import com.rgp.asks.persistence.entity.Argument;
+import androidx.annotation.NonNull;
 
-public class saveArgumentAsyncTask extends AsyncTask<Argument, Void, Integer> {
-    private ArgumentDao dao;
+import com.rgp.asks.interfaces.OnUpdatedEntityListener;
+import com.rgp.asks.persistence.dao.EntityDao;
+
+public class UpdateAsyncTask<T> extends AsyncTask<T, Void, Integer> {
+    private EntityDao<T> dao;
     private boolean finishSignal;
     private OnUpdatedEntityListener onUpdatedEntityListener;
 
-    public saveArgumentAsyncTask(ArgumentDao dao, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
+    public UpdateAsyncTask(@NonNull EntityDao<T> dao, boolean finishSignal, OnUpdatedEntityListener onUpdatedEntityListener) {
         this.dao = dao;
         this.finishSignal = finishSignal;
         this.onUpdatedEntityListener = onUpdatedEntityListener;
     }
 
+    @SafeVarargs
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-    }
-
-    @Override
-    protected Integer doInBackground(final Argument... params) {
+    protected final Integer doInBackground(final T... params) {
         return dao.update(params[0]);
     }
 
@@ -36,4 +32,3 @@ public class saveArgumentAsyncTask extends AsyncTask<Argument, Void, Integer> {
         }
     }
 }
-

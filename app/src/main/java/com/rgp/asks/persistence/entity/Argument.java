@@ -3,6 +3,7 @@ package com.rgp.asks.persistence.entity;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -27,7 +28,8 @@ public class Argument {
         this.beliefId = beliefId;
     }
 
-    public Argument(int argumentId, String argument, int beliefId) {
+    @Ignore
+    public Argument(int argumentId, @NonNull String argument, int beliefId) {
         this.id = argumentId;
         this.argument = argument;
         this.beliefId = beliefId;
@@ -76,5 +78,13 @@ public class Argument {
         result = 31 * result + getArgument().hashCode();
         result = 31 * result + getBeliefId();
         return result;
+    }
+
+    public Argument copy() {
+        return new Argument(
+                getId(),
+                getArgument(),
+                getBeliefId()
+        );
     }
 }

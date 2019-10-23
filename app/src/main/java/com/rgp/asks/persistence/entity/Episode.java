@@ -2,6 +2,7 @@ package com.rgp.asks.persistence.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -25,6 +26,15 @@ public class Episode {
     private String period;
 
     public Episode(@NonNull String episode, @NonNull String description, @NonNull Date date, @NonNull String period) {
+        this.episode = episode;
+        this.description = description;
+        this.date = date;
+        this.period = period;
+    }
+
+    @Ignore
+    public Episode(int id, @NonNull String episode, @NonNull String description, @NonNull Date date, @NonNull String period) {
+        this.id = id;
         this.episode = episode;
         this.description = description;
         this.date = date;
@@ -97,5 +107,15 @@ public class Episode {
 
     public void setPeriod(@NonNull String period) {
         this.period = period;
+    }
+
+    public Episode copy() {
+        return new Episode(
+                getId(),
+                getEpisode(),
+                getDescription(),
+                getDate(),
+                getPeriod()
+        );
     }
 }

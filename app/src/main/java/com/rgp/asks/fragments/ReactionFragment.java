@@ -75,16 +75,16 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
                 R.drawable.ic_save_white_24dp,
                 v -> {
                     hideKeyboard(v);
-                    save();
+                    updateReaction();
                 }
         );
         initViewModel();
         int id = requireArguments().getInt(Constants.ARG_ID);
-        this.model.setId(id);
+        this.model.setEntityId(id);
         if (id != -1) {
             initViews(fragmentView);
-            this.model.getLiveData().removeObservers(this);
-            this.model.getLiveData().observe(this, this.observer);
+            this.model.getReaction().removeObservers(this);
+            this.model.getReaction().observe(this, this.observer);
         } else {
             //todo: err
         }
@@ -106,10 +106,10 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
 
     private void createObserver() {
         this.observer = observed -> {
-            if (model.isInFirstLoad()) {
+            if (model.isEntityInFirstLoad()) {
                 loadFragmentFromViewModel(observed);
-                model.initModifiableCopy(observed);
-                model.setIsInFirstLoad(false);
+                model.setModifiableEntityCopy(observed.copy());
+                model.setIsEntityInFirstLoad(false);
             }
             setupViewListeners();
         };
@@ -124,7 +124,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
         builder
                 .setMessage(this.getString(R.string.save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    this.model.update(true, this.onUpdatedEntityListener);
+                    this.model.updateReaction(true, this.onUpdatedEntityListener);
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
                     finish();
@@ -138,9 +138,8 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
     }
 
     private void openUnsavedDialog() {
-        if (model.wasChanged()) {
-            AlertDialog unsavedDialog = createUnsavedDialog();
-            unsavedDialog.show();
+        if (model.entityWasChanged()) {
+            createUnsavedDialog().show();
         } else {
             finish();
         }
@@ -169,9 +168,9 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
         this.reactionClassSpinnerInputLayout = rootView.findViewById(R.id.reactionClassSpinnerInputLayout);
     }
 
-    private void save() {
-        if (this.model.wasChanged()) {
-            this.model.update(false, this.onUpdatedEntityListener);
+    private void updateReaction() {
+        if (this.model.entityWasChanged()) {
+            this.model.updateReaction(false, this.onUpdatedEntityListener);
         } else {
             this.onUpdatedEntityListener.onUpdatedEntity(false, 1);
         }
@@ -194,7 +193,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                Reaction reaction = model.getModifiableCopy();
+                Reaction reaction = model.getModifiableEntityCopy();
                 reaction.setReaction(s.toString());
             }
         });
@@ -202,7 +201,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String category = parent.getItemAtPosition(position).toString();
-                Reaction reaction = model.getModifiableCopy();
+                Reaction reaction = model.getModifiableEntityCopy();
                 reaction.setReactionCategory(category);
             }
 
@@ -222,7 +221,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            this.model.delete(this.onDeletedEntityListener);
+            this.model.deleteReaction(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

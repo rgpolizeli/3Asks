@@ -59,7 +59,7 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
         initViewModel();
-        int beliefId = this.model.getBeliefId();
+        int beliefId = this.model.getEntityId();
         if (beliefId != -1) {
 
             initThinkingStylesViews(fragmentView);
@@ -67,8 +67,8 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
             model.getThinkingStylesLiveData().observe(this, this.observerThinkingStyles);
 
             initBeliefViews(fragmentView);
-            model.getBeliefLiveData().removeObservers(this);
-            model.getBeliefLiveData().observe(this, this.observerBelief);
+            model.getBelief().removeObservers(this);
+            model.getBelief().observe(this, this.observerBelief);
 
         } else {
             //todo: err
@@ -91,10 +91,10 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
 
     private void createObserverBelief() {
         this.observerBelief = result -> {
-            if (this.model.isBeliefFirstLoad()) {
+            if (this.model.isEntityInFirstLoad()) {
                 loadFragmentBeliefViewsFromViewModel(result);
-                this.model.initModifiableBeliefCopy(result);
-                this.model.setIsBeliefFirstLoad(false);
+                this.model.setModifiableEntityCopy(result.copy());
+                this.model.setIsEntityInFirstLoad(false);
             }
             setupBeliefViewsListeners();
         };
@@ -154,7 +154,7 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
 
             @Override
             public void afterTextChanged(Editable s) {
-                Belief b = model.getModifiableBeliefCopy();
+                Belief b = model.getModifiableEntityCopy();
                 b.setBelief(s.toString());
             }
         };
@@ -188,11 +188,15 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
     @Override
     public void onFloatingActionButtonClick() {
         ((AddNewBeliefFragment) requireParentFragment()).hideKeyboard();
-        saveBelief();
+        updateBelief();
     }
 
-    private void saveBelief() {
-        model.uncheckedSaveBelief(this.onUpdatedEntityListener);
+    private void updateBelief() {
+        if (model.beliefWasChanged()) {
+            this.model.updateBelief(false, this.onUpdatedEntityListener);
+        } else {
+            onUpdatedEntity(false, 1);
+        }
     }
 
     @Override
@@ -205,7 +209,7 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            model.removeBelief(this.onDeletedEntityListener);
+            this.model.deleteBelief(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

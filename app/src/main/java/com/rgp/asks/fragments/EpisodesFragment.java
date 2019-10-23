@@ -29,7 +29,6 @@ import com.rgp.asks.interfaces.OnInsertedEntityListener;
 import com.rgp.asks.persistence.entity.Episode;
 import com.rgp.asks.viewmodel.MainViewModel;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -123,7 +122,7 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
     private void setupFloatingActionButton(@NonNull FloatingActionButton createEpisodeFab) {
         createEpisodeFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor)));
         createEpisodeFab.setImageResource(R.drawable.ic_add_white_24dp);
-        createEpisodeFab.setOnClickListener(v -> createNewEpisode());
+        createEpisodeFab.setOnClickListener(v -> insertNewEpisode());
         createEpisodeFab.setVisibility(View.VISIBLE);
     }
 
@@ -144,13 +143,14 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
         }
     }
 
-    private void createNewEpisode() {
-        model.createEpisode(
+    private void insertNewEpisode() {
+        Episode newEpisode = new Episode(
                 "",
-                DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().getTime()),
-                getResources().getStringArray(R.array.episode_period_array)[0],
-                this.onInsertedEntityListener
+                "",
+                Calendar.getInstance().getTime(),
+                getResources().getStringArray(R.array.episode_period_array)[0]
         );
+        model.insertEpisode(newEpisode, this.onInsertedEntityListener);
     }
 
     private void setupRecyclerView(@NonNull View rootView) {

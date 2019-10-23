@@ -58,11 +58,11 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
         initViewModel();
-        int episodeIdToLoad = model.getEpisodeId();
+        int episodeIdToLoad = model.getEntityId();
         if (episodeIdToLoad != -1) {
             initViews(fragmentView);
-            model.getEpisodeById().removeObservers(this);
-            model.getEpisodeById().observe(this, this.observer);
+            model.getEpisode().removeObservers(this);
+            model.getEpisode().observe(this, this.observer);
         } else {
             //todo: err
         }
@@ -84,10 +84,10 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
 
     private void createObserver() {
         this.observer = episode -> {
-            if (model.isEpisodeInFirstLoad()) {
+            if (model.isEntityInFirstLoad()) {
                 loadFragmentFromViewModel(episode);
-                model.initModifiableEpisodeCopy(episode);
-                model.setIsEpisodeInFirstLoad(false);
+                model.setModifiableEntityCopy(episode.copy());
+                model.setIsEntityInFirstLoad(false);
             }
             setupViewListeners();
         };
@@ -97,7 +97,7 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     public void onFloatingActionButtonClick() {
         if (this.model != null) {
             ((AsksFragment) requireParentFragment()).hideKeyboard();
-            saveEpisode();
+            updateEpisode();
         }
     }
 
@@ -109,15 +109,19 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
         this.model = ViewModelProviders.of(requireParentFragment()).get(EpisodeViewModel.class);
     }
 
-    private void initViews(View rootView) {
+    private void initViews(@NonNull View rootView) {
         this.episodeNameTextInputLayout = rootView.findViewById(com.rgp.asks.R.id.episodeNameTextInputLayout);
         this.episodeDescriptionTextInputLayout = rootView.findViewById(com.rgp.asks.R.id.episodeDescriptionTextInputLayout);
         this.episodeDateInputLayout = rootView.findViewById(com.rgp.asks.R.id.episodeDateInputLayout);
         this.episodePeriodSpinnerInputLayout = rootView.findViewById(com.rgp.asks.R.id.episodePeriodSpinnerInputLayout);
     }
 
-    private void saveEpisode() {
-        this.model.uncheckedSaveEpisode(this.onUpdatedEntityListener);
+    private void updateEpisode() {
+        if (model.entityWasChanged()) {
+            this.model.updateEpisode(false, this.onUpdatedEntityListener);
+        } else {
+            onUpdatedEntity(false, 1);
+        }
     }
 
     private void loadFragmentFromViewModel(@NonNull Episode e) {
@@ -144,7 +148,7 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            this.model.removeEpisode(this.onDeletedEntityListener);
+            this.model.deleteEpisode(this.onDeletedEntityListener);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

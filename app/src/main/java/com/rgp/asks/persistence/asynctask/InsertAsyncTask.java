@@ -5,20 +5,20 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 
 import com.rgp.asks.interfaces.OnInsertedEntityListener;
-import com.rgp.asks.persistence.dao.ReactionDao;
-import com.rgp.asks.persistence.entity.Reaction;
+import com.rgp.asks.persistence.dao.EntityDao;
 
-public class insertReactionAsyncTask extends AsyncTask<Reaction, Void, Long> {
-    private ReactionDao dao;
+public class InsertAsyncTask<T> extends AsyncTask<T, Void, Long> {
+    private EntityDao<T> dao;
     private OnInsertedEntityListener onInsertedEntityListener;
 
-    public insertReactionAsyncTask(ReactionDao dao, OnInsertedEntityListener onInsertedEntityListener) {
+    public InsertAsyncTask(@NonNull EntityDao<T> dao, OnInsertedEntityListener onInsertedEntityListener) {
         this.dao = dao;
         this.onInsertedEntityListener = onInsertedEntityListener;
     }
 
+    @SafeVarargs
     @Override
-    protected Long doInBackground(@NonNull final Reaction... params) {
+    protected final Long doInBackground(final T... params) {
         return dao.insert(params[0]);
     }
 
@@ -26,7 +26,7 @@ public class insertReactionAsyncTask extends AsyncTask<Reaction, Void, Long> {
     protected void onPostExecute(Long id) {
         super.onPostExecute(id);
         if (this.onInsertedEntityListener != null) {
-            this.onInsertedEntityListener.onInsertedEntity(id.intValue());
+            onInsertedEntityListener.onInsertedEntity(id.intValue());
         }
     }
 }

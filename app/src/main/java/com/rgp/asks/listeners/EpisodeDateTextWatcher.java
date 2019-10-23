@@ -27,7 +27,7 @@ public class EpisodeDateTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        Episode e = model.getModifiableEpisodeCopy();
+        Episode e = model.getModifiableEntityCopy();
         Date date;
         try {
             date = DateFormat.getDateInstance(DateFormat.SHORT).parse(s.toString());

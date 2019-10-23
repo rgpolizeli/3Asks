@@ -93,4 +93,13 @@ public class Reaction {
         result = 31 * result + getEpisodeId();
         return result;
     }
+
+    public Reaction copy() {
+        return new Reaction(
+                getId(),
+                getReaction(),
+                getReactionCategory(),
+                getEpisodeId()
+        );
+    }
 }

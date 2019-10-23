@@ -9,7 +9,6 @@ import java.util.Calendar;
 
 public class EpisodeDateOnDateSetDialogListener implements DatePickerDialog.OnDateSetListener {
     private TextView episodeDateTextView;
-    ;
 
     EpisodeDateOnDateSetDialogListener(TextView episodeDateTextView) {
         this.episodeDateTextView = episodeDateTextView;

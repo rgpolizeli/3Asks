@@ -3,6 +3,7 @@ package com.rgp.asks.persistence.entity;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -27,6 +28,7 @@ public class Objection {
         this.beliefId = beliefId;
     }
 
+    @Ignore
     public Objection(int objectionId, @NonNull String objection, int beliefId) {
         this.id = objectionId;
         this.objection = objection;
@@ -76,5 +78,13 @@ public class Objection {
         result = 31 * result + getObjection().hashCode();
         result = 31 * result + getBeliefId();
         return result;
+    }
+
+    public Objection copy() {
+        return new Objection(
+                getId(),
+                getObjection(),
+                getBeliefId()
+        );
     }
 }

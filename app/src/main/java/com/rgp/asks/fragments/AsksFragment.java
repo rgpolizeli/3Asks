@@ -54,7 +54,7 @@ public class AsksFragment extends Fragment {
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
         this.floatingActionButton = getFloatingActionButton();
         initViewModel();
-        this.model.setEpisodeId(requireArguments().getInt(Constants.ARG_ID));
+        this.model.setEntityId(requireArguments().getInt(Constants.ARG_ID));
         initTabs(fragmentView);
     }
 
@@ -75,7 +75,7 @@ public class AsksFragment extends Fragment {
         builder
                 .setMessage(this.getString(R.string.episode_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.episode_save_dialog_save_button), (dialog, id) -> {
-                    this.model.checkedSaveEpisode(getWhenFragmentFromFragmentManager().getOnUpdatedEntityListener());
+                    this.model.updateEpisode(true, getWhenFragmentFromFragmentManager().getOnUpdatedEntityListener());
                 })
                 .setNegativeButton(this.getString(R.string.episode_save_dialog_discard_button), (dialog, id) -> {
                     finish();
@@ -90,7 +90,7 @@ public class AsksFragment extends Fragment {
 
     private void openUnsavedDialog() {
         AlertDialog unsavedDialog = createUnsavedDialog();
-        if (model.episodeWasChanged()) {
+        if (model.entityWasChanged()) {
             unsavedDialog.show();
         } else {
             finish();

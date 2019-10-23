@@ -139,13 +139,17 @@ public class BeliefObjectionsFragment extends Fragment implements OnFloatingActi
     @Override
     public void onFloatingActionButtonClick() {
         if (this.model != null) {
-            createObjection();
+            insertNewObjection();
         }
     }
 
-    private void createObjection() {
-        this.model.createObjection(
+    private void insertNewObjection() {
+        Objection newObjection = new Objection(
                 "",
+                this.model.getEntityId()
+        );
+        this.model.insertObjection(
+                newObjection,
                 this.onInsertedEntityListener
         );
     }

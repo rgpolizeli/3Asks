@@ -153,6 +153,6 @@ public class EpisodeDaoTest extends EntitiesBuilder {
     }
 
     private LiveData<Episode> getEpisodeById(int episodeId) {
-        return this.episodeDao.getEpisodeById(episodeId);
+        return this.episodeDao.getEntityById(episodeId);
     }
 }

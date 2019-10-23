@@ -2,26 +2,23 @@ package com.rgp.asks.persistence.asynctask;
 
 import android.os.AsyncTask;
 
-import com.rgp.asks.interfaces.OnDeletedEntityListener;
-import com.rgp.asks.persistence.dao.ObjectionDao;
-import com.rgp.asks.persistence.entity.Objection;
+import androidx.annotation.NonNull;
 
-public class deleteObjectionAsyncTask extends AsyncTask<Objection, Void, Integer> {
-    private ObjectionDao dao;
+import com.rgp.asks.interfaces.OnDeletedEntityListener;
+import com.rgp.asks.persistence.dao.EntityDao;
+
+public class DeleteAsyncTask<T> extends AsyncTask<T, Void, Integer> {
+    private EntityDao<T> dao;
     private OnDeletedEntityListener onDeletedEntityListener;
 
-    public deleteObjectionAsyncTask(ObjectionDao dao, OnDeletedEntityListener onDeletedEntityListener) {
+    public DeleteAsyncTask(@NonNull EntityDao<T> dao, OnDeletedEntityListener onDeletedEntityListener) {
         this.dao = dao;
         this.onDeletedEntityListener = onDeletedEntityListener;
     }
 
+    @SafeVarargs
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
-    protected Integer doInBackground(final Objection... params) {
+    protected final Integer doInBackground(final T... params) {
         return dao.delete(params[0]);
     }
 

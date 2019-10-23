@@ -23,7 +23,7 @@ public class EpisodeDescriptionTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        Episode e = model.getModifiableEpisodeCopy();
+        Episode e = model.getModifiableEntityCopy();
         e.setDescription(s.toString());
     }
 }

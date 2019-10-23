@@ -66,7 +66,7 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
         );
         this.searcher.setSearchHeader(getString(R.string.search_header_beliefs));
         initViewModel();
-        int episodeIdToLoad = model.getEpisodeId();
+        int episodeIdToLoad = model.getEntityId();
         if (episodeIdToLoad != -1) {
             model.getBeliefsForEpisode().removeObservers(this);
             model.getBeliefsForEpisode().observe(this, this.observer);
@@ -133,7 +133,11 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
     }
 
     private void createNewBelief() {
-        model.createBelief("", this.onInsertedEntityListener);
+        Belief newBelief = new Belief(
+                "",
+                model.getEntityId()
+        );
+        model.insertBelief(newBelief, this.onInsertedEntityListener);
     }
 
     private void startEditBeliefActivity(int beliefId) {

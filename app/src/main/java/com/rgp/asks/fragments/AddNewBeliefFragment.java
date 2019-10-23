@@ -54,7 +54,7 @@ public class AddNewBeliefFragment extends Fragment {
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
         this.floatingActionButton = getFloatingActionButton();
         initViewModel();
-        this.model.setBeliefId(getArguments().getInt(Constants.ARG_ID));
+        this.model.setEntityId(getArguments().getInt(Constants.ARG_ID));
         initTabs(fragmentView);
     }
 
@@ -195,7 +195,7 @@ public class AddNewBeliefFragment extends Fragment {
         builder
                 .setMessage(this.getString(R.string.belief_save_dialog_title))
                 .setPositiveButton(this.getString(R.string.belief_save_dialog_save_button), (dialog, id) -> {
-                    model.checkedSaveBelief(getBeliefDetailsFragmentFromFragmentManager().getOnUpdatedEntityListener());
+                    model.updateBelief(true, getBeliefDetailsFragmentFromFragmentManager().getOnUpdatedEntityListener());
                 })
                 .setNegativeButton(this.getString(R.string.belief_save_dialog_discard_button), (dialog, id) -> {
                     finish();

@@ -66,7 +66,7 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
         );
         this.searcher.setSearchHeader(getString(R.string.search_header_reactions));
         initViewModel();
-        int episodeIdToLoad = model.getEpisodeId();
+        int episodeIdToLoad = model.getEntityId();
         if (episodeIdToLoad != -1) {
             this.model.getReactionsForEpisode().removeObservers(this);
             this.model.getReactionsForEpisode().observe(this, this.observer);
@@ -103,16 +103,17 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
     @Override
     public void onFloatingActionButtonClick() {
         if (this.model != null) {
-            createNewReaction();
+            insertNewReaction();
         }
     }
 
-    private void createNewReaction() {
-        this.model.createReaction(
+    private void insertNewReaction() {
+        Reaction newReaction = new Reaction(
                 "",
                 getResources().getStringArray(R.array.reaction_categories_array)[0],
-                this.onInsertedEntityListener
+                model.getEntityId()
         );
+        this.model.insertReaction(newReaction, this.onInsertedEntityListener);
     }
 
     @NonNull

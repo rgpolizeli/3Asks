@@ -7,8 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.rgp.asks.interfaces.OnInsertedEntityListener;
-import com.rgp.asks.persistence.Repository;
 import com.rgp.asks.persistence.entity.Episode;
+import com.rgp.asks.persistence.repositories.EpisodeRepository;
 
 import java.util.List;
 
@@ -16,21 +16,20 @@ import java.util.List;
 public class MainViewModel extends AndroidViewModel {
 
     private LiveData<List<Episode>> episodes;
+    private EpisodeRepository episodeRepository;
 
-    private Repository repository;
-
-    public MainViewModel(Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
-        repository = new Repository(application);
+        this.episodeRepository = new EpisodeRepository(application);
     }
 
-    public void createEpisode(@NonNull String newEpisodeName, @NonNull String newEpisodeDate, @NonNull String newEpisodePeriod, OnInsertedEntityListener onInsertedEntityListener) {
-        this.repository.createEpisode(newEpisodeName, newEpisodeDate, newEpisodePeriod, onInsertedEntityListener);
+    public void insertEpisode(@NonNull Episode entity, @NonNull OnInsertedEntityListener onInsertedEntityListener) {
+        this.episodeRepository.insertEntity(entity, onInsertedEntityListener);
     }
 
     public LiveData<List<Episode>> getAllEpisodes() {
         if (this.episodes == null) {
-            this.episodes = this.repository.getAllEpisodes();
+            this.episodes = this.episodeRepository.getAllEpisodes();
         }
         return this.episodes;
     }
