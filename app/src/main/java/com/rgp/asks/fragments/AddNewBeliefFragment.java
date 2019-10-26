@@ -19,6 +19,8 @@ import androidx.navigation.Navigation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.rgp.asks.R;
+import com.rgp.asks.ad.AderClient;
+import com.rgp.asks.ad.AderCreator;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.interfaces.OnFloatingActionButtonClickListener;
 import com.rgp.asks.viewmodel.BeliefViewModel;
@@ -26,7 +28,7 @@ import com.rgp.asks.views.DisableSwipeViewPager;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class AddNewBeliefFragment extends Fragment {
+public class AddNewBeliefFragment extends Fragment implements AderClient {
 
     private BeliefViewModel model;
     private FloatingActionButton floatingActionButton;
@@ -52,6 +54,7 @@ public class AddNewBeliefFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        requestToShowAd((AderCreator) requireActivity());
         this.floatingActionButton = getFloatingActionButton();
         initViewModel();
         this.model.setEntityId(getArguments().getInt(Constants.ARG_ID));

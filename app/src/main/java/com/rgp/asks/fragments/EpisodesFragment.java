@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rgp.asks.R;
 import com.rgp.asks.activities.MainActivity;
+import com.rgp.asks.ad.AderClient;
+import com.rgp.asks.ad.AderCreator;
 import com.rgp.asks.adapters.EpisodesRecyclerViewAdapter;
 import com.rgp.asks.auxiliaries.Constants;
 import com.rgp.asks.auxiliaries.Searcher;
@@ -32,7 +34,7 @@ import com.rgp.asks.viewmodel.MainViewModel;
 import java.util.Calendar;
 import java.util.List;
 
-public class EpisodesFragment extends Fragment implements OnInsertedEntityListener {
+public class EpisodesFragment extends Fragment implements OnInsertedEntityListener, AderClient {
 
     private Observer<List<Episode>> observer;
     private EpisodesRecyclerViewAdapter recyclerViewAdapter;
@@ -55,6 +57,7 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
 
     @Override
     public void onViewCreated(@NonNull View fragmentView, Bundle savedInstanceState) {
+        requestToShowAd((AderCreator) requireActivity());
         FloatingActionButton floatingActionButton = getFloatingActionButton();
         setupFloatingActionButton(floatingActionButton);
         setupRecyclerView(fragmentView);
@@ -70,7 +73,7 @@ public class EpisodesFragment extends Fragment implements OnInsertedEntityListen
         this.searcher.setSearchHeader(getString(R.string.search_header_episodes));
         initViewModel();
         model.getAllEpisodes().removeObservers(this);
-        model.getAllEpisodes().observe(this, this.observer);
+        model.getAllEpisodes().observe(getViewLifecycleOwner(), this.observer);
     }
 
     @Override
