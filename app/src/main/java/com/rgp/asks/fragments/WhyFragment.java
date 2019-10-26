@@ -69,7 +69,7 @@ public class WhyFragment extends Fragment implements OnFloatingActionButtonClick
         int episodeIdToLoad = model.getEntityId();
         if (episodeIdToLoad != -1) {
             model.getBeliefsForEpisode().removeObservers(this);
-            model.getBeliefsForEpisode().observe(this, this.observer);
+            model.getBeliefsForEpisode().observe(getViewLifecycleOwner(), this.observer);
         } else {
             //todo:err
         }

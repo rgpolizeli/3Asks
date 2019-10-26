@@ -80,7 +80,7 @@ public class ArgumentFragment extends Fragment implements OnUpdatedEntityListene
         if (id != -1) {
             initViews(fragmentView);
             this.model.getArgument().removeObservers(this);
-            this.model.getArgument().observe(this, this.observer);
+            this.model.getArgument().observe(getViewLifecycleOwner(), this.observer);
         } else {
             //todo: err
         }

@@ -62,7 +62,7 @@ public class WhenFragment extends Fragment implements OnFloatingActionButtonClic
         if (episodeIdToLoad != -1) {
             initViews(fragmentView);
             model.getEpisode().removeObservers(this);
-            model.getEpisode().observe(this, this.observer);
+            model.getEpisode().observe(getViewLifecycleOwner(), this.observer);
         } else {
             //todo: err
         }

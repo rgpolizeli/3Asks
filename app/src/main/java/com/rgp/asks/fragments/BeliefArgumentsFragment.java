@@ -67,7 +67,7 @@ public class BeliefArgumentsFragment extends Fragment implements OnFloatingActio
         this.searcher.setSearchHeader(getString(R.string.search_header_arguments));
         initViewModel();
         model.getArgumentsLiveData().removeObservers(this);
-        model.getArgumentsLiveData().observe(this, this.observer);
+        model.getArgumentsLiveData().observe(getViewLifecycleOwner(), this.observer);
     }
 
     @Override

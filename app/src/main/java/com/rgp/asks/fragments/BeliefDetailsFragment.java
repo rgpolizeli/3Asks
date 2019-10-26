@@ -64,11 +64,11 @@ public class BeliefDetailsFragment extends Fragment implements OnFloatingActionB
 
             initThinkingStylesViews(fragmentView);
             model.getThinkingStylesLiveData().removeObservers(this);
-            model.getThinkingStylesLiveData().observe(this, this.observerThinkingStyles);
+            model.getThinkingStylesLiveData().observe(getViewLifecycleOwner(), this.observerThinkingStyles);
 
             initBeliefViews(fragmentView);
             model.getBelief().removeObservers(this);
-            model.getBelief().observe(this, this.observerBelief);
+            model.getBelief().observe(getViewLifecycleOwner(), this.observerBelief);
 
         } else {
             //todo: err

@@ -69,7 +69,7 @@ public class WhatFragment extends Fragment implements OnFloatingActionButtonClic
         int episodeIdToLoad = model.getEntityId();
         if (episodeIdToLoad != -1) {
             this.model.getReactionsForEpisode().removeObservers(this);
-            this.model.getReactionsForEpisode().observe(this, this.observer);
+            this.model.getReactionsForEpisode().observe(getViewLifecycleOwner(), this.observer);
         } else {
             //todo: err: episode not loaded
         }

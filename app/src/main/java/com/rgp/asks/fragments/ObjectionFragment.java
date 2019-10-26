@@ -80,7 +80,7 @@ public class ObjectionFragment extends Fragment implements OnUpdatedEntityListen
         if (id != -1) {
             initViews(fragmentView);
             this.model.getObjection().removeObservers(this);
-            this.model.getObjection().observe(this, this.observer);
+            this.model.getObjection().observe(getViewLifecycleOwner(), this.observer);
         } else {
             //todo: err
         }

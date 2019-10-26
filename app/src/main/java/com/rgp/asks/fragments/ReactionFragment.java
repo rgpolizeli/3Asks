@@ -84,7 +84,7 @@ public class ReactionFragment extends Fragment implements OnUpdatedEntityListene
         if (id != -1) {
             initViews(fragmentView);
             this.model.getReaction().removeObservers(this);
-            this.model.getReaction().observe(this, this.observer);
+            this.model.getReaction().observe(getViewLifecycleOwner(), this.observer);
         } else {
             //todo: err
         }
