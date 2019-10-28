@@ -13,19 +13,21 @@ import java.util.Date;
 
 public class Ader {
     private InterstitialAd mInterstitialAd;
-    private long intervalInMiliseconds;
-    private int numberOfIntervals;
     private GetLastShowedTime getLastShowedTime;
 
-    public Ader(Context context, long intervalInMiliseconds, int numberOfIntervals, OnAdLoadingErrorListener onAdLoadingErrorListener, GetLastShowedTime getLastShowedTime) {
-        this.intervalInMiliseconds = intervalInMiliseconds;
-        this.numberOfIntervals = numberOfIntervals;
+    private final long intervalInMiliseconds = 1800000; // 1800000 ms - 30 min
+    private final int numberOfIntervals = 1;
+    // for test "ca-app-pub-3940256099942544/8691691433"
+    //for build "ca-app-pub-0779487197855100/3480090569"
+    private final String adUnitId = "ca-app-pub-3940256099942544/8691691433";
+
+    public Ader(Context context, OnAdLoadingErrorListener onAdLoadingErrorListener, GetLastShowedTime getLastShowedTime) {
         this.getLastShowedTime = getLastShowedTime;
 
         MobileAds.initialize(context,
-                "ca-app-pub-3940256099942544/8691691433");
+                adUnitId);
         mInterstitialAd = new InterstitialAd(context);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/8691691433");
+        mInterstitialAd.setAdUnitId(adUnitId);
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {

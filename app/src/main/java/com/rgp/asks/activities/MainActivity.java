@@ -36,10 +36,9 @@ public class MainActivity extends AppCompatActivity implements AderCreator, OnAd
         createAder();
     }
 
-    // 1800000 ms - 30 min
     @Override
     public void createAder() {
-        this.ader = new Ader(this, 1800000, 1, this, this.mainViewModel);
+        this.ader = new Ader(this, this, this.mainViewModel);
         this.adLoadErrorDialog = createAdLoadErrorDialog();
     }
 
